@@ -21,7 +21,7 @@ const Sidebar = (props) => {
     >
       <div className="flex items-center justify-center h-12 bg-blue-500">
         <img src={logo} className="h-8" alt="Logo" />
-        <p className="pl-1 pr-4 text-2xl text-blue-50">Velcro</p>
+        <p className="font-custom pl-1 pr-4 text-2xl text-blue-50">VelcroUI</p>
       </div>
       <p className="px-3 py-1 text-xs text-gray-400 bg-gray-600 border-b border-gray-700">
         Tasks
