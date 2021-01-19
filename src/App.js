@@ -97,6 +97,7 @@ const App = () => {
       <Sidebar
         updateView={(e) => setView(e)}
         open={openSidebar}
+        selected={view}
         closeBar={() => setOpenSidebar(false)}
       />
       <div className="flex flex-col flex-grow w-full justify-between h-full ml-0 md:ml-56">

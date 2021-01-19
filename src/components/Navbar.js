@@ -1,6 +1,5 @@
-import { IoGrid, IoPlay, IoTrash } from "react-icons/io5";
+import { IoGrid, IoPlay, IoTrash, IoPause } from "react-icons/io5";
 import { GoPlus } from "react-icons/go";
-import { IoIosPause } from "react-icons/io";
 
 import { getIconSize } from "../lib/util";
 
@@ -20,7 +19,7 @@ const Navbar = (props) => {
       </div>
       <Divider />
       <div className="flex items-center justify-between">
-        <IoIosPause size={getIconSize() + 2} className="mr-3 cursor-pointer" />
+        <IoPause size={getIconSize() + 2} className="mr-3 cursor-pointer" />
         <IoPlay size={getIconSize() - 2} className="mr-3 cursor-pointer" />
         <IoTrash size={getIconSize() - 4} className="cursor-pointer" />
       </div>
