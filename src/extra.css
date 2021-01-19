@@ -24,7 +24,9 @@
     opacity: 1;
   }
 }
-
+#root {
+  height: var(--app-height);
+}
 * {
   -webkit-tap-highlight-color: transparent;
 }

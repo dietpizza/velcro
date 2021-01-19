@@ -6,6 +6,7 @@ import Task from "./components/Task";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 const App = () => {
   // Global State
@@ -52,6 +53,10 @@ const App = () => {
 
   // Run a test call to check connectivity
   const testConnection = () => {
+    document.documentElement.style.setProperty(
+      "--app-height",
+      window.innerHeight + "px"
+    );
     let flag = true;
     aria2
       .listMethods()
@@ -66,6 +71,10 @@ const App = () => {
 
   // Close sidebar if window resized to smaller width (Mobile friendly layout)
   const sidebarMonitor = function () {
+    document.documentElement.style.setProperty(
+      "--app-height",
+      window.innerHeight + "px"
+    );
     if (window.innerWidth < 720) {
       setOpenSidebar(false);
     }
@@ -84,18 +93,21 @@ const App = () => {
 
   // Main markup
   return (
-    <div className="flex fade-in">
+    <div className="flex h-full fade-in">
       <Sidebar
         updateView={(e) => setView(e)}
         open={openSidebar}
         closeBar={() => setOpenSidebar(false)}
       />
-      <div className="w-full mA-0 md:ml-56">
-        <Navbar openSidebar={() => setOpenSidebar(true)} />
-        <Header />
-        {tasks[view].map((el) => {
-          return <Task key={el.gid} data={el} />;
-        })}
+      <div className="flex flex-col flex-grow w-full justify-between h-full ml-0 md:ml-56">
+        <div>
+          <Navbar openSidebar={() => setOpenSidebar(true)} />
+          <Header />
+          {tasks[view].map((el) => {
+            return <Task key={el.gid} data={el} />;
+          })}
+        </div>
+        <Footer data={globalStat} />
       </div>
     </div>
   );
