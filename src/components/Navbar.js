@@ -1,29 +1,31 @@
-import { Plus, Pause, Play, Trash, Grid } from "react-feather";
+import { IoGrid, IoPlay, IoTrash } from "react-icons/io5";
+import { GoPlus } from "react-icons/go";
+import { IoIosPause } from "react-icons/io";
+import { getIconSize } from "../lib/IconUtil";
+
+const Divider = () => {
+  return <div className="w-0 h-5 mx-3 border-r border-gray-300 border-solid" />;
+};
 
 const Navbar = (props) => {
-  const Divider = () => {
-    return (
-      <div className="w-0 h-5 mx-3 border-r border-gray-300 border-solid" />
-    );
-  };
   return (
-    <div className="flex items-center w-full h-12 px-3 text-gray-600 bg-gray-100 shadow">
+    <div className="flex items-center w-full h-12 px-3 text-gray-500 shadow">
       <div
         className="flex items-center mr-1 cursor-pointer"
         onClick={props.openSidebar}
       >
-        <Plus size={24} className="mr-1" />
-        <p className="text-sm">Add</p>
+        <GoPlus size={getIconSize() - 2} className="mr-1" />
+        <p className="text-base md:text-sm">New</p>
       </div>
       <Divider />
-      <div className="flex items-center justify-between w-24 md:w-20">
-        <Pause size={24} className="cursor-pointer" />
-        <Play size={22} className="cursor-pointer" />
-        <Trash size={20} className="cursor-pointer" />
+      <div className="flex items-center justify-between">
+        <IoIosPause size={getIconSize() + 2} className="cursor-pointer mr-1" />
+        <IoPlay size={getIconSize() - 2} className="mr-1 cursor-pointer" />
+        <IoTrash size={getIconSize() - 4} className="cursor-pointer" />
       </div>
       <Divider />
       <div className="flex items-center justify-between w-24 ml-1 md:w-20 md:ml-0">
-        <Grid size={22} className="cursor-pointer" />
+        <IoGrid size={getIconSize() - 4} className="cursor-pointer" />
       </div>
     </div>
   );

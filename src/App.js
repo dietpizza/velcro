@@ -11,12 +11,11 @@ const App = () => {
   // Global State
   const [view, setView] = useState("active");
   const [openSidebar, setOpenSidebar] = useState(false);
+  const [globalStat, setGlobalStat] = useState({});
   const [tasks, setTasks] = useState({
     active: [],
     waiting: [],
     stopped: [],
-    empty: [],
-    global: {},
   });
 
   // Connect to aria2 jsonrpc interface
@@ -34,57 +33,56 @@ const App = () => {
       ["tellStopped", 0, 999],
       ["getGlobalStat"],
     ];
-    try {
-      Promise.all(await aria2.batch(calls))
-        .then((result) => {
-          setTasks({
-            active: result[0],
-            waiting: result[1],
-            stopped: result[2],
-            global: result[3],
-          });
-        })
-        .catch(() => console.log("batch fault"));
-    } catch (err) {
-      console.log("failed");
-    }
+    aria2
+      .batch(calls)
+      .then((promises) => {
+        Promise.all(promises)
+          .then((result) => {
+            setTasks({
+              active: result[0],
+              waiting: result[1],
+              stopped: result[2],
+            });
+            setGlobalStat(result[3]);
+          })
+          .catch(() => console.log("one or more call failed"));
+      })
+      .catch(() => console.log("batch call failed"));
   };
 
+  // Run a test call to check connectivity
   const testConnection = () => {
     let flag = true;
     aria2
       .listMethods()
       .then(() => {
-        console.log("connected");
         getData();
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         flag = false;
       });
     return flag;
   };
 
+  // Close sidebar if window resized to smaller width (Mobile friendly layout)
+  const sidebarMonitor = function () {
+    if (window.innerWidth < 720) {
+      setOpenSidebar(false);
+    }
+  };
+
+  // componentDidMount using useEffect
   useEffect(() => {
     let interval;
-    if (testConnection()) {
-      interval = setInterval(getData, 1000);
-    }
-    const sidebarMonitor = function () {
-      if (window.innerWidth < 720) {
-        setOpenSidebar(false);
-      }
-    };
+    if (testConnection()) interval = setInterval(getData, 1000);
     window.addEventListener("resize", sidebarMonitor);
-    console.log("componentDidMount");
 
     return () => {
       clearInterval(interval);
-      console.log("componentDidUnmount");
     };
-    //eslint-disable-next-line
   }, []);
 
+  // Main markup
   return (
     <div className="flex fade-in">
       <Sidebar

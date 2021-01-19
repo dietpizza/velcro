@@ -1,4 +1,4 @@
-function formatBytes(bytes, decimals) {
+const formatBytes = (bytes, decimals) => {
   if (bytes === 0 || bytes === "0") return "0 B";
   var k = 1024;
   var sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB"];
@@ -6,25 +6,35 @@ function formatBytes(bytes, decimals) {
   return (
     parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + " " + sizes[i]
   );
-}
+};
 
-function getFilename(file) {
-  if (file.path === "") return "[Error]";
-  if (file.path !== "" || file.path !== undefined) {
-    return file.path.replace(/^.*(\\|\/|:)/, "");
-  } else {
-    return file.uris[0].uri.replace(/^.*(\\|\/|:)/, "");
-  }
-}
-function getProgress(completed, total, digits) {
+const getFilename = (file) => {
+  if (file.path === "") return file.uris[0].uri.replace(/^.*(\\|\/|:)/, "");
+  else if (file.path.length > 0) return file.path.replace(/^.*(\\|\/|:)/, "");
+  else return "Error";
+};
+const getProgress = (completed, total, digits) => {
   const progress = ((completed / total) * 100).toFixed(digits);
   if (isNaN(progress)) return "0%";
   else return progress + "%";
-}
+};
 
 const Task = (props) => {
-  const { totalLength, completedLength, downloadSpeed, files } = props.data;
+  const {
+    errorCode,
+    totalLength,
+    completedLength,
+    downloadSpeed,
+    files,
+  } = props.data;
   let progress = getProgress(completedLength, totalLength, 1);
+
+  const getStatus = () => {
+    if (errorCode !== undefined) return "Error";
+    else if (completedLength === totalLength) return "Completed";
+    else return formatBytes(downloadSpeed, 2) + "/s";
+  };
+
   return (
     <div
       className={
@@ -52,9 +62,7 @@ const Task = (props) => {
       </p>
       <p className="text-right md:text-left col-span-1 md:col-span-2">
         <span className="inline-block pr-1 md:hidden">Status:</span>
-        {totalLength === completedLength
-          ? "Completed"
-          : formatBytes(downloadSpeed, 2) + "/s"}
+        {getStatus()}
       </p>
     </div>
   );
