@@ -12,11 +12,13 @@ exports.formatBytes = (bytes, decimals) => {
     parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + " " + sizes[i]
   );
 };
+
 exports.getFilename = (file) => {
   if (file.path === "") return file.uris[0].uri.replace(/^.*(\\|\/|:)/, "");
   else if (file.path.length > 0) return file.path.replace(/^.*(\\|\/|:)/, "");
   else return "Error";
 };
+
 exports.getProgress = (completed, total, digits) => {
   const progress = ((completed / total) * 100).toFixed(digits);
   if (isNaN(progress)) return "0%";

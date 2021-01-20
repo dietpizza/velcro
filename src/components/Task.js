@@ -19,11 +19,11 @@ const Task = (props) => {
   return (
     <div
       className={
-        "items-center px-2 py-2 text-xs border-b border-blue-200 cursor-pointer grid grid-cols-2 md:grid-cols-16 " +
+        "items-center px-4 py-3 md:py-2 text-xs border-b border-blue-100 cursor-pointer grid grid-cols-2 md:grid-cols-16 " +
         "gap-y-1 md:gap-x-4 hover:bg-blue-100 fade-in"
       }
     >
-      <p className="overflow-hidden text-base md:col-span-9 col-span-2 md:text-xs whitespace-nowrap overflow-ellipsis">
+      <p className="overflow-hidden text-sm md:text-xs md:col-span-9 col-span-2 whitespace-nowrap overflow-ellipsis">
         {getFilename(files[0])}
       </p>
       <div className="relative flex items-center col-span-2 md:col-span-3">

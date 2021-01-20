@@ -24,12 +24,6 @@
     opacity: 1;
   }
 }
-#root {
-  height: var(--app-height);
-}
-* {
-  -webkit-tap-highlight-color: transparent;
-}
 
 .fade-in {
   -webkit-animation: fadein 0.3s;
@@ -37,6 +31,14 @@
   animation: fadein 0.3s;
 }
 
+#root {
+  height: var(--app-height);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 .font-custom {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: Roboto, Tahoma, Geneva, Verdana, sans-serif;
 }

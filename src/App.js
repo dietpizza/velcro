@@ -99,8 +99,13 @@ const App = () => {
         open={openSidebar}
         selected={view}
         closeBar={() => setOpenSidebar(false)}
+        count={{
+          active: globalStat.numActive,
+          waiting: globalStat.numWaiting,
+          stopped: globalStat.numStopped,
+        }}
       />
-      <div className="flex flex-col flex-grow w-full justify-between h-full ml-0 md:ml-56">
+      <div className="flex flex-col justify-between flex-grow w-full h-full ml-0 md:ml-56">
         <div>
           <Navbar openSidebar={() => setOpenSidebar(true)} />
           <Header />
