@@ -37,8 +37,18 @@
 
 * {
   -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
 }
 
 .font-custom {
   font-family: Roboto, Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

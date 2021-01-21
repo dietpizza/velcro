@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import Notification from "./components/Notifcation";
 
 const App = () => {
   // Global State
@@ -53,10 +54,6 @@ const App = () => {
 
   // Run a test call to check connectivity
   const testConnection = () => {
-    document.documentElement.style.setProperty(
-      "--app-height",
-      window.innerHeight + "px"
-    );
     let flag = true;
     aria2
       .listMethods()
@@ -83,7 +80,8 @@ const App = () => {
   // componentDidMount using useEffect
   useEffect(() => {
     let interval;
-    if (testConnection()) interval = setInterval(getData, 1000);
+    sidebarMonitor();
+    // if (testConnection()) interval = setInterval(getData, 1000);
     window.addEventListener("resize", sidebarMonitor);
 
     return () => {
@@ -94,6 +92,7 @@ const App = () => {
   // Main markup
   return (
     <div className="flex h-full fade-in">
+      <Notification />
       <Sidebar
         updateView={(e) => setView(e)}
         open={openSidebar}
