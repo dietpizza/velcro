@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import Aria2 from "aria2";
 
 // Import components
@@ -10,16 +10,17 @@ import Actionbar from "./components/Actionbar";
 import Footer from "./components/Footer";
 import Alert from "./components/Alert";
 import AlertStack from "./components/AlertStack";
+import NewDownload from "./components/NewDownload";
 
 const App = () => {
   // Global State
   const [sidebarStatus, setSidebarStatus] = useState(false);
-  const [globalStat, setGlobalStat] = useState({});
   const [alerts, setAlerts] = useState([]);
   const [tasks, setTasks] = useState({
     active: [],
     waiting: [],
     stopped: [],
+    globalStat: [],
   });
 
   // Connect to aria2 jsonrpc interface
@@ -32,29 +33,23 @@ const App = () => {
   // Helper to store data in state
   const setData = (data) => {
     setTasks({
-      active: data[0],
-      waiting: data[1],
-      stopped: data[2],
+      active: data[0][0],
+      waiting: data[1][0],
+      stopped: data[2][0],
+      globalStat: data[3][0],
     });
-    setGlobalStat(data[3]);
   };
 
   // Fetch data from aria2 rpc server
-  const getData = () => {
+  const getData = async () => {
     const calls = [
       ["tellActive"],
       ["tellWaiting", 0, 999],
       ["tellStopped", 0, 999],
       ["getGlobalStat"],
     ];
-    aria2
-      .batch(calls)
-      .then((promises) => {
-        Promise.all(promises)
-          .then((result) => setData(result))
-          .catch(() => console.log("one or more call failed"));
-      })
-      .catch(() => console.log("batch call failed"));
+    const data = await aria2.multicall(calls);
+    setData(data);
   };
 
   // Get taskview
@@ -77,15 +72,19 @@ const App = () => {
         id={alert.id}
         timeout={alert.timeout}
         destroy={removeAlert}
+        variant={alert.priority}
       />
     ));
   };
 
   // Alert mechanism
-  const addAlert = (content, timeout) => {
+  const addAlert = (content, timeout, priority) => {
     const id = Math.random().toString(16).substring(7);
-    console.log(id);
-    setAlerts((oldAlerts) => [...oldAlerts, { content, id, timeout }]);
+    if (priority === "critical") timeout = 20000;
+    setAlerts((oldAlerts) => [
+      ...oldAlerts,
+      { content, id, timeout, priority },
+    ]);
   };
 
   const removeAlert = (id) => {
@@ -99,7 +98,7 @@ const App = () => {
       .listMethods()
       .then(() => {
         getData();
-        addAlert("Aria2 RPC connected!", 3000);
+        addAlert("Aria2 RPC connected! ", 3000, "info");
       })
       .catch(() => (flag = false));
     return flag;
@@ -137,7 +136,7 @@ const App = () => {
       <Sidebar
         open={sidebarStatus}
         closeSidebar={() => setSidebarStatus(false)}
-        count={globalStat}
+        count={tasks.globalStat}
       />
       <div className="flex flex-col flex-grow ml-0 md:ml-56">
         <div className="flex flex-col justify-between flex-grow">
@@ -146,10 +145,12 @@ const App = () => {
             <Route path="/active">{getTasks("active")}</Route>
             <Route path="/waiting">{getTasks("waiting")}</Route>
             <Route path="/stopped">{getTasks("stopped")}</Route>
-            <Route path="/settings"></Route>
+            <Route path="/add">
+              <NewDownload />
+            </Route>
           </Switch>
+          <Footer data={tasks.globalStat} />
         </div>
-        <Footer data={globalStat} />
       </div>
     </div>
   );

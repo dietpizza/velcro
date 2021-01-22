@@ -1,6 +1,6 @@
 exports.IconSize = 24;
 exports.formatBytes = (bytes, decimals) => {
-  if (bytes === 0 || bytes === "0") return "0 B";
+  if (bytes === 0 || bytes === "0" || isNaN(bytes)) return "0 B";
   var k = 1024;
   var sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB"];
   var i = Math.floor(Math.log(bytes) / Math.log(k));

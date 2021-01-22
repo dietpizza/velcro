@@ -10,6 +10,8 @@ import {
 
 import { IconSize } from "../lib/util";
 
+import { Link } from "react-router-dom";
+
 const Divider = () => {
   return (
     <div className="w-0 h-6 border-r border-gray-300 border-solid md:h-5" />
@@ -23,10 +25,12 @@ const Actionbar = (props) => {
         <IoMenuSharp size={IconSize} className="ml-3 mr-4" />
         <Divider />
       </div>
-      <div className="flex items-center pr-1 cursor-pointer space-x-1">
-        <IoAddOutline size={IconSize + 2} />
-        <p className="text-base md:text-sm">New</p>
-      </div>
+      <Link to="/add">
+        <div className="flex items-center pr-1 cursor-pointer space-x-1">
+          <IoAddOutline size={IconSize + 2} />
+          <p className="text-base md:text-sm">New</p>
+        </div>
+      </Link>
       <Divider />
       <div className="flex items-center justify-between space-x-2">
         <IoPause size={IconSize} className="cursor-pointer" />

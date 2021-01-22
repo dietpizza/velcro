@@ -1,3 +1,8 @@
+* {
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
 @keyframes fadein {
   from {
     opacity: 0;
@@ -7,41 +12,30 @@
   }
 }
 
-@-moz-keyframes fadein {
+@keyframes fadeout {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
   }
-}
-
-@-webkit-keyframes fadein {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.fade-in {
-  -webkit-animation: fadein 0.3s;
-  -moz-animation: fadein 0.3s;
-  animation: fadein 0.3s;
 }
 
 #root {
   height: var(--app-height);
 }
+
 .fill-screen {
   height: auto;
   max-height: calc(var(--app-height) - 1px);
 }
 
-* {
-  -webkit-tap-highlight-color: transparent;
-  overscroll-behavior: none;
+.fade-in {
+  animation: fadein 0.2s;
+}
+
+.fade-out {
+  animation: fadein 0.2s;
 }
 
 .font-websafe {
