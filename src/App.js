@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Redirect, Route } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import Aria2 from "aria2";
 
 // Import components
@@ -13,7 +13,7 @@ import AlertStack from "./components/AlertStack";
 
 const App = () => {
   // Global State
-  const [openSidebar, setOpenSidebar] = useState(false);
+  const [sidebarStatus, setSidebarStatus] = useState(false);
   const [globalStat, setGlobalStat] = useState({});
   const [alerts, setAlerts] = useState([]);
   const [tasks, setTasks] = useState({
@@ -56,6 +56,7 @@ const App = () => {
       })
       .catch(() => console.log("batch call failed"));
   };
+
   // Get taskview
   const getTasks = (view) => {
     return (
@@ -82,7 +83,7 @@ const App = () => {
 
   // Alert mechanism
   const addAlert = (content, timeout) => {
-    const id = Math.round(Math.random() * 1000).toString();
+    const id = Math.random().toString(16).substring(7);
     console.log(id);
     setAlerts((oldAlerts) => [...oldAlerts, { content, id, timeout }]);
   };
@@ -111,7 +112,7 @@ const App = () => {
       window.innerHeight + "px"
     );
     if (window.innerWidth < 720) {
-      setOpenSidebar(false);
+      setSidebarStatus(false);
     }
   };
 
@@ -134,19 +135,19 @@ const App = () => {
     <div className="flex h-full fade-in">
       <AlertStack>{getAlerts()}</AlertStack>
       <Sidebar
-        open={openSidebar}
-        closeBar={() => setOpenSidebar(false)}
+        open={sidebarStatus}
+        closeSidebar={() => setSidebarStatus(false)}
         count={globalStat}
       />
       <div className="flex flex-col flex-grow ml-0 md:ml-56">
         <div className="flex flex-col justify-between flex-grow">
-          <Actionbar openSidebar={() => setOpenSidebar(true)} />
-          <Route path="/active">{getTasks("active")}</Route>
-          <Route path="/waiting">{getTasks("waiting")}</Route>
-          <Route path="/stopped">{getTasks("stopped")}</Route>
-          <Route>
-            <Redirect to="/active" />
-          </Route>
+          <Actionbar openSidebar={() => setSidebarStatus(true)} />
+          <Switch>
+            <Route path="/active">{getTasks("active")}</Route>
+            <Route path="/waiting">{getTasks("waiting")}</Route>
+            <Route path="/stopped">{getTasks("stopped")}</Route>
+            <Route path="/settings"></Route>
+          </Switch>
         </div>
         <Footer data={globalStat} />
       </div>

@@ -20,25 +20,26 @@ const Section = ({ sectionName }) => {
   );
 };
 
-const Sidebar = ({ closeBar, count, open }) => {
-  const [view, setView] = useState("active");
+const Sidebar = ({ closeSidebar, count, open }) => {
+  const [view, setView] = useState("");
   const ref = useRef(null);
 
   const MENU_STYLE =
-    "flex items-center w-full h-12 px-2 text-sm font-custom text-gray-300 " +
-    "cursor-pointer justify-items-start hover:bg-gray-600 border-b border-gray-700";
+    "flex items-center w-full h-12 px-2 text-sm font-websafe text-gray-300 " +
+    "cursor-pointer justify-items-start hover:bg-gray-600 " +
+    "border-b border-gray-700";
   const getMenuStyle = (path) => {
     return MENU_STYLE + (path === view ? " bg-gray-600" : "");
   };
 
-  useOnClickOutside(ref, () => closeBar());
+  useOnClickOutside(ref, () => closeSidebar());
   useEffect(() => {
-    closeBar();
-    //eslint-disable-next-line
+    closeSidebar();
+    console.log("closebar");
   }, [view]);
   useEffect(() => {
     setView(window.location.pathname);
-  }, []);
+  });
 
   return (
     <div
@@ -50,7 +51,7 @@ const Sidebar = ({ closeBar, count, open }) => {
     >
       <div className="flex items-center justify-center bg-blue-500 h-14 md:h-12 transition-all duration-200">
         <img src={logo} className="h-8 mr-1" alt="Logo" />
-        <p className="mr-3 text-2xl font-custom text-blue-50">VelcroUI</p>
+        <p className="mr-3 text-2xl font-websafe text-blue-50">VelcroUI</p>
       </div>
       <div>
         <Section sectionName="Tasks" />
@@ -59,7 +60,7 @@ const Sidebar = ({ closeBar, count, open }) => {
             className={getMenuStyle("/active")}
             onClick={() => setView("/active")}
           >
-            <IoArrowDownCircleSharp size={IconSize} className="w-8" />
+            <IoArrowDownCircleSharp size={IconSize} className="w-6 ml-1" />
             <p className="pl-2">
               Downloading
               {count.numActive > 0 ? " (" + count.numActive + ")" : ""}
@@ -71,7 +72,7 @@ const Sidebar = ({ closeBar, count, open }) => {
             className={getMenuStyle("/waiting")}
             onClick={() => setView("/waiting")}
           >
-            <IoPauseCircleSharp size={IconSize} className="w-8" />
+            <IoPauseCircleSharp size={IconSize} className="w-6 ml-1" />
             <p className="pl-2">
               Paused
               {count.numWaiting > 0 ? " (" + count.numWaiting + ")" : ""}
@@ -83,7 +84,7 @@ const Sidebar = ({ closeBar, count, open }) => {
             className={getMenuStyle("/stopped")}
             onClick={() => setView("/stopped")}
           >
-            <IoCheckmarkCircleSharp size={IconSize} className="w-8" />
+            <IoCheckmarkCircleSharp size={IconSize} className="w-6 ml-1" />
             <p className="pl-2">
               Finished / Stopped
               {count.numStopped > 0 ? " (" + count.numStopped + ")" : ""}
@@ -98,7 +99,7 @@ const Sidebar = ({ closeBar, count, open }) => {
             className={getMenuStyle("/settings")}
             onClick={() => setView("/settings")}
           >
-            <IoSettingsSharp size={IconSize - 3} className="w-8" />
+            <IoSettingsSharp size={IconSize - 3} className="w-6 ml-1" />
             <p className="pl-2">Settings</p>
           </div>
         </Link>
