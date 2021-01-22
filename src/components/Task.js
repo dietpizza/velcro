@@ -11,7 +11,7 @@ const Task = (props) => {
   let progress = getProgress(completedLength, totalLength, 1);
 
   const getStatus = () => {
-    if (errorCode !== undefined) return "Error";
+    if (errorCode !== undefined && errorCode !== "0") return "Error";
     else if (completedLength === totalLength) return "Completed";
     else return formatBytes(downloadSpeed, 2) + "/s";
   };
@@ -33,7 +33,7 @@ const Task = (props) => {
             style={{ width: progress }}
           ></div>
         </div>
-        <p className="w-10 font-bold text-right text-blue-500 md:w-12">
+        <p className="w-11 font-bold text-right text-blue-500 md:w-12">
           {progress}
         </p>
       </div>

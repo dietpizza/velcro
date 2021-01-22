@@ -34,6 +34,10 @@
 #root {
   height: var(--app-height);
 }
+.fill-screen {
+  height: auto;
+  max-height: calc(var(--app-height) - 1px);
+}
 
 * {
   -webkit-tap-highlight-color: transparent;
