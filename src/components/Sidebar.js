@@ -7,7 +7,7 @@ import {
   IoSettingsSharp,
 } from "react-icons/io5";
 
-import { getIconSize } from "../lib/util";
+import { IconSize } from "../lib/util";
 import logo from "../assets/velcro.svg";
 
 import { Link } from "react-router-dom";
@@ -59,7 +59,7 @@ const Sidebar = ({ closeBar, count, open }) => {
             className={getMenuStyle("/active")}
             onClick={() => setView("/active")}
           >
-            <IoArrowDownCircleSharp size={getIconSize()} className="w-8" />
+            <IoArrowDownCircleSharp size={IconSize} className="w-8" />
             <p className="pl-2">
               Downloading
               {count.numActive > 0 ? " (" + count.numActive + ")" : ""}
@@ -71,7 +71,7 @@ const Sidebar = ({ closeBar, count, open }) => {
             className={getMenuStyle("/waiting")}
             onClick={() => setView("/waiting")}
           >
-            <IoPauseCircleSharp size={getIconSize()} className="w-8" />
+            <IoPauseCircleSharp size={IconSize} className="w-8" />
             <p className="pl-2">
               Paused
               {count.numWaiting > 0 ? " (" + count.numWaiting + ")" : ""}
@@ -83,7 +83,7 @@ const Sidebar = ({ closeBar, count, open }) => {
             className={getMenuStyle("/stopped")}
             onClick={() => setView("/stopped")}
           >
-            <IoCheckmarkCircleSharp size={getIconSize()} className="w-8" />
+            <IoCheckmarkCircleSharp size={IconSize} className="w-8" />
             <p className="pl-2">
               Finished / Stopped
               {count.numStopped > 0 ? " (" + count.numStopped + ")" : ""}
@@ -98,7 +98,7 @@ const Sidebar = ({ closeBar, count, open }) => {
             className={getMenuStyle("/settings")}
             onClick={() => setView("/settings")}
           >
-            <IoSettingsSharp size={getIconSize() - 3} className="w-8" />
+            <IoSettingsSharp size={IconSize - 3} className="w-8" />
             <p className="pl-2">Settings</p>
           </div>
         </Link>

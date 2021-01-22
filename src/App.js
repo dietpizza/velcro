@@ -98,6 +98,7 @@ const App = () => {
       .listMethods()
       .then(() => {
         getData();
+        addAlert("Aria2 RPC connected!", 2000);
       })
       .catch(() => (flag = false));
     return flag;
