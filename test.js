@@ -1,0 +1,15 @@
+var regex = /^[0-9]+[kKmM]$/;
+console.log(regex.test("hello1900K"));
+console.log(regex.test("19b00K"));
+console.log(regex.test("190g0K"));
+console.log(regex.test("190_0K"));
+console.log(regex.test("kay1900m"));
+console.log(regex.test("19p00M"));
+console.log(regex.test("190f0m"));
+console.log(regex.test("190_0m"));
+console.log(regex.test("1900MM"));
+console.log(regex.test("1900KK"));
+console.log(regex.test("1900m"));
+console.log(regex.test("1900k"));
+console.log(regex.test("1900M"));
+console.log(regex.test("1900K"));
