@@ -18,6 +18,7 @@ const App = () => {
   const [sidebarStatus, setSidebarStatus] = useState(false);
   const [alerts, setAlerts] = useState([]);
   const [enableUpdate, setEnableUpdate] = useState(false);
+  const [aria2config, setAria2Config] = useState({});
   const [data, setData] = useState({
     active: [],
     waiting: [],
@@ -79,7 +80,7 @@ const App = () => {
         destroy={(id) => {
           setAlerts((oldAlerts) => oldAlerts.filter((el) => el.id !== id));
         }}
-        variant={alert.priority}
+        priority={alert.priority}
       />
     ));
   };
@@ -98,8 +99,9 @@ const App = () => {
   const testConnection = async () => {
     let flag = true;
     aria2
-      .listMethods()
-      .then(() => {
+      .call("aria2.getGlobalOption", [])
+      .then((aria2config) => {
+        setAria2Config(aria2config);
         getData();
         addAlert("Aria2 RPC connected! ", 3000, "info");
       })
@@ -154,7 +156,11 @@ const App = () => {
             <Route path="/waiting">{getTasks("waiting")}</Route>
             <Route path="/stopped">{getTasks("stopped")}</Route>
             <Route path="/new">
-              <NewDownload aria2={aria2} />
+              <NewDownload
+                aria2={aria2}
+                aria2config={aria2config}
+                getData={getData}
+              />
             </Route>
           </Switch>
           <Footer data={data.globalStat} />

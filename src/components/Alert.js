@@ -1,4 +1,4 @@
-const Alert = ({ id, content, timeout, destroy, variant: priority }) => {
+const Alert = ({ id, content, timeout, destroy, priority }) => {
   let alertStyle = "p-2 ml-auto fade-in bg-opacity-90 shadow border ";
   switch (priority) {
     case "info":

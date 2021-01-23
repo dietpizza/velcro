@@ -12,7 +12,8 @@ const Task = (props) => {
 
   const getStatus = () => {
     if (errorCode !== undefined && errorCode !== "0") return "Error";
-    else if (completedLength === totalLength) return "Completed";
+    else if (completedLength === totalLength && totalLength !== "0")
+      return "Completed";
     else return formatBytes(downloadSpeed, 2) + "/s";
   };
 

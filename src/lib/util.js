@@ -20,3 +20,16 @@ exports.getProgress = (completed, total, digits) => {
   if (isNaN(progress)) return "0%";
   else return progress + "%";
 };
+
+exports.isURL = (str) => {
+  return /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(str);
+};
+
+exports.isPath = (str) => {
+  return /^(\/([^/]+\/)*)(.*)$/.test(str);
+};
+
+exports.isSpeed = (str) => {
+  if (str === "0") return true;
+  else return /^[0-9]+[kKmM]$/.test(str);
+};

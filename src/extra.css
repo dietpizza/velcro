@@ -11,8 +11,7 @@
     opacity: 1;
   }
 }
-
-@keyframes fadeout {
+@-webkit-keyframes fadein {
   from {
     opacity: 0;
   }
@@ -31,11 +30,12 @@
 }
 
 .fade-in {
-  animation: fadein 0.2s;
+  animation: fadein 0.3s;
+  -webkit-animation: fadein 0.3s;
 }
 
 .fade-out {
-  animation: fadein 0.2s;
+  animation: fadein 0.3s;
 }
 
 .font-websafe {
