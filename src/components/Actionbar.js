@@ -22,10 +22,10 @@ const Actionbar = (props) => {
   return (
     <div className="flex items-center w-full px-1 text-gray-500 shadow space-x-3 md:space-x-2 h-14 md:h-12 transition-all duration-200">
       <div className="flex items-center md:hidden" onClick={props.openSidebar}>
-        <IoMenuSharp size={IconSize} className="ml-3 mr-4" />
+        <IoMenuSharp size={IconSize} className="ml-3 mr-4 cursor-pointer" />
         <Divider />
       </div>
-      <Link to="/add">
+      <Link to="/new">
         <div className="flex items-center pr-1 cursor-pointer space-x-1">
           <IoAddOutline size={IconSize + 2} />
           <p className="text-base md:text-sm">New</p>

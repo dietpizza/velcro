@@ -1,6 +1,6 @@
-const Alert = ({ id, content, timeout, destroy, variant }) => {
+const Alert = ({ id, content, timeout, destroy, variant: priority }) => {
   let alertStyle = "p-2 ml-auto fade-in bg-opacity-90 shadow border ";
-  switch (variant) {
+  switch (priority) {
     case "info":
       alertStyle += "border-blue-400 bg-blue-200 text-blue-600";
       break;
@@ -10,6 +10,8 @@ const Alert = ({ id, content, timeout, destroy, variant }) => {
     case "success":
       alertStyle += "border-green-400 bg-green-200 text-green-600";
       break;
+    default:
+      alertStyle += "border-gray-400 bg-gray-200 text-gray-600";
   }
   setTimeout(() => {
     destroy(id);

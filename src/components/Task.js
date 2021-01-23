@@ -17,12 +17,7 @@ const Task = (props) => {
   };
 
   return (
-    <div
-      className={
-        "items-center px-4 py-3 md:py-2 text-xs border-b border-blue-100 cursor-pointer grid grid-cols-2 md:grid-cols-16 " +
-        "gap-y-1 md:gap-x-4 hover:bg-blue-100 fade-in"
-      }
-    >
+    <div className="items-center px-4 py-3 text-xs text-gray-700 border-b border-gray-200 cursor-pointer md:py-2 grid grid-cols-2 md:grid-cols-16 gap-y-1 md:gap-x-4 fade-in">
       <p className="overflow-hidden text-sm md:text-xs md:col-span-9 col-span-2 whitespace-nowrap overflow-ellipsis">
         {getFilename(files[0])}
       </p>
@@ -33,7 +28,7 @@ const Task = (props) => {
             style={{ width: progress }}
           ></div>
         </div>
-        <p className="w-11 font-bold text-right text-blue-500 md:w-12">
+        <p className="font-bold text-right text-blue-500 w-11 md:w-12">
           {progress}
         </p>
       </div>

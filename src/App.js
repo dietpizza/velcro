@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import Aria2 from "aria2";
+import Interval from "react-interval";
 
 // Import components
 import Task from "./components/Task";
@@ -16,7 +17,8 @@ const App = () => {
   // Global State
   const [sidebarStatus, setSidebarStatus] = useState(false);
   const [alerts, setAlerts] = useState([]);
-  const [tasks, setTasks] = useState({
+  const [enableUpdate, setEnableUpdate] = useState(false);
+  const [data, setData] = useState({
     active: [],
     waiting: [],
     stopped: [],
@@ -30,16 +32,6 @@ const App = () => {
     path: "/jsonrpc",
   });
 
-  // Helper to store data in state
-  const setData = (data) => {
-    setTasks({
-      active: data[0][0],
-      waiting: data[1][0],
-      stopped: data[2][0],
-      globalStat: data[3][0],
-    });
-  };
-
   // Fetch data from aria2 rpc server
   const getData = async () => {
     const calls = [
@@ -48,16 +40,29 @@ const App = () => {
       ["tellStopped", 0, 999],
       ["getGlobalStat"],
     ];
-    const data = await aria2.multicall(calls);
-    setData(data);
+    aria2
+      .batch(calls)
+      .then((promises) => {
+        Promise.all(promises)
+          .then((result) => {
+            setData({
+              active: result[0],
+              waiting: result[1],
+              stopped: result[2],
+              globalStat: result[3],
+            });
+          })
+          .catch(() => console.log("One or more calls failed"));
+      })
+      .catch(() => console.log("Batch call failed"));
   };
 
   // Get taskview
   const getTasks = (view) => {
     return (
-      <div className="flex flex-col flex-grow h-32 overflow-y-auto">
+      <div className="flex flex-col flex-grow h-0 overflow-y-auto">
         <Header />
-        {tasks[view].map((el) => (
+        {data[view].map((el) => (
           <Task key={el.gid} data={el} />
         ))}
       </div>
@@ -71,7 +76,9 @@ const App = () => {
         key={alert.id}
         id={alert.id}
         timeout={alert.timeout}
-        destroy={removeAlert}
+        destroy={(id) => {
+          setAlerts((oldAlerts) => oldAlerts.filter((el) => el.id !== id));
+        }}
         variant={alert.priority}
       />
     ));
@@ -85,10 +92,6 @@ const App = () => {
       ...oldAlerts,
       { content, id, timeout, priority },
     ]);
-  };
-
-  const removeAlert = (id) => {
-    setAlerts((oldAlerts) => oldAlerts.filter((el) => el.id !== id));
   };
 
   // Run a test call to check connectivity
@@ -120,36 +123,41 @@ const App = () => {
     let interval;
     sidebarMonitor();
     window.addEventListener("resize", sidebarMonitor);
-    testConnection().then((val) => {
-      if (val) interval = setInterval(getData, 1000);
+    testConnection().then((isConnected) => {
+      if (isConnected) setEnableUpdate(true);
     });
 
     return () => {
+      setEnableUpdate(false);
       clearInterval(interval);
     };
     //eslint-disable-next-line
   }, []);
 
   return (
-    <div className="flex h-full fade-in">
+    <div className="flex h-full fade-in font-websafe ">
+      <Interval callback={getData} timeout={1000} enabled={enableUpdate} />
       <AlertStack>{getAlerts()}</AlertStack>
       <Sidebar
         open={sidebarStatus}
         closeSidebar={() => setSidebarStatus(false)}
-        count={tasks.globalStat}
+        count={data.globalStat}
       />
       <div className="flex flex-col flex-grow ml-0 md:ml-56">
         <div className="flex flex-col justify-between flex-grow">
           <Actionbar openSidebar={() => setSidebarStatus(true)} />
+          <Route path="/" exact>
+            <Redirect to="/active" />
+          </Route>
           <Switch>
             <Route path="/active">{getTasks("active")}</Route>
             <Route path="/waiting">{getTasks("waiting")}</Route>
             <Route path="/stopped">{getTasks("stopped")}</Route>
-            <Route path="/add">
-              <NewDownload />
+            <Route path="/new">
+              <NewDownload aria2={aria2} />
             </Route>
           </Switch>
-          <Footer data={tasks.globalStat} />
+          <Footer data={data.globalStat} />
         </div>
       </div>
     </div>
