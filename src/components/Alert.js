@@ -1,13 +1,24 @@
-const Alert = ({ id, content, timeout, destroy }) => {
+const Alert = ({ id, content, timeout, destroy, priority }) => {
+  let alertStyle = "p-2 ml-auto fade-in bg-opacity-90 shadow border ";
+  switch (priority) {
+    case "info":
+      alertStyle += "border-blue-400 bg-blue-200 text-blue-600";
+      break;
+    case "critical":
+      alertStyle += "border-red-400 bg-red-200 text-red-600";
+      break;
+    case "success":
+      alertStyle += "border-green-400 bg-green-200 text-green-600";
+      break;
+    default:
+      alertStyle += "border-gray-400 bg-gray-200 text-gray-600";
+  }
   setTimeout(() => {
     destroy(id);
   }, timeout);
-
   return (
-    <div className="right-0 flex text-xs font-medium text-gray-600 fade-in justify-items-end">
-      <div className="p-2 ml-auto bg-blue-200 border border-blue-400 opacity-80 shadow">
-        {content}
-      </div>
+    <div className="right-0 flex text-xs font-medium justify-items-end">
+      <div className={alertStyle}>{content}</div>
     </div>
   );
 };

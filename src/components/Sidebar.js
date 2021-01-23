@@ -24,22 +24,24 @@ const Sidebar = ({ closeSidebar, count, open }) => {
   const [view, setView] = useState("");
   const ref = useRef(null);
 
-  const MENU_STYLE =
-    "flex items-center w-full h-12 px-2 text-sm font-websafe text-gray-300 " +
-    "cursor-pointer justify-items-start hover:bg-gray-600 " +
-    "border-b border-gray-700";
   const getMenuStyle = (path) => {
-    return MENU_STYLE + (path === view ? " bg-gray-600" : "");
+    return (
+      "flex items-center w-full h-12 px-2 text-sm font-websafe text-gray-300 " +
+      "cursor-pointer justify-items-start hover:bg-gray-600 " +
+      "border-b border-gray-700" +
+      (path === view ? " bg-gray-600" : "")
+    );
+  };
+  const selectMenu = (path) => {
+    closeSidebar();
+    setView(path);
+    //eslint-disable-next-line
   };
 
   useOnClickOutside(ref, () => closeSidebar());
   useEffect(() => {
-    closeSidebar();
-    console.log("closebar");
-  }, [view]);
-  useEffect(() => {
     setView(window.location.pathname);
-  });
+  }, []);
 
   return (
     <div
@@ -58,7 +60,7 @@ const Sidebar = ({ closeSidebar, count, open }) => {
         <Link to="/active">
           <div
             className={getMenuStyle("/active")}
-            onClick={() => setView("/active")}
+            onClick={() => selectMenu("/active")}
           >
             <IoArrowDownCircleSharp size={IconSize} className="w-6 ml-1" />
             <p className="pl-2">
@@ -70,7 +72,7 @@ const Sidebar = ({ closeSidebar, count, open }) => {
         <Link to="/waiting">
           <div
             className={getMenuStyle("/waiting")}
-            onClick={() => setView("/waiting")}
+            onClick={() => selectMenu("/waiting")}
           >
             <IoPauseCircleSharp size={IconSize} className="w-6 ml-1" />
             <p className="pl-2">
@@ -82,7 +84,7 @@ const Sidebar = ({ closeSidebar, count, open }) => {
         <Link to="/stopped">
           <div
             className={getMenuStyle("/stopped")}
-            onClick={() => setView("/stopped")}
+            onClick={() => selectMenu("/stopped")}
           >
             <IoCheckmarkCircleSharp size={IconSize} className="w-6 ml-1" />
             <p className="pl-2">
@@ -97,7 +99,7 @@ const Sidebar = ({ closeSidebar, count, open }) => {
         <Link to="/settings">
           <div
             className={getMenuStyle("/settings")}
-            onClick={() => setView("/settings")}
+            onClick={() => selectMenu("/settings")}
           >
             <IoSettingsSharp size={IconSize - 3} className="w-6 ml-1" />
             <p className="pl-2">Settings</p>
