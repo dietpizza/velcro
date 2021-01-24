@@ -12,6 +12,7 @@ import Footer from "./components/Footer";
 import Alert from "./components/Alert";
 import AlertStack from "./components/AlertStack";
 import NewDownload from "./components/NewDownload";
+import Loading from "./components/Loading";
 
 const App = () => {
   // Global State
@@ -19,6 +20,7 @@ const App = () => {
   const [alerts, setAlerts] = useState([]);
   const [enableUpdate, setEnableUpdate] = useState(false);
   const [aria2config, setAria2Config] = useState({});
+  const [isLoading, setIsLoading] = useState("true");
   const [data, setData] = useState({
     active: [],
     waiting: [],
@@ -41,31 +43,35 @@ const App = () => {
       ["tellStopped", 0, 999],
       ["getGlobalStat"],
     ];
-    aria2
-      .batch(calls)
-      .then((promises) => {
-        Promise.all(promises)
-          .then((result) => {
-            setData({
-              active: result[0],
-              waiting: result[1],
-              stopped: result[2],
-              globalStat: result[3],
-            });
-          })
-          .catch(() => console.log("One or more calls failed"));
-      })
-      .catch(() => console.log("Batch call failed"));
+    try {
+      const promises = await aria2.batch(calls);
+      const result = await Promise.all(promises);
+      setData({
+        active: result[0],
+        waiting: result[1],
+        stopped: result[2],
+        globalStat: result[3],
+      });
+    } catch (err) {
+      addAlert(
+        "Aria2 RPC disconnected! Please refresh the page",
+        1000,
+        "critical"
+      );
+      setEnableUpdate(false);
+    }
   };
 
   // Get taskview
   const getTasks = (view) => {
     return (
       <div className="flex flex-col flex-grow h-0 overflow-y-auto">
-        <Header />
-        {data[view].map((el) => (
-          <Task key={el.gid} data={el} />
-        ))}
+        {isLoading ? "" : <Header />}
+        {isLoading ? (
+          <Loading />
+        ) : (
+          data[view].map((el) => <Task key={el.gid} data={el} />)
+        )}
       </div>
     );
   };
@@ -96,16 +102,22 @@ const App = () => {
   };
 
   // Run a test call to check connectivity
-  const testConnection = async () => {
+  const getAria2Settings = async () => {
     let flag = true;
-    aria2
-      .call("aria2.getGlobalOption", [])
-      .then((aria2config) => {
-        setAria2Config(aria2config);
-        getData();
-        addAlert("Aria2 RPC connected! ", 3000, "info");
-      })
-      .catch(() => (flag = false));
+    try {
+      const aria2config = await aria2.call("aria2.getGlobalOption", []);
+      setAria2Config(aria2config);
+      getData();
+      setIsLoading(false);
+      addAlert("Aria2 RPC connected! ", 3000, "info");
+    } catch (err) {
+      addAlert(
+        "Aria2 RPC connection failed. Please refresh the page.",
+        1000,
+        "critical"
+      );
+      flag = false;
+    }
     return flag;
   };
 
@@ -125,7 +137,7 @@ const App = () => {
     let interval;
     sidebarMonitor();
     window.addEventListener("resize", sidebarMonitor);
-    testConnection().then((isConnected) => {
+    getAria2Settings().then((isConnected) => {
       if (isConnected) setEnableUpdate(true);
     });
 
@@ -156,11 +168,16 @@ const App = () => {
             <Route path="/waiting">{getTasks("waiting")}</Route>
             <Route path="/stopped">{getTasks("stopped")}</Route>
             <Route path="/new">
-              <NewDownload
-                aria2={aria2}
-                aria2config={aria2config}
-                getData={getData}
-              />
+              {isLoading ? (
+                <Loading />
+              ) : (
+                <NewDownload
+                  aria2={aria2}
+                  aria2config={aria2config}
+                  getData={getData}
+                  addAlert={addAlert}
+                />
+              )}
             </Route>
           </Switch>
           <Footer data={data.globalStat} />

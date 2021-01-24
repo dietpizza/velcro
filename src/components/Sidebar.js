@@ -52,7 +52,7 @@ const Sidebar = ({ closeSidebar, count, open }) => {
       }
     >
       <div className="flex items-center justify-center bg-blue-500 h-14 md:h-12 transition-all duration-200">
-        <img src={logo} className="h-8 mr-1" alt="Logo" />
+        <img src={logo} className="w-8 h-8 mr-1" alt="Logo" />
         <p className="mr-3 text-2xl font-websafe text-blue-50">VelcroUI</p>
       </div>
       <div>

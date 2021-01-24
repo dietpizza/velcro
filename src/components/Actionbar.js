@@ -20,7 +20,7 @@ const Divider = () => {
 
 const Actionbar = (props) => {
   return (
-    <div className="flex items-center w-full px-1 text-gray-500 shadow space-x-3 md:space-x-2 h-14 md:h-12 transition-all duration-200">
+    <div className="flex items-center flex-shrink-0 w-full px-1 text-gray-500 shadow space-x-3 md:space-x-2 h-14 md:h-12 transition-all duration-200">
       <div className="flex items-center md:hidden" onClick={props.openSidebar}>
         <IoMenuSharp size={IconSize} className="ml-3 mr-4 cursor-pointer" />
         <Divider />
