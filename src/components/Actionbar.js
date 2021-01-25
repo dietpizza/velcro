@@ -8,7 +8,7 @@ import {
   IoFunnel,
 } from "react-icons/io5";
 
-import { IconSize } from "../lib/util";
+import { getIconSize } from "../lib/util";
 
 import { Link } from "react-router-dom";
 
@@ -18,29 +18,47 @@ const Divider = () => {
   );
 };
 
-const Actionbar = (props) => {
+const Actionbar = ({ openSidebar, clearSelected }) => {
   return (
-    <div className="flex items-center flex-shrink-0 w-full px-1 text-gray-500 shadow space-x-3 md:space-x-2 h-14 md:h-12 transition-all duration-200">
-      <div className="flex items-center md:hidden" onClick={props.openSidebar}>
-        <IoMenuSharp size={IconSize} className="ml-3 mr-4 cursor-pointer" />
+    <div className="z-20 flex items-center flex-shrink-0 w-full px-1 text-gray-500 shadow select-none space-x-3 md:space-x-2 h-14 md:h-12 transition-all duration-200">
+      <div className="flex items-center md:hidden" onClick={openSidebar}>
+        <IoMenuSharp
+          size={getIconSize()}
+          className="ml-3 mr-4 cursor-pointer hover:text-blue-500"
+        />
         <Divider />
       </div>
-      <Link to="/new">
-        <div className="flex items-center pr-1 cursor-pointer space-x-1">
-          <IoAddOutline size={IconSize + 2} />
+      <Link to="/new" onClick={clearSelected}>
+        <div className="flex items-center pr-1 cursor-pointer space-x-1 hover:text-blue-500">
+          <IoAddOutline size={getIconSize() + 2} />
           <p className="text-base md:text-sm">New</p>
         </div>
       </Link>
       <Divider />
       <div className="flex items-center justify-between space-x-2">
-        <IoPause size={IconSize} className="cursor-pointer" />
-        <IoPlay size={IconSize - 4} className="cursor-pointer" />
-        <IoTrash size={IconSize - 5} className="cursor-pointer" />
+        <IoPause
+          size={getIconSize()}
+          className="cursor-pointer hover:text-blue-500"
+        />
+        <IoPlay
+          size={getIconSize() - 4}
+          className="cursor-pointer hover:text-blue-500"
+        />
+        <IoTrash
+          size={getIconSize() - 5}
+          className="cursor-pointer hover:text-blue-500"
+        />
       </div>
       <Divider />
       <div className="flex items-center justify-between pl-1 space-x-3 md:space-x-2">
-        <IoGrid size={IconSize - 6} className="cursor-pointer" />
-        <IoFunnel size={IconSize - 6} className="cursor-pointer" />
+        <IoGrid
+          size={getIconSize() - 6}
+          className="cursor-pointer hover:text-blue-500"
+        />
+        <IoFunnel
+          size={getIconSize() - 6}
+          className="cursor-pointer hover:text-blue-500"
+        />
       </div>
     </div>
   );

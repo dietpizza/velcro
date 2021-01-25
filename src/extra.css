@@ -3,7 +3,7 @@
   overscroll-behavior: none;
 }
 
-@keyframes fadein {
+@keyframes fadeIn {
   from {
     opacity: 0;
   }
@@ -11,12 +11,63 @@
     opacity: 1;
   }
 }
-@-webkit-keyframes fadein {
+@-webkit-keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+@-webkit-keyframes slideDown {
+  0% {
+    -webkit-transform: translateY(-100%);
+  }
+  100% {
+    -webkit-transform: translateY(0%);
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+@-webkit-keyframes slideUp {
+  0% {
+    -webkit-transform: translateY(0%);
+  }
+  100% {
+    -webkit-transform: translateY(-100%);
   }
 }
 
@@ -25,17 +76,26 @@
 }
 
 .fill-screen {
-  height: auto;
-  max-height: calc(var(--app-height) - 1px);
+  height: calc(var(--app-height) - 1px);
 }
 
 .fade-in {
-  animation: fadein 0.3s;
-  -webkit-animation: fadein 0.3s;
+  animation: fadeIn 0.3s;
+  -webkit-animation: fadeIn 0.3s;
 }
 
 .fade-out {
-  animation: fadein 0.3s;
+  animation: fadeOut 0.3s;
+  -webkit-animation: fadeOut 0.3s;
+}
+
+.slide-down {
+  animation: slideDown 0.3s;
+  -webkit-animation: slideDown 0.3s;
+}
+.slide-up {
+  animation: slideUp 0.3s;
+  -webkit-animation: slideUp 0.3s;
 }
 
 .font-websafe {

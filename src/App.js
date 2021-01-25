@@ -16,11 +16,16 @@ import Loading from "./components/Loading";
 
 const App = () => {
   // Global State
+  const [selected, setSelected] = useState([]);
+  const selectTask = (gid, op) => {
+    if (op) setSelected([...selected, gid]);
+    else setSelected(selected.filter((el) => el !== gid));
+  };
   const [sidebarStatus, setSidebarStatus] = useState(false);
   const [alerts, setAlerts] = useState([]);
   const [enableUpdate, setEnableUpdate] = useState(false);
   const [aria2config, setAria2Config] = useState({});
-  const [isLoading, setIsLoading] = useState("true");
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({
     active: [],
     waiting: [],
@@ -65,13 +70,16 @@ const App = () => {
   // Get taskview
   const getTasks = (view) => {
     return (
-      <div className="flex flex-col flex-grow h-0 overflow-y-auto">
-        {isLoading ? "" : <Header />}
-        {isLoading ? (
-          <Loading />
-        ) : (
-          data[view].map((el) => <Task key={el.gid} data={el} />)
-        )}
+      <div className="w-full">
+        <Header />
+        {data[view].map((el) => (
+          <Task
+            key={el.gid}
+            data={el}
+            selected={selected.includes(el.gid)}
+            selectTask={selectTask}
+          />
+        ))}
       </div>
     );
   };
@@ -92,8 +100,10 @@ const App = () => {
   };
 
   // Alert mechanism
-  const addAlert = (content, timeout, priority) => {
+  const addAlert = (content, priority, timeout) => {
     const id = Math.random().toString(16).substring(7);
+    if (priority === undefined) priority = "info";
+    if (timeout === undefined) timeout = 3000;
     if (priority === "critical") timeout = 20000;
     setAlerts((oldAlerts) => [
       ...oldAlerts,
@@ -109,13 +119,13 @@ const App = () => {
       setAria2Config(aria2config);
       getData();
       setIsLoading(false);
-      addAlert("Aria2 RPC connected! ", 3000, "info");
+      addAlert("Aria2 RPC connected! ");
     } catch (err) {
       addAlert(
         "Aria2 RPC connection failed. Please refresh the page.",
-        1000,
         "critical"
       );
+      setIsLoading(false);
       flag = false;
     }
     return flag;
@@ -140,6 +150,9 @@ const App = () => {
     getAria2Settings().then((isConnected) => {
       if (isConnected) setEnableUpdate(true);
     });
+    setTimeout(() => {
+      addAlert("Dummy");
+    }, 2000);
 
     return () => {
       setEnableUpdate(false);
@@ -149,37 +162,40 @@ const App = () => {
   }, []);
 
   return (
-    <div className="flex h-full fade-in font-websafe ">
+    <div className="flex h-full fade-in font-websafe">
       <Interval callback={getData} timeout={1000} enabled={enableUpdate} />
       <AlertStack>{getAlerts()}</AlertStack>
       <Sidebar
         open={sidebarStatus}
         closeSidebar={() => setSidebarStatus(false)}
         count={data.globalStat}
+        clearSelected={() => setSelected([])}
       />
       <div className="flex flex-col flex-grow ml-0 md:ml-56">
         <div className="flex flex-col justify-between flex-grow">
-          <Actionbar openSidebar={() => setSidebarStatus(true)} />
-          <Route path="/" exact>
-            <Redirect to="/active" />
-          </Route>
-          <Switch>
-            <Route path="/active">{getTasks("active")}</Route>
-            <Route path="/waiting">{getTasks("waiting")}</Route>
-            <Route path="/stopped">{getTasks("stopped")}</Route>
-            <Route path="/new">
-              {isLoading ? (
-                <Loading />
-              ) : (
+          <Actionbar
+            openSidebar={() => setSidebarStatus(true)}
+            clearSelected={() => setSelected([])}
+          />
+          <div className="relative flex flex-col items-center flex-grow h-0 overflow-y-auto fade-in">
+            <Loading show={isLoading} />
+            <Switch>
+              <Route path="/" exact>
+                <Redirect to="/active" />
+              </Route>
+              <Route path="/active">{getTasks("active")}</Route>
+              <Route path="/waiting">{getTasks("waiting")}</Route>
+              <Route path="/stopped">{getTasks("stopped")}</Route>
+              <Route path="/new">
                 <NewDownload
                   aria2={aria2}
                   aria2config={aria2config}
                   getData={getData}
                   addAlert={addAlert}
                 />
-              )}
-            </Route>
-          </Switch>
+              </Route>
+            </Switch>
+          </div>
           <Footer data={data.globalStat} />
         </div>
       </div>

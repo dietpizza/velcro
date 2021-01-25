@@ -1,13 +1,14 @@
 import { formatBytes, getProgress, getFilename } from "../lib/util";
 
-const Task = (props) => {
+const Task = ({ data, selected, selectTask }) => {
   const {
+    gid,
     errorCode,
     totalLength,
     completedLength,
     downloadSpeed,
     files,
-  } = props.data;
+  } = data;
   let progress = getProgress(completedLength, totalLength, 1);
 
   const getStatus = () => {
@@ -16,10 +17,17 @@ const Task = (props) => {
       return "Completed";
     else return formatBytes(downloadSpeed, 2) + "/s";
   };
+  const taskStyle =
+    "items-center p-2 text-xs text-gray-700 border-b border-gray-200 cursor-pointer md:px-4 grid grid-cols-2 md:grid-cols-16 gap-y-1 md:gap-x-4 fade-in";
+  const metaStyle = "pr-1 text-xs text-gray-500 md:hidden";
 
   return (
-    <div className="items-center p-2 text-xs text-gray-700 border-b border-gray-200 cursor-pointer md:px-4 grid grid-cols-2 md:grid-cols-16 gap-y-1 md:gap-x-4 fade-in">
+    <div
+      className={taskStyle + (selected ? " bg-blue-100 border-blue-200" : "")}
+      onClick={() => selectTask(gid, !selected)}
+    >
       <p className="overflow-hidden text-sm md:text-xs md:col-span-9 col-span-2 whitespace-nowrap overflow-ellipsis">
+        <span className={metaStyle}>Name:</span>
         {getFilename(files[0])}
       </p>
       <div className="relative flex items-center col-span-2 md:col-span-3">
@@ -34,11 +42,11 @@ const Task = (props) => {
         </p>
       </div>
       <p className="col-span-1 md:col-span-2">
-        <span className="inline-block pr-1 md:hidden">Size:</span>
+        <span className={metaStyle}>Size:</span>
         {formatBytes(totalLength, 2)}
       </p>
       <p className="text-right md:text-left col-span-1 md:col-span-2">
-        <span className="inline-block pr-1 md:hidden">Status:</span>
+        <span className={metaStyle}>Status:</span>
         {getStatus()}
       </p>
     </div>

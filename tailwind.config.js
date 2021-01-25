@@ -19,6 +19,9 @@ module.exports = {
         15: "repeat(15, minmax(0, 1fr))",
         16: "repeat(16, minmax(0, 1fr))",
       },
+      animation: {
+        "spin-slow": "spin 1s ease-in-out infinite",
+      },
     },
   },
   variants: {

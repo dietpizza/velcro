@@ -7,7 +7,7 @@ import {
   IoSettingsSharp,
 } from "react-icons/io5";
 
-import { IconSize } from "../lib/util";
+import { getIconSize } from "../lib/util";
 import logo from "../assets/velcro.svg";
 
 import { Link } from "react-router-dom";
@@ -20,13 +20,13 @@ const Section = ({ sectionName }) => {
   );
 };
 
-const Sidebar = ({ closeSidebar, count, open }) => {
+const Sidebar = ({ closeSidebar, count, open, clearSelected }) => {
   const [view, setView] = useState("");
   const ref = useRef(null);
 
   const getMenuStyle = (path) => {
     return (
-      "flex items-center w-full h-12 px-2 text-sm font-websafe text-gray-300 " +
+      "flex items-center w-full h-12 px-2 font-websafe text-sm text-gray-300 " +
       "cursor-pointer justify-items-start hover:bg-gray-600 " +
       "border-b border-gray-700" +
       (path === view ? " bg-gray-600" : "")
@@ -34,8 +34,8 @@ const Sidebar = ({ closeSidebar, count, open }) => {
   };
   const selectMenu = (path) => {
     closeSidebar();
+    if (view !== path) clearSelected();
     setView(path);
-    //eslint-disable-next-line
   };
 
   useOnClickOutside(ref, () => closeSidebar());
@@ -47,7 +47,7 @@ const Sidebar = ({ closeSidebar, count, open }) => {
     <div
       ref={ref}
       className={
-        "fixed z-10 h-full overflow-auto bg-gray-700 shadow-lg transition duration-200 transform-gpu w-56 ease-in-out " +
+        "fixed z-30 h-full overflow-auto bg-gray-700 transition duration-200 transform-gpu w-56 ease-in-out select-none shadow " +
         (open ? "translate-x-0" : "-translate-x-full md:translate-x-0")
       }
     >
@@ -62,10 +62,10 @@ const Sidebar = ({ closeSidebar, count, open }) => {
             className={getMenuStyle("/active")}
             onClick={() => selectMenu("/active")}
           >
-            <IoArrowDownCircleSharp size={IconSize} className="w-6 ml-1" />
+            <IoArrowDownCircleSharp size={getIconSize()} className="ml-1" />
             <p className="pl-2">
               Downloading
-              {count.numActive > 0 ? " (" + count.numActive + ")" : ""}
+              {count.numActive > 0 ? ` (${count.numActive})` : ""}
             </p>
           </div>
         </Link>
@@ -74,10 +74,10 @@ const Sidebar = ({ closeSidebar, count, open }) => {
             className={getMenuStyle("/waiting")}
             onClick={() => selectMenu("/waiting")}
           >
-            <IoPauseCircleSharp size={IconSize} className="w-6 ml-1" />
+            <IoPauseCircleSharp size={getIconSize()} className="ml-1" />
             <p className="pl-2">
               Paused
-              {count.numWaiting > 0 ? " (" + count.numWaiting + ")" : ""}
+              {count.numWaiting > 0 ? ` (${count.numWaiting})` : ""}
             </p>
           </div>
         </Link>
@@ -86,10 +86,10 @@ const Sidebar = ({ closeSidebar, count, open }) => {
             className={getMenuStyle("/stopped")}
             onClick={() => selectMenu("/stopped")}
           >
-            <IoCheckmarkCircleSharp size={IconSize} className="w-6 ml-1" />
+            <IoCheckmarkCircleSharp size={getIconSize()} className="ml-1" />
             <p className="pl-2">
               Finished / Stopped
-              {count.numStopped > 0 ? " (" + count.numStopped + ")" : ""}
+              {count.numStopped > 0 ? ` (${count.numStopped})` : ""}
             </p>
           </div>
         </Link>
@@ -101,7 +101,7 @@ const Sidebar = ({ closeSidebar, count, open }) => {
             className={getMenuStyle("/settings")}
             onClick={() => selectMenu("/settings")}
           >
-            <IoSettingsSharp size={IconSize - 3} className="w-6 ml-1" />
+            <IoSettingsSharp size={getIconSize() - 3} className="ml-1" />
             <p className="pl-2">Settings</p>
           </div>
         </Link>

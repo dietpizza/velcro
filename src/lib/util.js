@@ -1,4 +1,7 @@
-exports.IconSize = 24;
+exports.getIconSize = () => {
+  if (window.innerWidth < 720) return 28;
+  else return 24;
+};
 exports.formatBytes = (bytes, decimals) => {
   if (bytes === 0 || bytes === "0" || isNaN(bytes)) return "0 B";
   var k = 1024;
@@ -22,7 +25,7 @@ exports.getProgress = (completed, total, digits) => {
 };
 
 exports.isURL = (str) => {
-  return /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(str);
+  return /^(?:\w+:)?\/\/([^\s.]+\.\S{2})\S*$/.test(str);
 };
 
 exports.isPath = (str) => {
@@ -31,5 +34,5 @@ exports.isPath = (str) => {
 
 exports.isSpeed = (str) => {
   if (str === "0") return true;
-  else return /^[0-9]+[kKmM]$/.test(str);
+  else return /^[0-9]+[kKmM]?$/.test(str);
 };
