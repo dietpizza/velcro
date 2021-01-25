@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { isURL, isPath, isSpeed } from "../lib/util";
+import { read, write } from "clipboardy";
 
 const InputField = ({ text, children }) => {
   return (
@@ -37,8 +38,7 @@ const NewDownload = ({ aria2, aria2config, getData, addAlert }) => {
     if (enableDownload) {
       aria2
         .call("addUri", [config.url], config)
-        .then((gid) => {
-          console.log(gid);
+        .then(() => {
           if (config.dir !== aria2config.dir)
             localStorage.setItem("lastDir", config.dir);
           else localStorage.removeItem("lastDir");
@@ -46,6 +46,7 @@ const NewDownload = ({ aria2, aria2config, getData, addAlert }) => {
           else localStorage.removeItem("lastFile");
           getData();
           addAlert("Download Added", "success");
+          write("");
           history.push("/active");
         })
         .catch(() => {
@@ -71,6 +72,11 @@ const NewDownload = ({ aria2, aria2config, getData, addAlert }) => {
       addAlert("Aria2 RPC not connected! Redirecting to Downloads");
       history.push("/active");
     }
+    read().then((text) => {
+      if (isURL(text)) {
+        setConfig({ url: text });
+      }
+    });
     //eslint-disable-next-line
   }, []);
 
@@ -81,6 +87,7 @@ const NewDownload = ({ aria2, aria2config, getData, addAlert }) => {
           <input
             type="url"
             className={inputStyle}
+            defaultValue={config.url !== undefined ? config.url : ""}
             placeholder="Eg.- https://speed.hetzner.de/100MB.bin"
             onChange={(e) => {
               setConfig({ url: e.target.value.trim() });
@@ -134,7 +141,7 @@ const NewDownload = ({ aria2, aria2config, getData, addAlert }) => {
             className={inputStyle}
             placeholder={
               config["max-download-limit"] === "0"
-                ? "None (You can append K or M too...)"
+                ? "None (you can append K or M too...)"
                 : config["max-download-limit"]
             }
             onChange={(e) => {
@@ -171,13 +178,13 @@ const NewDownload = ({ aria2, aria2config, getData, addAlert }) => {
             onClick={() => {
               if (window.confirm("Discard Data?")) history.goBack();
             }}
-            className="px-4 py-2 font-medium text-red-500 bg-red-200 border-red-500 md:font-bold focus:outline-none"
+            className="px-4 py-2 font-medium text-red-500 bg-red-200 border border-red-400 md:font-bold focus:outline-none"
           >
             Discard
           </button>
           <button
             disabled={!enableDownload}
-            className="px-4 py-2 font-medium text-blue-500 bg-blue-200 border-blue-500 md:font-bold focus:outline-none disabled:opacity-50"
+            className="px-4 py-2 font-medium text-blue-600 bg-blue-200 border border-blue-500 md:font-bold focus:outline-none disabled:opacity-50"
             type="submit"
           >
             Download

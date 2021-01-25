@@ -11,7 +11,7 @@ const Alert = ({ id, content, timeout, destroy, priority }) => {
         setStyle((a) => a + "border-red-300 bg-red-200 text-red-500");
         break;
       case "success":
-        setStyle((a) => a + "border-green-300 bg-green-100 text-green-500");
+        setStyle((a) => a + "border-green-300 bg-green-100 text-green-600");
         break;
       default:
         setStyle((a) => a + "border-blue-300 bg-blue-100 text-blue-500");

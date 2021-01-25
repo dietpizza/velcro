@@ -80,22 +80,22 @@
 }
 
 .fade-in {
-  animation: fadeIn 0.3s;
-  -webkit-animation: fadeIn 0.3s;
+  animation: fadeIn 200ms;
+  -webkit-animation: fadeIn 200ms;
 }
 
 .fade-out {
-  animation: fadeOut 0.3s;
-  -webkit-animation: fadeOut 0.3s;
+  animation: fadeOut 200ms;
+  -webkit-animation: fadeOut 200ms;
 }
 
 .slide-down {
-  animation: slideDown 0.3s;
-  -webkit-animation: slideDown 0.3s;
+  animation: slideDown 200ms;
+  -webkit-animation: slideDown 200ms;
 }
 .slide-up {
-  animation: slideUp 0.3s;
-  -webkit-animation: slideUp 0.3s;
+  animation: slideUp 200ms;
+  -webkit-animation: slideUp 200ms;
 }
 
 .font-websafe {

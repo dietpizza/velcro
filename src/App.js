@@ -141,18 +141,16 @@ const App = () => {
       setSidebarStatus(false);
     }
   };
-
   // componentDidMount using useEffect
   useEffect(() => {
     let interval;
     sidebarMonitor();
     window.addEventListener("resize", sidebarMonitor);
     getAria2Settings().then((isConnected) => {
-      if (isConnected) setEnableUpdate(true);
+      if (isConnected) {
+        setEnableUpdate(true);
+      }
     });
-    setTimeout(() => {
-      addAlert("Dummy");
-    }, 2000);
 
     return () => {
       setEnableUpdate(false);
