@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { Redirect, Route, Switch, useHistory } from "react-router-dom";
+import { isURL } from "./lib/util";
+import { read } from "clipboardy";
 import Aria2 from "aria2";
 import Interval from "react-interval";
 
 // Import components
+import { confirm } from "./components/Confirm";
 import Task from "./components/Task";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
@@ -32,6 +35,8 @@ const App = () => {
     stopped: [],
     globalStat: [],
   });
+  const lastLink = useRef("");
+  const history = useHistory();
 
   // Connect to aria2 jsonrpc interface
   const aria2 = new Aria2({
@@ -51,6 +56,7 @@ const App = () => {
     try {
       const promises = await aria2.batch(calls);
       const result = await Promise.all(promises);
+      result[2].reverse();
       setData({
         active: result[0],
         waiting: result[1],
@@ -67,7 +73,18 @@ const App = () => {
     }
   };
 
-  // Get taskview
+  const selectAll = (op) => {
+    if (op) {
+      const path = window.location.pathname;
+      if (path === "/active") setSelected(data.active.map((el) => el.gid));
+      if (path === "/waiting") setSelected(data.waiting.map((el) => el.gid));
+      if (path === "/stopped") setSelected(data.stopped.map((el) => el.gid));
+    } else {
+      setSelected([]);
+    }
+  };
+
+  // Get tasks
   const getTasks = (view) => {
     return (
       <div className="w-full">
@@ -83,7 +100,7 @@ const App = () => {
       </div>
     );
   };
-
+  // Get alerts
   const getAlerts = () => {
     return alerts.map((alert) => (
       <Alert
@@ -149,9 +166,24 @@ const App = () => {
     getAria2Settings().then((isConnected) => {
       if (isConnected) {
         setEnableUpdate(true);
+        if (window.location.host.includes("localhost")) {
+          read().then((link) => {
+            if (lastLink.current !== link && isURL(link)) {
+              history.push("/new");
+              lastLink.current = link;
+            }
+          });
+          window.addEventListener("focus", () => {
+            read().then((link) => {
+              if (lastLink.current !== link && isURL(link)) {
+                history.push("/new");
+                lastLink.current = link;
+              }
+            });
+          });
+        }
       }
     });
-
     return () => {
       setEnableUpdate(false);
       clearInterval(interval);
@@ -160,7 +192,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="flex h-full fade-in font-websafe">
+    <div className="relative flex h-full fade-in font-websafe">
       <Interval callback={getData} timeout={1000} enabled={enableUpdate} />
       <AlertStack>{getAlerts()}</AlertStack>
       <Sidebar
@@ -174,8 +206,12 @@ const App = () => {
           <Actionbar
             openSidebar={() => setSidebarStatus(true)}
             clearSelected={() => setSelected([])}
+            selected={selected}
+            aria2={aria2}
+            getData={getData}
+            selectAll={selectAll}
           />
-          <div className="relative flex flex-col items-center flex-grow h-0 overflow-y-auto fade-in">
+          <div className="flex flex-col items-center flex-grow h-0 overflow-y-auto fade-in">
             <Loading show={isLoading} />
             <Switch>
               <Route path="/" exact>

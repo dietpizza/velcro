@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { isURL, isPath, isSpeed } from "../lib/util";
 import { read, write } from "clipboardy";
+import { confirm } from "./Confirm";
 
 const InputField = ({ text, children }) => {
   return (
@@ -21,12 +22,8 @@ const NewDownload = ({ aria2, aria2config, getData, addAlert }) => {
   const history = useHistory();
 
   const [enableDownload, setEnableDownload] = useState(false);
-  const [config, _setConfig] = useState({
-    split: aria2config.split,
-    dir: lastDir !== null ? lastDir : aria2config.dir,
-    "force-save": aria2config["force-save"],
-    "max-download-limit": aria2config["max-download-limit"],
-  });
+  const [config, _setConfig] = useState({});
+  const [loaded, setLoaded] = useState(0);
 
   const setConfig = (property) => {
     _setConfig((oldConfig) => {
@@ -68,15 +65,25 @@ const NewDownload = ({ aria2, aria2config, getData, addAlert }) => {
   }, [config]);
 
   useEffect(() => {
-    if (config.dir === undefined) {
-      addAlert("Aria2 RPC not connected! Redirecting to Downloads");
-      history.push("/active");
+    if (loaded < 2) {
+      setConfig({
+        split: aria2config.split,
+        dir: lastDir !== null ? lastDir : aria2config.dir,
+        "force-save": aria2config["force-save"],
+        "max-download-limit": aria2config["max-download-limit"],
+      });
     }
-    read().then((text) => {
-      if (isURL(text)) {
-        setConfig({ url: text });
-      }
-    });
+    setLoaded(loaded + 1);
+    //eslint-disable-next-line
+  }, [aria2config]);
+
+  useEffect(() => {
+    if (window.location.hostname === "localhost" && document.hasFocus())
+      read().then((text) => {
+        if (isURL(text)) {
+          setConfig({ url: text });
+        }
+      });
     //eslint-disable-next-line
   }, []);
 
@@ -141,7 +148,7 @@ const NewDownload = ({ aria2, aria2config, getData, addAlert }) => {
             className={inputStyle}
             placeholder={
               config["max-download-limit"] === "0"
-                ? "None (you can append K or M too...)"
+                ? "None"
                 : config["max-download-limit"]
             }
             onChange={(e) => {
@@ -175,8 +182,14 @@ const NewDownload = ({ aria2, aria2config, getData, addAlert }) => {
         </InputField>
         <div className="flex justify-start px-2 py-2 select-none md:px-4 space-x-2">
           <button
-            onClick={() => {
-              if (window.confirm("Discard Data?")) history.goBack();
+            onClick={(e) => {
+              e.preventDefault();
+              confirm({
+                message: "Entered data will be lost.",
+                title: "Discard?",
+                actionText: "Discard",
+                cancelText: "Cancel",
+              });
             }}
             className="px-4 py-2 font-medium text-red-500 bg-red-200 border border-red-400 md:font-bold focus:outline-none"
           >

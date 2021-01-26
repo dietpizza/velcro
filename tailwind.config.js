@@ -22,11 +22,19 @@ module.exports = {
       animation: {
         "spin-slow": "spin 1s ease-in-out infinite",
       },
+      spacing: {
+        108: "27rem",
+        120: "30rem",
+        132: "33rem",
+        144: "36rem",
+        156: "39rem",
+      },
     },
   },
   variants: {
     extend: {
       opacity: ["disabled"],
+      textColor: ["disabled", "active"],
     },
   },
 
