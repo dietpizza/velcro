@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import { isURL } from "./lib/util";
 import { read } from "clipboardy";
-import Aria2 from "aria2";
 import Interval from "react-interval";
+import Aria2 from "aria2";
 
 // Import components
 import Task from "./components/Task";
@@ -165,20 +165,24 @@ const App = () => {
     getAria2Settings().then((isConnected) => {
       if (isConnected) {
         setEnableUpdate(true);
-        if (window.location.host.includes("localhost")) {
-          read().then((link) => {
-            if (lastLink.current !== link && isURL(link)) {
-              history.push("/new");
-              lastLink.current = link;
-            }
-          });
-          window.addEventListener("focus", () => {
-            read().then((link) => {
+        if (document.hasFocus()) {
+          read()
+            .then((link) => {
               if (lastLink.current !== link && isURL(link)) {
                 history.push("/new");
                 lastLink.current = link;
               }
-            });
+            })
+            .catch(() => {});
+          window.addEventListener("focus", () => {
+            read()
+              .then((link) => {
+                if (lastLink.current !== link && isURL(link)) {
+                  history.push("/new");
+                  lastLink.current = link;
+                }
+              })
+              .catch(() => {});
           });
         }
       }
@@ -191,7 +195,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="relative flex h-full fade-in font-websafe">
+    <div className="relative flex h-full font-websafe fade-in">
       <Interval callback={getData} timeout={1000} enabled={enableUpdate} />
       <AlertStack>{getAlerts()}</AlertStack>
       <Sidebar
@@ -210,7 +214,7 @@ const App = () => {
             getData={getData}
             selectAll={selectAll}
           />
-          <div className="flex flex-col items-center flex-grow h-0 overflow-y-auto fade-in">
+          <div className="relative flex flex-col items-center flex-grow h-0 overflow-y-auto">
             <Loading show={isLoading} />
             <Switch>
               <Route path="/" exact>

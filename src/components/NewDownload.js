@@ -78,12 +78,14 @@ const NewDownload = ({ aria2, aria2config, getData, addAlert }) => {
   }, [aria2config]);
 
   useEffect(() => {
-    if (window.location.hostname === "localhost" && document.hasFocus())
-      read().then((text) => {
-        if (isURL(text)) {
-          setConfig({ url: text });
-        }
-      });
+    if (document.hasFocus())
+      read()
+        .then((text) => {
+          if (isURL(text)) {
+            setConfig({ url: text });
+          }
+        })
+        .catch(() => {});
     //eslint-disable-next-line
   }, []);
 
@@ -189,15 +191,17 @@ const NewDownload = ({ aria2, aria2config, getData, addAlert }) => {
                 title: "Discard?",
                 actionText: "Discard",
                 cancelText: "Cancel",
+              }).then((val) => {
+                if (val) history.push("/active");
               });
             }}
-            className="px-4 py-2 font-medium text-red-500 bg-red-200 border border-red-400 md:font-bold focus:outline-none"
+            className="px-4 py-1.5 font-medium text-red-500 bg-red-200 border border-red-400 md:font-bold focus:outline-none"
           >
-            Discard
+            Cancel
           </button>
           <button
             disabled={!enableDownload}
-            className="px-4 py-2 font-medium text-blue-600 bg-blue-200 border border-blue-500 md:font-bold focus:outline-none disabled:opacity-50"
+            className="px-4 py-1.5 font-medium text-blue-600 bg-blue-200 border border-blue-500 md:font-bold focus:outline-none disabled:opacity-50"
             type="submit"
           >
             Download

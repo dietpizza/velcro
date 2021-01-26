@@ -46,11 +46,9 @@ const Actionbar = ({
         getData();
       })
       .catch((err) => console.log(err));
-    console.log(calls);
   };
   useEffect(() => {
     if (selected.length === 0) setAll(true);
-    console.log("Hello");
   }, [selected]);
 
   return (
@@ -118,8 +116,11 @@ const Actionbar = ({
         <button
           className={buttonStyle}
           onClick={() => {
-            selectAll(all);
-            setAll(!all);
+            if (selected.length === 1) selectAll(false);
+            else {
+              selectAll(all);
+              setAll(!all);
+            }
           }}
         >
           <IoGrid size={getIconSize() - 6} />

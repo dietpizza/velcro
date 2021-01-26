@@ -10,7 +10,6 @@
     "aria2": "^4.1.2",
     "clipboardy": "^2.3.0",
     "react": "^17.0.1",
-    "react-confirm": "^0.1.20",
     "react-dom": "^17.0.1",
     "react-icons": "^4.1.0",
     "react-interval": "^2.1.1",

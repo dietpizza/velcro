@@ -15,7 +15,7 @@ const Loading = ({ show }) => {
         else if (!show) setRender(true);
       }}
     >
-      <div className="flex items-center px-4 py-2 bg-blue-100 border border-t-0 border-blue-300 shadow rounded-bl-md rounded-br-md">
+      <div className="z-10 flex items-center px-4 py-2 bg-blue-100 border border-t-0 border-blue-300 shadow rounded-bl-md rounded-br-md">
         <svg
           className="w-4 h-4 mr-1 -ml-1 text-white text-blue-500 animate-spin-slow"
           xmlns="http://www.w3.org/2000/svg"

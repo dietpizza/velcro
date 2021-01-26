@@ -1,16 +1,14 @@
-import { useEffect, useRef, useState } from "react";
-import useOnClickOutside from "use-onclickoutside";
 import {
   IoArrowDownCircleSharp,
   IoCheckmarkCircleSharp,
   IoPauseCircleSharp,
   IoSettingsSharp,
 } from "react-icons/io5";
-
-import { getIconSize } from "../lib/util";
-import logo from "../assets/velcro.svg";
-
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { getIconSize } from "../lib/util";
+import useOnClickOutside from "use-onclickoutside";
+import logo from "../assets/velcro.svg";
 
 const Section = ({ sectionName }) => {
   return (
