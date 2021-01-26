@@ -6,7 +6,6 @@ import Aria2 from "aria2";
 import Interval from "react-interval";
 
 // Import components
-import { confirm } from "./components/Confirm";
 import Task from "./components/Task";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
