@@ -9,19 +9,22 @@ import { Link } from "react-router-dom";
 import { getIconSize } from "../lib/util";
 import useOnClickOutside from "use-onclickoutside";
 import logo from "../assets/velcro.svg";
+import { useSelector, useDispatch } from "react-redux";
+import { actions } from "../redux";
 
 const Section = ({ sectionName }) => {
   return (
-    <p className="px-3 py-1 text-xs text-gray-400 bg-gray-600 border-b border-gray-700">
+    <p className="px-3 py-1 text-xs text-gray-200 bg-gray-600 border-b border-gray-700">
       {sectionName}
     </p>
   );
 };
 
-const Sidebar = ({ closeSidebar, count, open, clearSelected }) => {
+const Sidebar = ({ count }) => {
+  const dispatch = useDispatch();
   const [view, setView] = useState("");
+  const sidebarStatus = useSelector((state) => state.sidebarStatus);
   const ref = useRef(null);
-
   const getMenuStyle = (path) => {
     return (
       "flex items-center w-full h-12 px-2 font-websafe text-sm text-gray-300 " +
@@ -31,27 +34,30 @@ const Sidebar = ({ closeSidebar, count, open, clearSelected }) => {
     );
   };
   const selectMenu = (path) => {
-    closeSidebar();
-    if (view !== path) clearSelected();
+    dispatch({ type: actions.closeSidebar });
+    if (view !== path) {
+      dispatch({ type: actions.setSelected, payload: [] });
+    }
     setView(path);
   };
 
-  useOnClickOutside(ref, () => closeSidebar());
+  useOnClickOutside(ref, () => dispatch({ type: actions.closeSidebar }));
   useEffect(() => {
-    setView(window.location.pathname);
-  }, []);
+    const path = window.location.pathname;
+    if (view !== path) setView(path);
+  });
 
   return (
     <div
       ref={ref}
       className={
         "fixed z-30 h-full overflow-auto bg-gray-700 transition duration-200 transform-gpu w-56 ease-in-out select-none shadow " +
-        (open ? "translate-x-0" : "-translate-x-full md:translate-x-0")
+        (sidebarStatus ? "translate-x-0" : "-translate-x-full md:translate-x-0")
       }
     >
-      <div className="flex items-center justify-center bg-blue-500 h-14 md:h-12 transition-all duration-200">
+      <div className="flex items-center justify-center bg-blue-600 h-14 md:h-12 transition-all duration-200">
         <img src={logo} className="w-8 h-8 mr-1" alt="Logo" />
-        <p className="mr-3 text-2xl font-websafe text-blue-50">VelcroUI</p>
+        <p className="mr-3 text-2xl text-white font-websafe">VelcroUI</p>
       </div>
       <div>
         <Section sectionName="Tasks" />

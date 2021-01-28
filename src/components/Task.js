@@ -1,6 +1,8 @@
 import { formatBytes, getProgress, getFilename } from "../lib/util";
+import { useSelector, useDispatch } from "react-redux";
+import { actions } from "../redux";
 
-const Task = ({ data, selected, selectTask }) => {
+const Task = ({ data }) => {
   const {
     gid,
     errorCode,
@@ -10,6 +12,8 @@ const Task = ({ data, selected, selectTask }) => {
     files,
   } = data;
   let progress = getProgress(completedLength, totalLength, 1);
+  const dispatch = useDispatch();
+  const selected = useSelector((state) => state.selected);
 
   const getStatus = () => {
     if (errorCode !== undefined && errorCode !== "0") return "Error";
@@ -18,13 +22,21 @@ const Task = ({ data, selected, selectTask }) => {
     else return formatBytes(downloadSpeed, 2) + "/s";
   };
   const taskStyle =
-    "items-center p-2 text-xs text-gray-700 border-b border-gray-200 cursor-pointer md:px-4 grid grid-cols-2 md:grid-cols-16 gap-y-1 md:gap-x-4 fade-in";
+    "items-center p-2 text-xs text-gray-700 border-b border-gray-200 cursor-pointer md:px-4 grid grid-cols-2 md:grid-cols-16 gap-y-1 md:gap-x-4 fade-in w-full";
   const metaStyle = "pr-1 text-xs text-gray-500 md:hidden";
 
   return (
     <div
-      className={taskStyle + (selected ? " bg-blue-100 border-blue-200" : "")}
-      onClick={() => selectTask(gid, !selected)}
+      className={
+        taskStyle +
+        (selected.includes(gid) ? " bg-blue-100 border-blue-200" : "")
+      }
+      onClick={() =>
+        dispatch({
+          type: actions.selectTask,
+          payload: { gid, op: !selected.includes(gid) },
+        })
+      }
     >
       <p className="overflow-hidden text-sm md:text-xs md:col-span-9 col-span-2 whitespace-nowrap overflow-ellipsis">
         <span className={metaStyle}>Name:</span>

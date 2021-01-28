@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { isURL, isPath, isSpeed } from "../lib/util";
+import addAlert from "../lib/addAlert";
 import { read, write } from "clipboardy";
 import { confirm } from "./Confirm";
+import { shallowEqual, useSelector, useDispatch } from "react-redux";
+import { actions } from "../redux";
 
 const InputField = ({ text, children }) => {
   return (
@@ -13,13 +16,15 @@ const InputField = ({ text, children }) => {
   );
 };
 
-const NewDownload = ({ aria2, aria2config, getData, addAlert }) => {
+const NewDownload = (aria2, getData) => {
   const lastDir = localStorage.getItem("lastDir");
   const lastFile = localStorage.getItem("lastFile");
   const inputStyle =
     "w-full p-2 border border-gray-300 outline-none resize-none md:py-1 focus:border-blue-300";
 
   const history = useHistory();
+  const aria2config = useSelector((state) => state.aria2config, shallowEqual);
+  const dispatch = useDispatch();
 
   const [enableDownload, setEnableDownload] = useState(false);
   const [config, _setConfig] = useState({});
@@ -42,12 +47,16 @@ const NewDownload = ({ aria2, aria2config, getData, addAlert }) => {
           if (config.out) localStorage.setItem("lastFile", config.out);
           else localStorage.removeItem("lastFile");
           getData();
-          addAlert("Download Added", "success");
-          write("");
+          addAlert({ dispatch, content: "Download added!" });
+          write(null);
           history.push("/active");
         })
         .catch(() => {
-          addAlert("Failed to add download", "critical");
+          addAlert({
+            dispatch,
+            content: "Failed to add download",
+            priority: "critical",
+          });
         });
     }
   };

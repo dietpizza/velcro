@@ -1,5 +1,4 @@
 import {
-  IoGrid,
   IoPlay,
   IoTrash,
   IoPause,
@@ -8,9 +7,12 @@ import {
 } from "react-icons/io5";
 
 import { getIconSize } from "../lib/util";
+import addAlert from "../lib/addAlert";
 
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { actions } from "../redux";
 
 import { confirm } from "./Confirm";
 
@@ -20,36 +22,56 @@ const Divider = () => {
   );
 };
 
-const Actionbar = ({
-  openSidebar,
-  clearSelected,
-  aria2,
-  selected,
-  getData,
-  selectAll,
-}) => {
+const Actionbar = ({ aria2, getData }) => {
   const buttonStyle =
     "focus:outline-none disabled:text-gray-300 active:text-blue-500";
-  const history = useHistory();
-  const [all, setAll] = useState(true);
+  const [view, setView] = useState("");
 
-  const getDisabled = (path) => {
-    return path === undefined
-      ? false
-      : selected.length === 0 || window.location.pathname !== path;
+  const dispatch = useDispatch();
+  const selected = useSelector((state) => state.selected);
+  const data = useSelector((state) => state.data);
+
+  const getIndex = () => {
+    const path = window.location.pathname;
+    let index = -1;
+    if (path === "/active") index = 0;
+    if (path === "/waiting") index = 1;
+    if (path === "/stopped") index = 2;
+    return index;
   };
+  const filterSelected = () => {
+    const path = window.location.pathname;
+    let index = getIndex();
+    let tmpSel = [];
+    if (index >= 0 && selected.length > 0) {
+      const arr = data[path.substring(1)].map((e) => e.gid);
+      tmpSel = selected.filter((e) => arr.includes(e));
+      dispatch({ type: actions.setSelected, payload: [] });
+    }
+    return tmpSel;
+  };
+
   const action = (op) => {
-    let calls = selected.map((el) => [op, el]);
-    aria2
-      .multicall(calls)
-      .then(() => {
-        getData();
-      })
-      .catch((err) => console.log(err));
+    let calls = filterSelected().map((el) => [op, el]);
+    if (calls.length > 0)
+      aria2
+        .multicall(calls)
+        .then(() => {
+          getData();
+        })
+        .catch(() =>
+          addAlert({
+            dispatch,
+            content: "Operation failed",
+            priority: "critical",
+          })
+        );
   };
+
   useEffect(() => {
-    if (selected.length === 0) setAll(true);
-  }, [selected]);
+    const path = window.location.pathname;
+    if (view !== path) setView(path);
+  });
 
   return (
     <div
@@ -58,37 +80,43 @@ const Actionbar = ({
         " md:space-x-2 h-14 md:h-12 transition-all duration-200"
       }
     >
-      <div className="flex items-center md:hidden" onClick={openSidebar}>
+      <div
+        className="flex items-center md:hidden"
+        onClick={() => dispatch({ type: actions.openSidebar })}
+      >
         <IoMenuSharp
           size={getIconSize()}
           className="ml-3 mr-4 cursor-pointer active:text-blue-500"
         />
         <Divider />
       </div>
-      <Link to="/new" onClick={clearSelected}>
-        <div className="flex items-center pr-1 cursor-pointer space-x-1 hover:text-blue-500">
-          <IoAddSharp size={getIconSize() + 2} />
-          <p className="text-base md:text-sm">New</p>
+      <Link to="/new">
+        <div className="pr-2 cursor-pointer hover:text-blue-500">
+          <button
+            disabled={view === "/new"}
+            className={buttonStyle + " flex items-center"}
+          >
+            <IoAddSharp size={getIconSize() + 2} />
+            <p className="text-base md:text-sm">New</p>
+          </button>
         </div>
       </Link>
       <Divider />
       <div className="flex items-center justify-between space-x-3">
         <button
-          disabled={getDisabled("/active")}
+          disabled={view !== "/active" || selected.length < 1}
           className={buttonStyle}
           onClick={() => {
             action("pause");
-            history.push("/waiting");
           }}
         >
           <IoPause size={getIconSize()} />
         </button>
         <button
-          disabled={getDisabled("/waiting")}
+          disabled={view !== "/waiting" || selected.length < 1}
           className={buttonStyle}
           onClick={() => {
             action("unpause");
-            history.push("/active");
           }}
         >
           <IoPlay size={getIconSize() - 4} />
@@ -112,18 +140,6 @@ const Actionbar = ({
           }}
         >
           <IoTrash size={getIconSize() - 5} />
-        </button>
-        <button
-          className={buttonStyle}
-          onClick={() => {
-            if (selected.length === 1) selectAll(false);
-            else {
-              selectAll(all);
-              setAll(!all);
-            }
-          }}
-        >
-          <IoGrid size={getIconSize() - 6} />
         </button>
       </div>
     </div>
