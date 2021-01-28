@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { isURL, isPath, isSpeed } from "../lib/util";
 import addAlert from "../lib/addAlert";
 import { read, write } from "clipboardy";
 import { confirm } from "./Confirm";
-import { shallowEqual, useSelector, useDispatch } from "react-redux";
-import { actions } from "../redux";
+import { useSelector, useDispatch } from "react-redux";
 
 const InputField = ({ text, children }) => {
   return (
@@ -22,13 +21,13 @@ const NewDownload = (aria2, getData) => {
   const inputStyle =
     "w-full p-2 border border-gray-300 outline-none resize-none md:py-1 focus:border-blue-300";
 
-  const history = useHistory();
-  const aria2config = useSelector((state) => state.aria2config, shallowEqual);
-  const dispatch = useDispatch();
-
-  const [enableDownload, setEnableDownload] = useState(false);
+  const enableDownload = useRef(false);
+  const loaded = useRef(0);
   const [config, _setConfig] = useState({});
-  const [loaded, setLoaded] = useState(0);
+
+  const history = useHistory();
+  const aria2config = useSelector((state) => state.aria2config);
+  const dispatch = useDispatch();
 
   const setConfig = (property) => {
     _setConfig((oldConfig) => {
@@ -37,28 +36,26 @@ const NewDownload = (aria2, getData) => {
   };
   const addUri = (e) => {
     e.preventDefault();
-    if (enableDownload) {
-      aria2
-        .call("addUri", [config.url], config)
-        .then(() => {
-          if (config.dir !== aria2config.dir)
-            localStorage.setItem("lastDir", config.dir);
-          else localStorage.removeItem("lastDir");
-          if (config.out) localStorage.setItem("lastFile", config.out);
-          else localStorage.removeItem("lastFile");
-          getData();
-          addAlert({ dispatch, content: "Download added!" });
-          write(null);
-          history.push("/active");
-        })
-        .catch(() => {
-          addAlert({
-            dispatch,
-            content: "Failed to add download",
-            priority: "critical",
-          });
+    aria2
+      .call("addUri", [config.url], config)
+      .then(() => {
+        if (config.dir !== aria2config.dir)
+          localStorage.setItem("lastDir", config.dir);
+        else localStorage.removeItem("lastDir");
+        if (config.out) localStorage.setItem("lastFile", config.out);
+        else localStorage.removeItem("lastFile");
+        getData();
+        addAlert({ dispatch, content: "Download added!" });
+        write(null);
+        history.push("/active");
+      })
+      .catch(() => {
+        addAlert({
+          dispatch,
+          content: "Failed to add download",
+          priority: "critical",
         });
-    }
+      });
   };
 
   useEffect(() => {
@@ -69,12 +66,12 @@ const NewDownload = (aria2, getData) => {
       isPath(config.dir) &&
       isSpeed(config["max-download-limit"])
     )
-      setEnableDownload(true);
-    else setEnableDownload(false);
+      enableDownload.current = true;
+    else enableDownload.current = false;
   }, [config]);
 
   useEffect(() => {
-    if (loaded < 2) {
+    if (loaded.current < 2) {
       setConfig({
         split: aria2config.split,
         dir: lastDir !== null ? lastDir : aria2config.dir,
@@ -82,7 +79,7 @@ const NewDownload = (aria2, getData) => {
         "max-download-limit": aria2config["max-download-limit"],
       });
     }
-    setLoaded(loaded + 1);
+    loaded.current += 1;
     //eslint-disable-next-line
   }, [aria2config]);
 
@@ -209,7 +206,7 @@ const NewDownload = (aria2, getData) => {
             Cancel
           </button>
           <button
-            disabled={!enableDownload}
+            disabled={!enableDownload.current}
             className="px-4 py-1.5 font-medium text-blue-600 bg-blue-200 border border-blue-500 md:font-bold focus:outline-none disabled:opacity-50"
             type="submit"
           >

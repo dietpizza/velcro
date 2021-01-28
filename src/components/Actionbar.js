@@ -9,8 +9,7 @@ import {
 import { getIconSize } from "../lib/util";
 import addAlert from "../lib/addAlert";
 
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../redux";
 
@@ -24,30 +23,19 @@ const Divider = () => {
 
 const Actionbar = ({ aria2, getData }) => {
   const buttonStyle =
-    "focus:outline-none disabled:text-gray-300 active:text-blue-500";
-  const [view, setView] = useState("");
+    "focus:outline-none disabled:text-gray-300 active:text-blue-500 transition-all duration-200 ease-in-out";
+  const iconStyle = "transition-all duration-200 ease-in-out";
 
   const dispatch = useDispatch();
+  const path = useLocation();
   const selected = useSelector((state) => state.selected);
   const data = useSelector((state) => state.data);
 
-  const getIndex = () => {
-    const path = window.location.pathname;
-    let index = -1;
-    if (path === "/active") index = 0;
-    if (path === "/waiting") index = 1;
-    if (path === "/stopped") index = 2;
-    return index;
-  };
   const filterSelected = () => {
-    const path = window.location.pathname;
-    let index = getIndex();
     let tmpSel = [];
-    if (index >= 0 && selected.length > 0) {
-      const arr = data[path.substring(1)].map((e) => e.gid);
-      tmpSel = selected.filter((e) => arr.includes(e));
-      dispatch({ type: actions.setSelected, payload: [] });
-    }
+    const arr = data[path.substring(1)].map((e) => e.gid);
+    tmpSel = selected.filter((e) => arr.includes(e));
+    dispatch({ type: actions.setSelected, payload: [] });
     return tmpSel;
   };
 
@@ -68,58 +56,50 @@ const Actionbar = ({ aria2, getData }) => {
         );
   };
 
-  useEffect(() => {
-    const path = window.location.pathname;
-    if (view !== path) setView(path);
-  });
-
   return (
-    <div
-      className={
-        "z-20 flex items-center flex-shrink-0 w-full px-1 text-gray-500 shadow select-none space-x-3" +
-        " md:space-x-2 h-14 md:h-12 transition-all duration-200"
-      }
-    >
+    <div className="z-20 flex items-center flex-shrink-0 w-full px-1 text-gray-500 shadow select-none space-x-3 md:space-x-2 h-14 md:h-12">
       <div
-        className="flex items-center md:hidden"
+        className="flex items-center md:hidden fade-in"
         onClick={() => dispatch({ type: actions.openSidebar })}
       >
         <IoMenuSharp
           size={getIconSize()}
-          className="ml-3 mr-4 cursor-pointer active:text-blue-500"
+          className={"ml-3 mr-4 cursor-pointer " + iconStyle}
         />
         <Divider />
       </div>
       <Link to="/new">
-        <div className="pr-2 cursor-pointer hover:text-blue-500">
+        <div
+          className={"pr-2 cursor-pointer active:text-blue-500 " + iconStyle}
+        >
           <button
-            disabled={view === "/new"}
+            disabled={path === "/new"}
             className={buttonStyle + " flex items-center"}
           >
             <IoAddSharp size={getIconSize() + 2} />
-            <p className="text-base md:text-sm">New</p>
+            <p className="text-base md:text-sm fade-in">New</p>
           </button>
         </div>
       </Link>
       <Divider />
       <div className="flex items-center justify-between space-x-3">
         <button
-          disabled={view !== "/active" || selected.length < 1}
+          disabled={path !== "/active" || selected.length < 1}
           className={buttonStyle}
           onClick={() => {
             action("pause");
           }}
         >
-          <IoPause size={getIconSize()} />
+          <IoPause size={getIconSize()} className={iconStyle} />
         </button>
         <button
-          disabled={view !== "/waiting" || selected.length < 1}
+          disabled={path !== "/waiting" || selected.length < 1}
           className={buttonStyle}
           onClick={() => {
             action("unpause");
           }}
         >
-          <IoPlay size={getIconSize() - 4} />
+          <IoPlay size={getIconSize() - 4} className={iconStyle} />
         </button>
         <button
           className={buttonStyle}
@@ -132,14 +112,13 @@ const Actionbar = ({ aria2, getData }) => {
               cancelText: "Cancel",
             }).then((res) => {
               if (res) {
-                if (window.location.pathname === "/stopped")
-                  action("removeDownloadResult");
+                if (path === "/stopped") action("removeDownloadResult");
                 else action("remove");
               }
             });
           }}
         >
-          <IoTrash size={getIconSize() - 5} />
+          <IoTrash size={getIconSize() - 5} className={iconStyle} />
         </button>
       </div>
     </div>

@@ -1,15 +1,24 @@
 import { useState, useEffect, useRef } from "react";
-import { Redirect, Route, Switch, useHistory } from "react-router-dom";
-import { shallowEqual, useSelector, useDispatch } from "react-redux";
-import { actions } from "./redux";
-
+import {
+  Redirect,
+  Route,
+  Switch,
+  useHistory,
+  useLocation,
+} from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { read } from "clipboardy";
-import Interval from "react-interval";
+import { useWindowSize } from "@react-hook/window-size";
+
 import Aria2 from "aria2";
+import useWindowFocus from "use-window-focus";
+
 import { isURL } from "./lib/util";
+import { actions } from "./redux";
 import addAlert from "./lib/addAlert";
 
 // Import components
+import Interval from "react-interval";
 import TaskView from "./components/TaskView";
 import Sidebar from "./components/Sidebar";
 import Actionbar from "./components/Actionbar";
@@ -20,21 +29,22 @@ import Loading from "./components/Loading";
 
 const App = () => {
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.data, shallowEqual);
 
   const [enableUpdate, setEnableUpdate] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const lastLink = useRef("");
-  const history = useHistory();
+  const link = useRef(null);
 
-  // Connect to aria2 jsonrpc interface
+  const history = useHistory();
+  const location = useLocation();
+  const windowFocus = useWindowFocus();
+  const [width, height] = useWindowSize({ wait: 50 });
+
   const aria2 = new Aria2({
     host: window.location.hostname,
     port: 6800,
     path: "/jsonrpc",
   });
 
-  // Fetch data from aria2 rpc server
   const getData = async () => {
     const calls = [
       ["tellActive"],
@@ -46,72 +56,68 @@ const App = () => {
       const result = await Promise.all(await aria2.batch(calls));
       dispatch({ type: actions.setData, payload: result });
     } catch (err) {
+      setEnableUpdate(false);
       addAlert({
         dispatch,
         content: "Aria2 RPC disconnected! Please refresh the page",
         timeout: 1000,
         priority: "critical",
       });
-      setEnableUpdate(false);
     }
   };
 
-  // Run a test call to check connectivity
-  const getAria2Settings = async () => {
+  const testConnection = async () => {
     let flag = true;
     try {
       const config = await aria2.call("aria2.getGlobalOption", []);
-      dispatch({ type: actions.aria2config, payload: config });
-      getData();
       setIsLoading(false);
+      getData();
+      dispatch({ type: actions.aria2config, payload: config });
       addAlert({ dispatch, content: "Aria2 RPC connected!" });
     } catch (err) {
+      setIsLoading(false);
       addAlert({
         dispatch,
         content: "Aria2 RPC connection failed. Please refresh the page.",
         priority: "critical",
       });
-      setIsLoading(false);
       flag = false;
     }
     return flag;
   };
 
-  // Close sidebar if window resized to smaller width (Mobile friendly layout)
-  const sidebarMonitor = function () {
-    document.documentElement.style.setProperty(
-      "--app-height",
-      window.innerHeight + "px"
-    );
-    if (window.innerWidth < 720) {
+  useEffect(() => {
+    if (windowFocus)
+      read()
+        .then((text) => {
+          if (text !== link.current && isURL(text)) {
+            history.push("/new");
+            link.current = text;
+          }
+        })
+        .catch(() => {});
+    //eslint-disable-next-line
+  }, [windowFocus]);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty("--app-height", height + "px");
+    if (width < 720) {
       dispatch({ type: actions.closeSidebar });
     }
-  };
+    //eslint-disable-next-line
+  }, [width, height]);
 
-  const grabUrl = () => {
-    read()
-      .then((link) => {
-        if (lastLink.current !== link && isURL(link)) {
-          history.push("/new");
-          lastLink.current = link;
-        }
-      })
-      .catch(() => {});
-  };
-  // componentDidMount using useEffect
+  useEffect(() => {
+    dispatch({ type: actions.setPath, payload: location.pathname });
+    //eslint-disable-next-line
+  }, [location]);
+
   useEffect(() => {
     let interval;
-    sidebarMonitor();
-    window.addEventListener("resize", sidebarMonitor);
-    getAria2Settings().then((isConnected) => {
+    testConnection().then((isConnected) => {
       if (isConnected) {
         setEnableUpdate(true);
-        grabUrl();
-        window.addEventListener("focus", grabUrl);
       }
-    });
-    history.listen((location) => {
-      dispatch({ type: actions.setPath, payload: location.pathname });
     });
     return () => {
       setEnableUpdate(false);
@@ -124,9 +130,9 @@ const App = () => {
     <div className="relative flex h-full font-websafe fade-in">
       <Interval callback={getData} timeout={1000} enabled={enableUpdate} />
       <AlertStack />
-      <Sidebar count={data.globalStat} />
-      <div className="flex flex-col flex-grow ml-0 md:ml-56">
-        <div className="flex flex-col justify-between flex-grow">
+      <Sidebar />
+      <div className="flex flex-col flex-grow ml-0 md:ml-56 fade-in">
+        <div className="flex flex-col justify-between flex-grow fade-in">
           <Actionbar aria2={aria2} getData={() => getData()} />
           <div className="relative flex flex-col items-center flex-grow h-0 overflow-y-auto">
             <Loading show={isLoading} />
@@ -148,7 +154,7 @@ const App = () => {
               </Route>
             </Switch>
           </div>
-          <Footer data={data.globalStat} />
+          <Footer />
         </div>
       </div>
     </div>

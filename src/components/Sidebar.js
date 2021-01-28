@@ -4,13 +4,15 @@ import {
   IoPauseCircleSharp,
   IoSettingsSharp,
 } from "react-icons/io5";
-import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import { getIconSize } from "../lib/util";
-import useOnClickOutside from "use-onclickoutside";
-import logo from "../assets/velcro.svg";
+import { useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { actions } from "../redux";
+import { getIconSize } from "../lib/util";
+
+import useOnClickOutside from "use-onclickoutside";
+
+import logo from "../assets/velcro.svg";
 
 const Section = ({ sectionName }) => {
   return (
@@ -20,32 +22,31 @@ const Section = ({ sectionName }) => {
   );
 };
 
-const Sidebar = ({ count }) => {
+const Sidebar = () => {
+  const iconStyle = "transition-all duration-200 ease-in-out";
+
   const dispatch = useDispatch();
-  const [view, setView] = useState("");
+  const path = useLocation();
   const sidebarStatus = useSelector((state) => state.sidebarStatus);
-  const ref = useRef(null);
-  const getMenuStyle = (path) => {
+  const count = useSelector((state) => state.data.globalStat);
+
+  const getMenuStyle = (id) => {
     return (
       "flex items-center w-full h-12 px-2 font-websafe text-sm text-gray-300 " +
       "cursor-pointer justify-items-start hover:bg-gray-600 " +
       "border-b border-gray-700" +
-      (path === view ? " bg-gray-600" : "")
+      (id === path ? " bg-gray-600" : "")
     );
   };
-  const selectMenu = (path) => {
+  const selectMenu = (id) => {
     dispatch({ type: actions.closeSidebar });
-    if (view !== path) {
+    if (path !== id) {
       dispatch({ type: actions.setSelected, payload: [] });
     }
-    setView(path);
   };
 
+  const ref = useRef(null);
   useOnClickOutside(ref, () => dispatch({ type: actions.closeSidebar }));
-  useEffect(() => {
-    const path = window.location.pathname;
-    if (view !== path) setView(path);
-  });
 
   return (
     <div
@@ -66,7 +67,10 @@ const Sidebar = ({ count }) => {
             className={getMenuStyle("/active")}
             onClick={() => selectMenu("/active")}
           >
-            <IoArrowDownCircleSharp size={getIconSize()} className="ml-1" />
+            <IoArrowDownCircleSharp
+              size={getIconSize()}
+              className={iconStyle}
+            />
             <p className="pl-2">
               Downloading
               {count.numActive > 0 ? ` (${count.numActive})` : ""}
@@ -78,7 +82,7 @@ const Sidebar = ({ count }) => {
             className={getMenuStyle("/waiting")}
             onClick={() => selectMenu("/waiting")}
           >
-            <IoPauseCircleSharp size={getIconSize()} className="ml-1" />
+            <IoPauseCircleSharp size={getIconSize()} className={iconStyle} />
             <p className="pl-2">
               Paused
               {count.numWaiting > 0 ? ` (${count.numWaiting})` : ""}
@@ -90,7 +94,10 @@ const Sidebar = ({ count }) => {
             className={getMenuStyle("/stopped")}
             onClick={() => selectMenu("/stopped")}
           >
-            <IoCheckmarkCircleSharp size={getIconSize()} className="ml-1" />
+            <IoCheckmarkCircleSharp
+              size={getIconSize()}
+              className={iconStyle}
+            />
             <p className="pl-2">
               Finished / Stopped
               {count.numStopped > 0 ? ` (${count.numStopped})` : ""}
@@ -105,7 +112,7 @@ const Sidebar = ({ count }) => {
             className={getMenuStyle("/settings")}
             onClick={() => selectMenu("/settings")}
           >
-            <IoSettingsSharp size={getIconSize() - 3} className="ml-1" />
+            <IoSettingsSharp size={getIconSize() - 3} className={iconStyle} />
             <p className="pl-2">Settings</p>
           </div>
         </Link>

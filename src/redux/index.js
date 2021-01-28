@@ -41,7 +41,7 @@ function stateReducer(state = initialState, action) {
         },
       };
     }
-    case actions.selectTask: {
+    case actions.setSelected: {
       const items = action.payload;
       return {
         ...state,
