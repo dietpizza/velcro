@@ -23,7 +23,6 @@ const initialState = {
   selected: [],
   sidebarStatus: false,
   aria2config: {},
-  path: null,
 };
 
 function stateReducer(state = initialState, action) {
@@ -31,77 +30,44 @@ function stateReducer(state = initialState, action) {
     case actions.setData: {
       const result = action.payload;
       result[2].reverse();
-      return {
-        ...state,
-        data: {
-          active: result[0],
-          waiting: result[1],
-          stopped: result[2],
-          globalStat: result[3],
-        },
+      state.data = {
+        active: result[0],
+        waiting: result[1],
+        stopped: result[2],
+        globalStat: result[3],
       };
+      return state;
     }
     case actions.setSelected: {
-      const items = action.payload;
-      return {
-        ...state,
-        selected: items,
-      };
+      state.selected = action.payload;
+      return state;
     }
     case actions.selectTask: {
       const { gid, op } = action.payload;
-      const newArray = op
-        ? Array.from(new Set([...state.selected, gid]))
+      state.selected = op
+        ? [...state.selected, gid]
         : state.selected.filter((el) => el !== gid);
-      return {
-        ...state,
-        selected: newArray,
-      };
+      return state;
     }
     case actions.openSidebar: {
-      return {
-        ...state,
-        sidebarStatus: true,
-      };
+      state.sidebarStatus = true;
+      return state;
     }
     case actions.closeSidebar: {
-      return {
-        ...state,
-        sidebarStatus: false,
-      };
+      state.sidebarStatus = false;
+      return state;
     }
     case actions.aria2config: {
-      const config = action.payload;
-      return {
-        ...state,
-        aria2config: config,
-      };
+      state.aria2config = action.payload;
+      return state;
     }
     case actions.addAlert: {
-      let { content, timeout, priority } = action.payload;
-      const id = Math.random().toString(16).substring(7);
-      if (priority === undefined) priority = "info";
-      if (timeout === undefined) timeout = 3000;
-      if (priority === "critical") timeout = 20000;
-      return {
-        ...state,
-        alerts: [...state.alerts, { content, id, timeout, priority }],
-      };
+      state.alerts = [...state.alerts, action.payload];
+      return state;
     }
     case actions.destroyAlert: {
-      const id = action.payload;
-      const newAlerts = state.alerts.filter((el) => el.id !== id);
-      return {
-        ...state,
-        alerts: newAlerts,
-      };
-    }
-    case actions.setPath: {
-      const newPath = action.payload;
-      return {
-        ...state,
-        path: newPath,
-      };
+      state.alerts = state.alerts.filter((el) => el.id !== action.payload);
+      return state;
     }
     default:
       return state;

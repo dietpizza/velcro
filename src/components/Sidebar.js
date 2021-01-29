@@ -23,10 +23,10 @@ const Section = ({ sectionName }) => {
 };
 
 const Sidebar = () => {
-  const iconStyle = "transition-all duration-200 ease-in-out";
+  const iconStyle = "transition-all";
 
   const dispatch = useDispatch();
-  const path = useLocation();
+  const path = useLocation().pathname;
   const sidebarStatus = useSelector((state) => state.sidebarStatus);
   const count = useSelector((state) => state.data.globalStat);
 

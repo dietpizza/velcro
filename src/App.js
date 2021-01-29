@@ -30,7 +30,7 @@ import Loading from "./components/Loading";
 const App = () => {
   const dispatch = useDispatch();
 
-  const [enableUpdate, setEnableUpdate] = useState(false);
+  const [update, setUpdate] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const link = useRef(null);
 
@@ -56,7 +56,7 @@ const App = () => {
       const result = await Promise.all(await aria2.batch(calls));
       dispatch({ type: actions.setData, payload: result });
     } catch (err) {
-      setEnableUpdate(false);
+      setUpdate(false);
       addAlert({
         dispatch,
         content: "Aria2 RPC disconnected! Please refresh the page",
@@ -66,7 +66,7 @@ const App = () => {
     }
   };
 
-  const testConnection = async () => {
+  const initClient = async () => {
     let flag = true;
     try {
       const config = await aria2.call("aria2.getGlobalOption", []);
@@ -113,26 +113,25 @@ const App = () => {
   }, [location]);
 
   useEffect(() => {
-    let interval;
-    testConnection().then((isConnected) => {
+    initClient().then((isConnected) => {
       if (isConnected) {
-        setEnableUpdate(true);
+        setUpdate(true);
       }
     });
+
     return () => {
-      setEnableUpdate(false);
-      clearInterval(interval);
+      setUpdate(false);
     };
     //eslint-disable-next-line
   }, []);
 
   return (
     <div className="relative flex h-full font-websafe fade-in">
-      <Interval callback={getData} timeout={1000} enabled={enableUpdate} />
+      <Interval callback={getData} timeout={1000} enabled={update} />
       <AlertStack />
       <Sidebar />
       <div className="flex flex-col flex-grow ml-0 md:ml-56 fade-in">
-        <div className="flex flex-col justify-between flex-grow fade-in">
+        <div className="flex flex-col flex-grow fade-in">
           <Actionbar aria2={aria2} getData={() => getData()} />
           <div className="relative flex flex-col items-center flex-grow h-0 overflow-y-auto">
             <Loading show={isLoading} />

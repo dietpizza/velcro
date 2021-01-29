@@ -1,11 +1,12 @@
 import { Fragment } from "react";
+import { useSelector } from "react-redux";
+
 import Header from "./Header";
 import Task from "./Task";
 
-import { useSelector } from "react-redux";
-
 const TaskView = ({ view }) => {
   const data = useSelector((state) => state.data);
+
   return (
     <Fragment>
       <Header />

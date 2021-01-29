@@ -23,11 +23,11 @@ const Divider = () => {
 
 const Actionbar = ({ aria2, getData }) => {
   const buttonStyle =
-    "focus:outline-none disabled:text-gray-300 active:text-blue-500 transition-all duration-200 ease-in-out";
+    "focus:outline-none disabled:text-gray-300 active:text-blue-500";
   const iconStyle = "transition-all duration-200 ease-in-out";
 
   const dispatch = useDispatch();
-  const path = useLocation();
+  const path = useLocation().pathname;
   const selected = useSelector((state) => state.selected);
   const data = useSelector((state) => state.data);
 

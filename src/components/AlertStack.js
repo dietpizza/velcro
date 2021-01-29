@@ -1,17 +1,24 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
+import { actions } from "../redux";
+
 import Alert from "./Alert";
 
 const AlertStack = () => {
   const alerts = useSelector((state) => state.alerts);
+  const dispatch = useDispatch();
   return (
     <div className="absolute right-0 z-40 flex flex-col w-full p-3 pointer-events-none fill-screen md:w-auto md:max-w-sm md:p-2 space-y-2">
-      {alerts.map((alert) => (
+      {alerts.map(({ content, id, priority, timeout }) => (
         <Alert
-          content={alert.content}
-          key={alert.id}
-          id={alert.id}
-          timeout={alert.timeout}
-          priority={alert.priority}
+          content={content}
+          key={id}
+          id={id}
+          timeout={timeout}
+          priority={priority}
+          destroy={(id) =>
+            dispatch({ type: actions.destroyAlert, payload: id })
+          }
         />
       ))}
     </div>

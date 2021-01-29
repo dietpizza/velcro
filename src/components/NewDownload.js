@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { read, write } from "clipboardy";
+
 import { isURL, isPath, isSpeed } from "../lib/util";
 import addAlert from "../lib/addAlert";
-import { read, write } from "clipboardy";
-import { confirm } from "./Confirm";
-import { useSelector, useDispatch } from "react-redux";
 
 const InputField = ({ text, children }) => {
   return (
@@ -15,13 +15,13 @@ const InputField = ({ text, children }) => {
   );
 };
 
-const NewDownload = (aria2, getData) => {
+const NewDownload = ({ aria2, getData }) => {
   const lastDir = localStorage.getItem("lastDir");
   const lastFile = localStorage.getItem("lastFile");
   const inputStyle =
     "w-full p-2 border border-gray-300 outline-none resize-none md:py-1 focus:border-blue-300";
 
-  const enableDownload = useRef(false);
+  const enable = useRef(false);
   const loaded = useRef(0);
   const [config, _setConfig] = useState({});
 
@@ -66,8 +66,8 @@ const NewDownload = (aria2, getData) => {
       isPath(config.dir) &&
       isSpeed(config["max-download-limit"])
     )
-      enableDownload.current = true;
-    else enableDownload.current = false;
+      enable.current = true;
+    else enable.current = false;
   }, [config]);
 
   useEffect(() => {
@@ -190,23 +190,7 @@ const NewDownload = (aria2, getData) => {
         </InputField>
         <div className="flex justify-start px-2 py-2 select-none md:px-4 space-x-2">
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              confirm({
-                message: "Entered data will be lost.",
-                title: "Discard?",
-                actionText: "Discard",
-                cancelText: "Cancel",
-              }).then((val) => {
-                if (val) history.push("/active");
-              });
-            }}
-            className="px-4 py-1.5 font-medium text-red-500 bg-red-200 border border-red-400 md:font-bold focus:outline-none"
-          >
-            Cancel
-          </button>
-          <button
-            disabled={!enableDownload.current}
+            disabled={!enable.current}
             className="px-4 py-1.5 font-medium text-blue-600 bg-blue-200 border border-blue-500 md:font-bold focus:outline-none disabled:opacity-50"
             type="submit"
           >
