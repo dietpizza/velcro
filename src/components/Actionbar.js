@@ -8,7 +8,7 @@ import {
 
 import { getIconSize, addAlert } from "../lib/util";
 
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../redux";
 
@@ -25,34 +25,36 @@ const Actionbar = ({ aria2, update }) => {
     "focus:outline-none disabled:text-gray-300 active:text-blue-500";
   const iconStyle = "transition-all duration-200 ease-in-out";
 
+  const path = useLocation().pathname.substring(1);
+  const history = useHistory();
   const dispatch = useDispatch();
-  const path = useLocation().pathname;
   const selected = useSelector((state) => state.selected);
   const data = useSelector((state) => state.data);
 
   const filterSelected = () => {
     let tmpSel = [];
-    const arr = data[path.substring(1)].map((e) => e.gid);
+    const arr = data[path].map((e) => e.gid);
     tmpSel = selected.filter((e) => arr.includes(e));
     dispatch({ type: actions.setSelected, payload: [] });
     return tmpSel;
   };
 
-  const action = (op) => {
+  const action = async (op) => {
     let calls = filterSelected().map((el) => [op, el]);
+    let flag = false;
     if (calls.length > 0)
-      aria2
-        .multicall(calls)
-        .then(() => {
-          update();
-        })
-        .catch(() =>
-          addAlert({
-            dispatch,
-            content: "Operation failed",
-            priority: "critical",
-          })
-        );
+      try {
+        await aria2.multicall(calls);
+        update();
+        flag = true;
+      } catch (err) {
+        addAlert({
+          dispatch,
+          content: "Operation failed",
+          priority: "critical",
+        });
+      }
+    return flag;
   };
 
   return (
@@ -86,7 +88,9 @@ const Actionbar = ({ aria2, update }) => {
           disabled={path !== "/active" || selected.length < 1}
           className={buttonStyle}
           onClick={() => {
-            action("pause");
+            action("pause").then((ret) => {
+              if (ret) history.push("/waiting");
+            });
           }}
         >
           <IoPause size={getIconSize()} className={iconStyle} />
@@ -95,7 +99,9 @@ const Actionbar = ({ aria2, update }) => {
           disabled={path !== "/waiting" || selected.length < 1}
           className={buttonStyle}
           onClick={() => {
-            action("unpause");
+            action("unpause").then((ret) => {
+              if (ret) history.push("/active");
+            });
           }}
         >
           <IoPlay size={getIconSize() - 4} className={iconStyle} />
@@ -111,8 +117,13 @@ const Actionbar = ({ aria2, update }) => {
               cancelText: "Cancel",
             }).then((res) => {
               if (res) {
-                if (path === "/stopped") action("removeDownloadResult");
-                else action("remove");
+                if (path === "/stopped") {
+                  action("removeDownloadResult");
+                } else {
+                  action("remove").then((ret) => {
+                    if (ret) history.push("/stopped");
+                  });
+                }
               }
             });
           }}

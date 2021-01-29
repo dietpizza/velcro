@@ -1,19 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
-const Loading = ({ show }) => {
-  const [render, setRender] = useState(false);
-  const [hide, setHide] = useState(false);
+const Loading = () => {
+  const isLoading = useSelector((state) => state.isLoading);
+  const [show, setShow] = useState(true);
+
+  useEffect(() => {
+    setShow(isLoading);
+  }, [isLoading]);
+
   return (
     <div
       className={
-        "absolute z-10 text-blue-600 " +
-        (render ? "slide-up" : "slide-down") +
-        (hide ? " hidden" : "")
+        "absolute z-10 text-blue-600 transition-all duration-200 ease-in-out " +
+        (show ? "transform-gpu translate-y-0" : "transform-gpu -translate-y-12")
       }
-      onAnimationEnd={() => {
-        if (render) setHide(true);
-        else if (!show) setRender(true);
-      }}
     >
       <div className="z-10 flex items-center px-4 py-2 bg-blue-100 border border-t-0 border-blue-300 shadow rounded-bl-md rounded-br-md">
         <svg

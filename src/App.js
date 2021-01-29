@@ -26,14 +26,13 @@ import New from "./components/New";
 import Loading from "./components/Loading";
 
 const App = () => {
-  const [shouldUpdate, setUpdate] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const isLoading = useSelector((state) => state.isLoading);
+  const [isConnected, setConnected] = useState(false);
   const link = useRef(null);
 
   const dispatch = useDispatch();
-  const length = useSelector((state) => state.selected).length;
   const history = useHistory();
-  const path = useLocation().pathname;
+  const location = useLocation();
   const windowFocus = useWindowFocus();
   const [width, height] = useWindowSize({ wait: 50 });
 
@@ -42,6 +41,25 @@ const App = () => {
     port: 6800,
     path: "/jsonrpc",
   });
+
+  const updateLoop = async () => {
+    if (isConnected) {
+      update();
+      if (isLoading) dispatch({ type: actions.unload });
+    } else {
+      try {
+        const config = await aria2.call("getGlobalOption", []);
+        console.log("updateLoop");
+        update();
+        setConnected(true);
+        dispatch({ type: actions.unload });
+        addAlert({ dispatch, content: "Aria2 RPC connected!" });
+        dispatch({ type: actions.aria2config, payload: config });
+      } catch (err) {
+        if (!isLoading) dispatch({ type: actions.load });
+      }
+    }
+  };
 
   const update = async () => {
     const calls = [
@@ -54,40 +72,21 @@ const App = () => {
       const result = await Promise.all(await aria2.batch(calls));
       dispatch({ type: actions.setData, payload: result });
     } catch (err) {
-      setUpdate(false);
+      dispatch({ type: actions.load });
+      setConnected(false);
       addAlert({
         dispatch,
-        content: "Aria2 RPC disconnected! Please refresh the page",
+        content: "Aria2 RPC disconnected!",
         priority: "critical",
       });
     }
-  };
-
-  const initClient = async () => {
-    let flag = true;
-    try {
-      const config = await aria2.call("aria2.getGlobalOption", []);
-      setIsLoading(false);
-      update();
-      dispatch({ type: actions.aria2config, payload: config });
-      addAlert({ dispatch, content: "Aria2 RPC connected!" });
-    } catch (err) {
-      setIsLoading(false);
-      addAlert({
-        dispatch,
-        content: "Aria2 RPC connection failed. Please refresh the page.",
-        priority: "critical",
-      });
-      flag = false;
-    }
-    return flag;
   };
 
   useEffect(() => {
     if (windowFocus)
       read()
         .then((text) => {
-          if (text !== link.current && isURL(text)) {
+          if (text !== link.current && isURL(text) && isConnected) {
             history.push("/new");
             link.current = text;
           }
@@ -103,27 +102,20 @@ const App = () => {
   }, [width, height]);
 
   useEffect(() => {
+    console.log("Hello");
     dispatch({ type: actions.closeSidebar });
-    if (length > 0) dispatch({ type: actions.setSelected, payload: [] });
+    dispatch({ type: actions.setSelected, payload: [] });
     //eslint-disable-next-line
-  }, [path]);
+  }, [location]);
 
   useEffect(() => {
-    initClient().then((isConnected) => {
-      if (isConnected) {
-        setUpdate(true);
-      }
-    });
-
-    return () => {
-      setUpdate(false);
-    };
+    updateLoop();
     //eslint-disable-next-line
   }, []);
 
   return (
     <div className="relative flex h-full font-websafe fade-in">
-      <Interval callback={update} timeout={1000} enabled={shouldUpdate} />
+      <Interval callback={updateLoop} timeout={1000} enabled={true} />
       <AlertStack />
       <Sidebar />
       <div className="flex flex-col flex-grow ml-0 md:ml-56 fade-in">
