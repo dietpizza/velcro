@@ -31,7 +31,7 @@ const App = () => {
   const link = useRef(null);
 
   const dispatch = useDispatch();
-  const length = useSelector((state) => state.selected.length);
+  const length = useSelector((state) => state.selected).length;
   const history = useHistory();
   const path = useLocation().pathname;
   const windowFocus = useWindowFocus();
