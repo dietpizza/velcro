@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import Header from "./Header";
 import Task from "./Task";
 
-const TaskView = ({ view }) => {
+const Tasks = ({ view }) => {
   const data = useSelector((state) => state.data);
 
   return (
@@ -17,4 +17,4 @@ const TaskView = ({ view }) => {
   );
 };
 
-export default TaskView;
+export default Tasks;

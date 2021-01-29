@@ -6,8 +6,7 @@ import {
   IoAddSharp,
 } from "react-icons/io5";
 
-import { getIconSize } from "../lib/util";
-import addAlert from "../lib/addAlert";
+import { getIconSize, addAlert } from "../lib/util";
 
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +20,7 @@ const Divider = () => {
   );
 };
 
-const Actionbar = ({ aria2, getData }) => {
+const Actionbar = ({ aria2, update }) => {
   const buttonStyle =
     "focus:outline-none disabled:text-gray-300 active:text-blue-500";
   const iconStyle = "transition-all duration-200 ease-in-out";
@@ -45,7 +44,7 @@ const Actionbar = ({ aria2, getData }) => {
       aria2
         .multicall(calls)
         .then(() => {
-          getData();
+          update();
         })
         .catch(() =>
           addAlert({

@@ -6,36 +6,34 @@ import {
   useHistory,
   useLocation,
 } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { read } from "clipboardy";
 import { useWindowSize } from "@react-hook/window-size";
 
 import Aria2 from "aria2";
 import useWindowFocus from "use-window-focus";
 
-import { isURL } from "./lib/util";
+import { isURL, addAlert } from "./lib/util";
 import { actions } from "./redux";
-import addAlert from "./lib/addAlert";
 
-// Import components
 import Interval from "react-interval";
-import TaskView from "./components/TaskView";
+import Tasks from "./components/Tasks";
 import Sidebar from "./components/Sidebar";
 import Actionbar from "./components/Actionbar";
 import Footer from "./components/Footer";
 import AlertStack from "./components/AlertStack";
-import NewDownload from "./components/NewDownload";
+import New from "./components/New";
 import Loading from "./components/Loading";
 
 const App = () => {
-  const dispatch = useDispatch();
-
-  const [update, setUpdate] = useState(false);
+  const [shouldUpdate, setUpdate] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const link = useRef(null);
 
+  const dispatch = useDispatch();
+  const length = useSelector((state) => state.selected.length);
   const history = useHistory();
-  const location = useLocation();
+  const path = useLocation().pathname;
   const windowFocus = useWindowFocus();
   const [width, height] = useWindowSize({ wait: 50 });
 
@@ -45,7 +43,7 @@ const App = () => {
     path: "/jsonrpc",
   });
 
-  const getData = async () => {
+  const update = async () => {
     const calls = [
       ["tellActive"],
       ["tellWaiting", 0, 999],
@@ -60,7 +58,6 @@ const App = () => {
       addAlert({
         dispatch,
         content: "Aria2 RPC disconnected! Please refresh the page",
-        timeout: 1000,
         priority: "critical",
       });
     }
@@ -71,7 +68,7 @@ const App = () => {
     try {
       const config = await aria2.call("aria2.getGlobalOption", []);
       setIsLoading(false);
-      getData();
+      update();
       dispatch({ type: actions.aria2config, payload: config });
       addAlert({ dispatch, content: "Aria2 RPC connected!" });
     } catch (err) {
@@ -101,16 +98,15 @@ const App = () => {
 
   useEffect(() => {
     document.documentElement.style.setProperty("--app-height", height + "px");
-    if (width < 720) {
-      dispatch({ type: actions.closeSidebar });
-    }
+    if (width < 720) dispatch({ type: actions.closeSidebar });
     //eslint-disable-next-line
   }, [width, height]);
 
   useEffect(() => {
-    dispatch({ type: actions.setPath, payload: location.pathname });
+    dispatch({ type: actions.closeSidebar });
+    if (length > 0) dispatch({ type: actions.setSelected, payload: [] });
     //eslint-disable-next-line
-  }, [location]);
+  }, [path]);
 
   useEffect(() => {
     initClient().then((isConnected) => {
@@ -127,12 +123,12 @@ const App = () => {
 
   return (
     <div className="relative flex h-full font-websafe fade-in">
-      <Interval callback={getData} timeout={1000} enabled={update} />
+      <Interval callback={update} timeout={1000} enabled={shouldUpdate} />
       <AlertStack />
       <Sidebar />
       <div className="flex flex-col flex-grow ml-0 md:ml-56 fade-in">
         <div className="flex flex-col flex-grow fade-in">
-          <Actionbar aria2={aria2} getData={() => getData()} />
+          <Actionbar aria2={aria2} update={() => update()} />
           <div className="relative flex flex-col items-center flex-grow h-0 overflow-y-auto">
             <Loading show={isLoading} />
             <Switch>
@@ -140,16 +136,16 @@ const App = () => {
                 <Redirect to="/active" />
               </Route>
               <Route path="/active">
-                <TaskView view="active" />
+                <Tasks view="active" />
               </Route>
               <Route path="/waiting">
-                <TaskView view="waiting" />
+                <Tasks view="waiting" />
               </Route>
               <Route path="/stopped">
-                <TaskView view="stopped" />
+                <Tasks view="stopped" />
               </Route>
               <Route path="/new">
-                <NewDownload aria2={aria2} getData={getData} />
+                <New aria2={aria2} update={() => update()} />
               </Route>
             </Switch>
           </div>

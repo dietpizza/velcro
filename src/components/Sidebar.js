@@ -38,13 +38,6 @@ const Sidebar = () => {
       (id === path ? " bg-gray-600" : "")
     );
   };
-  const selectMenu = (id) => {
-    dispatch({ type: actions.closeSidebar });
-    if (path !== id) {
-      dispatch({ type: actions.setSelected, payload: [] });
-    }
-  };
-
   const ref = useRef(null);
   useOnClickOutside(ref, () => dispatch({ type: actions.closeSidebar }));
 
@@ -63,10 +56,7 @@ const Sidebar = () => {
       <div>
         <Section sectionName="Tasks" />
         <Link to="/active">
-          <div
-            className={getMenuStyle("/active")}
-            onClick={() => selectMenu("/active")}
-          >
+          <div className={getMenuStyle("/active")}>
             <IoArrowDownCircleSharp
               size={getIconSize()}
               className={iconStyle}
@@ -78,10 +68,7 @@ const Sidebar = () => {
           </div>
         </Link>
         <Link to="/waiting">
-          <div
-            className={getMenuStyle("/waiting")}
-            onClick={() => selectMenu("/waiting")}
-          >
+          <div className={getMenuStyle("/waiting")}>
             <IoPauseCircleSharp size={getIconSize()} className={iconStyle} />
             <p className="pl-2">
               Paused
@@ -90,10 +77,7 @@ const Sidebar = () => {
           </div>
         </Link>
         <Link to="/stopped">
-          <div
-            className={getMenuStyle("/stopped")}
-            onClick={() => selectMenu("/stopped")}
-          >
+          <div className={getMenuStyle("/stopped")}>
             <IoCheckmarkCircleSharp
               size={getIconSize()}
               className={iconStyle}
@@ -108,10 +92,7 @@ const Sidebar = () => {
       <div>
         <Section sectionName="Settings" />
         <Link to="/settings">
-          <div
-            className={getMenuStyle("/settings")}
-            onClick={() => selectMenu("/settings")}
-          >
+          <div className={getMenuStyle("/settings")}>
             <IoSettingsSharp size={getIconSize() - 3} className={iconStyle} />
             <p className="pl-2">Settings</p>
           </div>

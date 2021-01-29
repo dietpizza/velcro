@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { read, write } from "clipboardy";
+import { read } from "clipboardy";
 
-import { isURL, isPath, isSpeed } from "../lib/util";
-import addAlert from "../lib/addAlert";
+import { isURL, isPath, isSpeed, addAlert } from "../lib/util";
 
 const InputField = ({ text, children }) => {
   return (
@@ -15,13 +14,13 @@ const InputField = ({ text, children }) => {
   );
 };
 
-const NewDownload = ({ aria2, getData }) => {
+const New = ({ aria2, update }) => {
   const lastDir = localStorage.getItem("lastDir");
   const lastFile = localStorage.getItem("lastFile");
   const inputStyle =
     "w-full p-2 border border-gray-300 outline-none resize-none md:py-1 focus:border-blue-300";
 
-  const enable = useRef(false);
+  const [enable, setEnable] = useState(false);
   const loaded = useRef(0);
   const [config, _setConfig] = useState({});
 
@@ -44,9 +43,8 @@ const NewDownload = ({ aria2, getData }) => {
         else localStorage.removeItem("lastDir");
         if (config.out) localStorage.setItem("lastFile", config.out);
         else localStorage.removeItem("lastFile");
-        getData();
+        update();
         addAlert({ dispatch, content: "Download added!" });
-        write(null);
         history.push("/active");
       })
       .catch(() => {
@@ -66,8 +64,8 @@ const NewDownload = ({ aria2, getData }) => {
       isPath(config.dir) &&
       isSpeed(config["max-download-limit"])
     )
-      enable.current = true;
-    else enable.current = false;
+      setEnable(true);
+    else setEnable(false);
   }, [config]);
 
   useEffect(() => {
@@ -190,7 +188,7 @@ const NewDownload = ({ aria2, getData }) => {
         </InputField>
         <div className="flex justify-start px-2 py-2 select-none md:px-4 space-x-2">
           <button
-            disabled={!enable.current}
+            disabled={!enable}
             className="px-4 py-1.5 font-medium text-blue-600 bg-blue-200 border border-blue-500 md:font-bold focus:outline-none disabled:opacity-50"
             type="submit"
           >
@@ -201,4 +199,4 @@ const NewDownload = ({ aria2, getData }) => {
     </div>
   );
 };
-export default NewDownload;
+export default New;

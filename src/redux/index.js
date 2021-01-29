@@ -62,7 +62,7 @@ function stateReducer(state = initialState, action) {
       return state;
     }
     case actions.addAlert: {
-      state.alerts = [...state.alerts, action.payload];
+      state.alerts.push(action.payload);
       return state;
     }
     case actions.destroyAlert: {

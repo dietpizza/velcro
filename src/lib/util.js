@@ -1,8 +1,21 @@
-exports.getIconSize = () => {
+import { actions } from "../redux";
+
+export const addAlert = ({ dispatch, content, priority, timeout }) => {
+  const id = Math.random().toString(16).substring(7);
+  priority = priority || "info";
+  timeout = timeout || 3000;
+  timeout = priority === "critical" ? 20000 : timeout;
+  dispatch({
+    type: actions.addAlert,
+    payload: { content, priority, timeout, id },
+  });
+};
+
+export const getIconSize = () => {
   if (window.innerWidth < 720) return 28;
   else return 24;
 };
-exports.formatBytes = (bytes, decimals) => {
+export const formatBytes = (bytes, decimals) => {
   if (bytes === 0 || bytes === "0" || isNaN(bytes)) return "0 B";
   var k = 1024;
   var sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB"];
@@ -12,27 +25,27 @@ exports.formatBytes = (bytes, decimals) => {
   );
 };
 
-exports.getFilename = (file) => {
+export const getFilename = (file) => {
   if (file.path === "") return file.uris[0].uri.replace(/^.*(\\|\/|:)/, "");
   else if (file.path.length > 0) return file.path.replace(/^.*(\\|\/|:)/, "");
   else return "Error";
 };
 
-exports.getProgress = (completed, total, digits) => {
+export const getProgress = (completed, total, digits) => {
   const progress = ((completed / total) * 100).toFixed(digits);
   if (isNaN(progress)) return "0%";
   else return progress + "%";
 };
 
-exports.isURL = (str) => {
+export const isURL = (str) => {
   return /^(?:\w+:)?\/\/([^\s.]+\.\S{2})\S*$/.test(str);
 };
 
-exports.isPath = (str) => {
+export const isPath = (str) => {
   return /^(\/([^/]+\/)*)(.*)$/.test(str);
 };
 
-exports.isSpeed = (str) => {
+export const isSpeed = (str) => {
   if (str === "0") return true;
   else return /^[0-9]+[kKmM]?$/.test(str);
 };
