@@ -41,20 +41,16 @@ const Task = ({ data }) => {
     >
       <p className="overflow-hidden text-sm md:text-xs md:col-span-9 col-span-2 whitespace-nowrap overflow-ellipsis">
         <span className={metaStyle}>Name:</span>
-        <Link to={"/task/" + gid}>
-          <span className="z-10 hover:text-blue-500">
-            {getFilename(files[0])}
-          </span>
-        </Link>
+        {getFilename(files[0])}
       </p>
       <div className="relative flex items-center col-span-2 md:col-span-3">
         <div className="flex self-auto flex-grow h-4 overflow-hidden bg-blue-200 rounded-sm">
           <div
-            className="flex justify-center text-white bg-blue-500 shadow-none whitespace-nowrap"
+            className="flex justify-center text-white bg-blue-600 shadow-none whitespace-nowrap"
             style={{ width: progress }}
           ></div>
         </div>
-        <p className="font-bold text-right text-blue-500 w-11 md:w-12">
+        <p className="font-bold text-right text-blue-600 w-11 md:w-12">
           {progress}
         </p>
       </div>

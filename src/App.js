@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   Redirect,
   Route,
@@ -6,7 +6,7 @@ import {
   useHistory,
   useLocation,
 } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { read } from "clipboardy";
 import { useWindowSize } from "@react-hook/window-size";
 
@@ -26,9 +26,8 @@ import New from "./components/New";
 import Loading from "./components/Loading";
 
 const App = () => {
-  const isLoading = useSelector((state) => state.isLoading);
   const [isConnected, setConnected] = useState(false);
-  const link = useRef(null);
+  const [link, setLink] = useState(null);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -45,19 +44,14 @@ const App = () => {
   const updateLoop = async () => {
     if (isConnected) {
       update();
-      if (isLoading) dispatch({ type: actions.unload });
     } else {
       try {
         const config = await aria2.call("getGlobalOption", []);
-        console.log("updateLoop");
-        update();
         setConnected(true);
-        dispatch({ type: actions.unload });
+        update();
         addAlert({ dispatch, content: "Aria2 RPC connected!" });
         dispatch({ type: actions.aria2config, payload: config });
-      } catch (err) {
-        if (!isLoading) dispatch({ type: actions.load });
-      }
+      } catch (err) {}
     }
   };
 
@@ -72,8 +66,8 @@ const App = () => {
       const result = await Promise.all(await aria2.batch(calls));
       dispatch({ type: actions.setData, payload: result });
     } catch (err) {
-      dispatch({ type: actions.load });
       setConnected(false);
+      dispatch({ type: actions.resetData });
       addAlert({
         dispatch,
         content: "Aria2 RPC disconnected!",
@@ -82,18 +76,20 @@ const App = () => {
     }
   };
 
-  useEffect(() => {
-    if (windowFocus)
-      read()
-        .then((text) => {
-          if (text !== link.current && isURL(text) && isConnected) {
-            history.push("/new");
-            link.current = text;
-          }
-        })
-        .catch(() => {});
-    //eslint-disable-next-line
-  }, [windowFocus]);
+  const grabLink = async () => {
+    if (windowFocus) {
+      try {
+        const text = await read();
+        if (text !== link && isURL(text)) {
+          setLink(text);
+          history.push("/new");
+        }
+      } catch (err) {}
+    }
+  };
+
+  //eslint-disable-next-line
+  useEffect(() => grabLink(), [windowFocus]);
 
   useEffect(() => {
     document.documentElement.style.setProperty("--app-height", height + "px");
@@ -109,6 +105,7 @@ const App = () => {
   }, [location]);
 
   useEffect(() => {
+    grabLink();
     updateLoop();
     //eslint-disable-next-line
   }, []);
@@ -122,7 +119,7 @@ const App = () => {
         <div className="flex flex-col flex-grow fade-in">
           <Actionbar aria2={aria2} update={() => update()} />
           <div className="relative flex flex-col items-center flex-grow h-0 overflow-y-auto">
-            <Loading show={isLoading} />
+            <Loading show={!isConnected} />
             <Switch>
               <Route path="/" exact>
                 <Redirect to="/active" />

@@ -1,14 +1,4 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-
-const Loading = () => {
-  const isLoading = useSelector((state) => state.isLoading);
-  const [show, setShow] = useState(true);
-
-  useEffect(() => {
-    setShow(isLoading);
-  }, [isLoading]);
-
+const Loading = ({ show }) => {
   return (
     <div
       className={
@@ -18,7 +8,7 @@ const Loading = () => {
     >
       <div className="z-10 flex items-center px-4 py-2 bg-blue-100 border border-t-0 border-blue-300 shadow rounded-bl-md rounded-br-md">
         <svg
-          className="w-4 h-4 mr-1 -ml-1 text-blue-600 animate-spin-slow"
+          className="w-4 h-4 mr-1 -ml-1 text-blue-600 animate-spin"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"

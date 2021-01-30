@@ -2,6 +2,7 @@ import { createStore } from "redux";
 
 export const actions = {
   setData: "setData",
+  resetData: "resetData",
   setSelected: "setSelected",
   selectTask: "selectTask",
   aria2config: "aria2config",
@@ -10,8 +11,6 @@ export const actions = {
   addAlert: "addAlert",
   destroyAlert: "destroyAlert",
   setPath: "setPath",
-  load: "load",
-  unload: "unload",
 };
 
 const initialState = {
@@ -25,7 +24,6 @@ const initialState = {
   selected: [],
   sidebarStatus: false,
   aria2config: {},
-  isLoading: true,
 };
 
 function stateReducer(state = initialState, action) {
@@ -40,6 +38,17 @@ function stateReducer(state = initialState, action) {
           waiting: result[1],
           stopped: result[2],
           globalStat: result[3],
+        },
+      };
+    }
+    case actions.resetData: {
+      return {
+        ...state,
+        data: {
+          active: [],
+          waiting: [],
+          stopped: [],
+          globalStat: [],
         },
       };
     }
@@ -67,19 +76,7 @@ function stateReducer(state = initialState, action) {
     }
     case actions.destroyAlert: {
       const newAlerts = state.alerts.filter((el) => el.id !== action.payload);
-      return { ...state, alerts: [...newAlerts] };
-    }
-    case actions.load: {
-      return {
-        ...state,
-        isLoading: true,
-      };
-    }
-    case actions.unload: {
-      return {
-        ...state,
-        isLoading: false,
-      };
+      return { ...state, alerts: newAlerts };
     }
     default:
       return state;
