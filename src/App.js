@@ -13,7 +13,7 @@ import { useWindowSize } from "@react-hook/window-size";
 import Aria2 from "aria2";
 import useWindowFocus from "use-window-focus";
 
-import { isURL, addAlert } from "./lib/util";
+import { isURL, addAlert, defaultRpcConfig } from "./lib/util";
 import { actions } from "./redux";
 
 import Interval from "react-interval";
@@ -24,6 +24,7 @@ import Footer from "./components/Footer";
 import AlertStack from "./components/AlertStack";
 import New from "./components/New";
 import Loading from "./components/Loading";
+import Settings from "./components/Settings";
 
 const App = () => {
   const [isConnected, setConnected] = useState(false);
@@ -34,11 +35,7 @@ const App = () => {
   const location = useLocation();
   const windowFocus = useWindowFocus();
   const [width, height] = useWindowSize({ wait: 50 });
-  const rpcConfig = localStorage.getItem("rpc-config") || {
-    host: window.location.hostname,
-    port: 6800,
-    path: "/jsonrpc",
-  };
+  const [rpcConfig, setRpcConfig] = useState(defaultRpcConfig);
   const aria2 = new Aria2(rpcConfig);
 
   const updateLoop = async () => {
@@ -98,7 +95,6 @@ const App = () => {
   }, [width, height]);
 
   useEffect(() => {
-    console.log("Hello");
     dispatch({ type: actions.closeSidebar });
     dispatch({ type: actions.setSelected, payload: [] });
     //eslint-disable-next-line
@@ -107,6 +103,9 @@ const App = () => {
   useEffect(() => {
     grabLink();
     updateLoop();
+    const fig =
+      JSON.parse(localStorage.getItem("rpc-config")) || defaultRpcConfig;
+    setRpcConfig(fig);
     //eslint-disable-next-line
   }, []);
 
@@ -132,6 +131,9 @@ const App = () => {
               </Route>
               <Route path="/stopped">
                 <Tasks view="stopped" />
+              </Route>
+              <Route path="/settings">
+                <Settings />
               </Route>
               <Route path="/new">
                 <New aria2={aria2} update={() => update()} />

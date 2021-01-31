@@ -3,16 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { read } from "clipboardy";
 
-import { isURL, isPath, isSpeed, addAlert } from "../lib/util";
+import InputField from "./InputField";
 
-const InputField = ({ text, children }) => {
-  return (
-    <div className="flex flex-col items-center w-full p-2 border-b border-gray-200 md:px-4 md:flex-row">
-      <p className="w-full pb-1 select-none md:w-2/5 md:p-0">{text}</p>
-      {children}
-    </div>
-  );
-};
+import { isURL, isPath, isSpeed, addAlert } from "../lib/util";
 
 const New = ({ aria2, update }) => {
   const lastDir = localStorage.getItem("lastDir");
@@ -94,7 +87,7 @@ const New = ({ aria2, update }) => {
   }, []);
 
   return (
-    <div className="flex flex-col flex-grow w-full h-0 overflow-y-auto text-sm text-gray-600 fade-in">
+    <div className="flex flex-col flex-grow w-full h-0 overflow-y-auto text-sm fade-in">
       <form onSubmit={addUri} noValidate>
         <InputField text={"URL:"}>
           <input

@@ -1,23 +1,66 @@
+import { useEffect, useState } from "react";
+import InputField from "./InputField";
+import { defaultRpcConfig } from "../lib/util";
+
 const Settings = () => {
+  const inputStyle =
+    "w-full p-2 border border-gray-300 outline-none resize-none md:py-1 focus:border-blue-300";
+  const tmpConfig = JSON.parse(localStorage.getItem("rpc-config"));
+  const [config, setConfig] = useState(tmpConfig || defaultRpcConfig);
+
+  useEffect(() => {}, []);
+
   return (
-    <div>
-      <div className="flex w-full">
-        <p>Aria2 RPC Address</p>
-        <div className="flex">
-          <div>
-            <p></p>
-            <input />
-          </div>
-          <div>
-            <p></p>
-            <input />
-          </div>
-          <div>
-            <p></p>
-            <input />
-          </div>
+    <div className="flex flex-col items-center w-full overflow-y-auto text-sm fade-in">
+      <form
+        className="w-full"
+        onSubmit={(e) => {
+          e.preventDefault();
+          localStorage.setItem("rpc-config", JSON.stringify(config));
+        }}
+      >
+        <InputField text="Hostname">
+          <input
+            defaultValue={config.host}
+            className={inputStyle}
+            onChange={(e) => {
+              setConfig((oldConfig) => {
+                return { ...oldConfig, host: e.target.value.trim() };
+              });
+            }}
+          />
+        </InputField>
+        <InputField text="Port">
+          <input
+            defaultValue={config.port}
+            className={inputStyle}
+            onChange={(e) => {
+              setConfig((oldConfig) => {
+                return { ...oldConfig, port: parseInt(e.target.value.trim()) };
+              });
+            }}
+          />
+        </InputField>
+        <InputField text="JsonRPC Path">
+          <input
+            defaultValue={config.path}
+            className={inputStyle}
+            onChange={(e) => {
+              setConfig((oldConfig) => {
+                return { ...oldConfig, path: e.target.value.trim() };
+              });
+            }}
+          />
+        </InputField>
+        <div className="flex justify-start px-2 py-2 select-none md:px-4 space-x-2">
+          <button
+            className="px-4 py-1.5 font-medium text-blue-600 bg-blue-200 border border-blue-500 md:font-bold focus:outline-none disabled:opacity-50"
+            type="submit"
+          >
+            Save
+          </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

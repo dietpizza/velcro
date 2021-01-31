@@ -49,3 +49,9 @@ export const isSpeed = (str) => {
   if (str === "0") return true;
   else return /^[0-9]+[kKmM]?$/.test(str);
 };
+
+export const defaultRpcConfig = {
+  host: window.location.hostname,
+  port: 6800,
+  path: "/jsonrpc",
+};
