@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 import InputField from "./InputField";
+import { confirm } from "./Confirm";
 
 import { defaultRpcConfig, addAlert } from "../lib/util";
 
@@ -18,10 +19,18 @@ const Settings = () => {
         className="w-full"
         onSubmit={(e) => {
           e.preventDefault();
-          addAlert({
-            dispatch,
-            content: "Settings updated... Please refresh page.",
-            priority: "success",
+          confirm({
+            title: "Reload?",
+            message:
+              "Aria2 RPC settings updated. Reload the page for this to take effect.",
+            actionText: "Reload",
+            cancelText: "Cancel",
+          }).then((res) => {
+            if (res) window.location.reload();
+            addAlert({
+              dispatch,
+              content: "Settings updated... Please refresh page.",
+            });
           });
           localStorage.setItem("rpc-config", JSON.stringify(config));
         }}

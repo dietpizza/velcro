@@ -31,56 +31,59 @@ function stateReducer(state = initialState, action) {
     case actions.setData: {
       const result = action.payload;
       result[2].reverse();
-      return {
-        ...state,
-        data: {
-          active: result[0],
-          waiting: result[1],
-          stopped: result[2],
-          globalStat: result[3],
-        },
+      state.data = {
+        active: result[0],
+        waiting: result[1],
+        stopped: result[2],
+        globalStat: result[3],
       };
+      break;
     }
     case actions.resetData: {
-      return {
-        ...state,
-        data: {
-          active: [],
-          waiting: [],
-          stopped: [],
-          globalStat: [],
-        },
+      state.data = {
+        active: [],
+        waiting: [],
+        stopped: [],
+        globalStat: [],
       };
+      break;
     }
     case actions.setSelected: {
-      return { ...state, selected: action.payload };
+      state.selected = action.payload;
+      break;
     }
     case actions.selectTask: {
       const { gid, op } = action.payload;
-      const newSelected = op
+      state.selected = op
         ? [...state.selected, gid]
         : state.selected.filter((el) => el !== gid);
-      return { ...state, selected: newSelected };
+      break;
     }
     case actions.openSidebar: {
-      return { ...state, sidebarStatus: true };
+      state.sidebarStatus = true;
+      break;
     }
     case actions.closeSidebar: {
-      return { ...state, sidebarStatus: false };
+      state.sidebarStatus = false;
+      break;
     }
     case actions.aria2config: {
-      return { ...state, aria2config: action.payload };
+      state.aria2config = action.payload;
+      break;
     }
     case actions.addAlert: {
-      return { ...state, alerts: [...state.alerts, action.payload] };
+      state.alerts = [...state.alerts, action.payload];
+      break;
     }
     case actions.destroyAlert: {
-      const newAlerts = state.alerts.filter((el) => el.id !== action.payload);
-      return { ...state, alerts: newAlerts };
+      state.alerts = state.alerts.filter((el) => el.id !== action.payload);
+      break;
     }
-    default:
+    default: {
       return state;
+    }
   }
+  return { ...state };
 }
 
 const enableReduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__?.();

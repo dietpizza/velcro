@@ -51,7 +51,7 @@ const Actionbar = ({ aria2, update }) => {
         addAlert({
           dispatch,
           content: "Operation failed",
-          priority: "critical",
+          variant: "error",
         });
       }
     return flag;

@@ -68,7 +68,7 @@ const App = () => {
       addAlert({
         dispatch,
         content: "Aria2 RPC disconnected!",
-        priority: "critical",
+        variant: "error",
       });
     }
   };

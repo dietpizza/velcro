@@ -1,13 +1,10 @@
-import { actions } from "../redux";
-
-export const addAlert = ({ dispatch, content, priority, timeout }) => {
+export const addAlert = ({ dispatch, content, variant }) => {
+  const { actions } = require("../redux");
   const id = Math.random().toString(16).substring(7);
-  priority = priority || "info";
-  timeout = timeout || 3000;
-  timeout = priority === "critical" ? 20000 : timeout;
+  const timeout = variant === "error" ? 5000 : 3000;
   dispatch({
     type: actions.addAlert,
-    payload: { content, priority, timeout, id },
+    payload: { content, variant, timeout, id },
   });
 };
 
@@ -51,7 +48,6 @@ export const isSpeed = (str) => {
 };
 
 export const defaultRpcConfig = {
-  secure: true,
   host: window.location.hostname,
   port: 6800,
   path: "/jsonrpc",

@@ -9,13 +9,13 @@ const AlertStack = () => {
   const dispatch = useDispatch();
   return (
     <div className="absolute right-0 z-40 flex flex-col w-full p-3 pointer-events-none fill-screen md:w-auto md:max-w-sm md:p-2 space-y-2">
-      {alerts.map(({ content, id, priority, timeout }) => (
+      {alerts.map(({ content, id, variant, timeout }) => (
         <Alert
           content={content}
           key={id}
           id={id}
           timeout={timeout}
-          priority={priority}
+          variant={variant}
           destroy={(id) =>
             dispatch({ type: actions.destroyAlert, payload: id })
           }

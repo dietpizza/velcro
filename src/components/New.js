@@ -44,7 +44,7 @@ const New = ({ aria2, update }) => {
         addAlert({
           dispatch,
           content: "Failed to add download",
-          priority: "critical",
+          variant: "error",
         });
       });
   };

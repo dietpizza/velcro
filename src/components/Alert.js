@@ -1,20 +1,17 @@
 import { useState } from "react";
 
-const Alert = ({ id, content, timeout, priority, destroy }) => {
+const Alert = ({ id, content, timeout, variant, destroy }) => {
   let alertStyle =
     "p-2 ml-auto bg-opacity-95 font-medium md:font-bold shadow border fade-in ";
 
   const [render, setRender] = useState(false);
 
-  switch (priority) {
-    case "critical":
+  switch (variant) {
+    case "error":
       alertStyle += "border-red-300 bg-red-200 text-red-500";
       break;
-    case "success":
-      alertStyle += "border-green-300 bg-green-100 text-green-600";
-      break;
     default:
-      alertStyle += "border-blue-300 bg-blue-100 text-blue-500";
+      alertStyle += "border-blue-300 bg-blue-200 text-blue-500";
   }
 
   setTimeout(() => {
