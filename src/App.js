@@ -34,12 +34,12 @@ const App = () => {
   const location = useLocation();
   const windowFocus = useWindowFocus();
   const [width, height] = useWindowSize({ wait: 50 });
-
-  const aria2 = new Aria2({
+  const rpcConfig = localStorage.getItem("rpc-config") || {
     host: window.location.hostname,
     port: 6800,
     path: "/jsonrpc",
-  });
+  };
+  const aria2 = new Aria2(rpcConfig);
 
   const updateLoop = async () => {
     if (isConnected) {

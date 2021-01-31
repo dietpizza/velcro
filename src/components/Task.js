@@ -1,5 +1,4 @@
 import { formatBytes, getProgress, getFilename } from "../lib/util";
-import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { actions } from "../redux";
 
