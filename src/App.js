@@ -99,6 +99,7 @@ const App = () => {
   useEffect(() => {
     grabLink();
     updateLoop();
+    //eslint-disable-next-line
   }, []);
 
   return (
