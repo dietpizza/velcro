@@ -31,9 +31,9 @@ const App = () => {
   const [isConnected, setConnected] = useState(false);
   const [link, setLink] = useState(null);
 
-  const dispatch = useDispatch();
   const [width, height] = useWindowSize({ wait: 50 });
   const windowFocus = useWindowFocus();
+  const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
 
