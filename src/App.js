@@ -7,8 +7,8 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { read } from "clipboardy";
 import { useWindowSize } from "@react-hook/window-size";
+import { read } from "clipboardy";
 
 import Aria2 from "aria2";
 import useWindowFocus from "use-window-focus";
