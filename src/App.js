@@ -105,7 +105,7 @@ const App = () => {
     updateLoop();
     const fig =
       JSON.parse(localStorage.getItem("rpc-config")) || defaultRpcConfig;
-    setRpcConfig(fig);
+    setRpcConfig({ ...fig, secure: true });
     //eslint-disable-next-line
   }, []);
 
