@@ -51,6 +51,7 @@ export const isSpeed = (str) => {
 };
 
 export const defaultRpcConfig = {
+  secure: true,
   host: window.location.hostname,
   port: 6800,
   path: "/jsonrpc",
