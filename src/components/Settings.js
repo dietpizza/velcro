@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+
 import InputField from "./InputField";
-import { defaultRpcConfig } from "../lib/util";
+
+import { defaultRpcConfig, addAlert } from "../lib/util";
 
 const Settings = () => {
   const inputStyle =
     "w-full p-2 border border-gray-300 outline-none resize-none md:py-1 focus:border-blue-300";
+  const dispatch = useDispatch();
   const tmpConfig = JSON.parse(localStorage.getItem("rpc-config"));
   const [config, setConfig] = useState(tmpConfig || defaultRpcConfig);
-
-  useEffect(() => {}, []);
 
   return (
     <div className="flex flex-col items-center w-full overflow-y-auto text-sm fade-in">
@@ -16,6 +18,11 @@ const Settings = () => {
         className="w-full"
         onSubmit={(e) => {
           e.preventDefault();
+          addAlert({
+            dispatch,
+            content: "Settings updated... Please refresh page.",
+            priority: "success",
+          });
           localStorage.setItem("rpc-config", JSON.stringify(config));
         }}
       >

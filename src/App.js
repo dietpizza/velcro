@@ -103,9 +103,8 @@ const App = () => {
   useEffect(() => {
     grabLink();
     updateLoop();
-    const fig =
-      JSON.parse(localStorage.getItem("rpc-config")) || defaultRpcConfig;
-    setRpcConfig(fig);
+    const config = JSON.parse(localStorage.getItem("rpc-config"));
+    if (config !== null) setRpcConfig(config);
     //eslint-disable-next-line
   }, []);
 
