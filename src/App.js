@@ -13,7 +13,7 @@ import { read } from "clipboardy";
 import Aria2 from "aria2";
 import useWindowFocus from "use-window-focus";
 
-import { isURL, addAlert, defaultRpcConfig } from "./lib/util";
+import { isURL, addAlert, defaultRpcConfig, dataCalls } from "./lib/util";
 import { actions } from "./redux";
 
 import Interval from "react-interval";
@@ -27,7 +27,6 @@ import Loading from "./components/Loading";
 import Settings from "./components/Settings";
 
 const App = () => {
-  const [rpcConfig, setRpcConfig] = useState(defaultRpcConfig);
   const [isConnected, setConnected] = useState(false);
   const [link, setLink] = useState(null);
 
@@ -37,7 +36,9 @@ const App = () => {
   const location = useLocation();
   const history = useHistory();
 
-  const aria2 = new Aria2(rpcConfig);
+  const config =
+    JSON.parse(localStorage.getItem("rpc-config")) || defaultRpcConfig;
+  const aria2 = new Aria2(config);
 
   const updateLoop = async () => {
     if (isConnected) {
@@ -54,14 +55,8 @@ const App = () => {
   };
 
   const update = async () => {
-    const calls = [
-      ["tellActive"],
-      ["tellWaiting", 0, 999],
-      ["tellStopped", 0, 999],
-      ["getGlobalStat"],
-    ];
     try {
-      const result = await Promise.all(await aria2.batch(calls));
+      const result = await Promise.all(await aria2.batch(dataCalls));
       dispatch({ type: actions.setData, payload: result });
     } catch (err) {
       setConnected(false);
@@ -104,9 +99,6 @@ const App = () => {
   useEffect(() => {
     grabLink();
     updateLoop();
-    const config = JSON.parse(localStorage.getItem("rpc-config"));
-    if (config !== null) setRpcConfig(config);
-    //eslint-disable-next-line
   }, []);
 
   return (

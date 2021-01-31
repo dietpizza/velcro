@@ -52,3 +52,10 @@ export const defaultRpcConfig = {
   port: 6800,
   path: "/jsonrpc",
 };
+
+export const dataCalls = [
+  ["tellActive"],
+  ["tellWaiting", 0, 999],
+  ["tellStopped", 0, 999],
+  ["getGlobalStat"],
+];
