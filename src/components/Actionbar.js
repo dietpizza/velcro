@@ -77,7 +77,7 @@ const Actionbar = ({ aria2, update }) => {
             disabled={path === "/new"}
             className={buttonStyle + " flex items-center"}
           >
-            <IoAddSharp size={getIconSize() + 2} />
+            <IoAddSharp size={getIconSize()} />
             <p className="text-base md:text-sm fade-in">New</p>
           </button>
         </div>
