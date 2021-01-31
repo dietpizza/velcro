@@ -27,15 +27,16 @@ import Loading from "./components/Loading";
 import Settings from "./components/Settings";
 
 const App = () => {
+  const [rpcConfig, setRpcConfig] = useState(defaultRpcConfig);
   const [isConnected, setConnected] = useState(false);
   const [link, setLink] = useState(null);
 
   const dispatch = useDispatch();
-  const history = useHistory();
-  const location = useLocation();
-  const windowFocus = useWindowFocus();
   const [width, height] = useWindowSize({ wait: 50 });
-  const [rpcConfig, setRpcConfig] = useState(defaultRpcConfig);
+  const windowFocus = useWindowFocus();
+  const location = useLocation();
+  const history = useHistory();
+
   const aria2 = new Aria2(rpcConfig);
 
   const updateLoop = async () => {
