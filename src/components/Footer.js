@@ -1,12 +1,12 @@
 import { formatBytes, getIconSize } from "../lib/util";
 import { IoArrowDown, IoArrowUp } from "react-icons/io5";
-import { useSelector } from "react-redux";
+
+import { useGlobalState } from "../globalState";
 
 const Footer = () => {
-  const downloadSpeed = useSelector(
-    (state) => state.data.globalStat.downloadSpeed
-  );
-  const uploadSpeed = useSelector((state) => state.data.globalStat.uploadSpeed);
+  const [data] = useGlobalState("data");
+  const { downloadSpeed, uploadSpeed } = data.globalStat;
+
   return (
     <div className="flex items-center justify-center h-8 px-5 text-xs text-gray-600 border-t border-gray-200 select-none md:h-10 md:justify-end">
       <div className="flex items-center mr-1">

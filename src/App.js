@@ -6,15 +6,21 @@ import {
   useHistory,
   useLocation,
 } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { useWindowSize } from "@react-hook/window-size";
 import { read } from "clipboardy";
 
 import Aria2 from "aria2";
 import useWindowFocus from "use-window-focus";
 
-import { isURL, addAlert, defaultRpcConfig, dataCalls } from "./lib/util";
-import { actions } from "./redux";
+import { isURL, defaultRpcConfig, dataCalls } from "./lib/util";
+import {
+  setData,
+  resetData,
+  addAlert,
+  setAria2Config,
+  setSidebar,
+  clearSelected,
+} from "./globalState";
 
 import Interval from "react-interval";
 import Tasks from "./components/Tasks";
@@ -32,7 +38,6 @@ const App = () => {
 
   const [width, height] = useWindowSize({ wait: 50 });
   const windowFocus = useWindowFocus();
-  const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
 
@@ -48,8 +53,8 @@ const App = () => {
         const config = await aria2.call("getGlobalOption", []);
         setConnected(true);
         update();
-        addAlert({ dispatch, content: "Aria2 RPC connected!" });
-        dispatch({ type: actions.aria2config, payload: config });
+        addAlert({ content: "Aria2 RPC connected!" });
+        setAria2Config(config);
       } catch (err) {}
     }
   };
@@ -57,12 +62,11 @@ const App = () => {
   const update = async () => {
     try {
       const result = await Promise.all(await aria2.batch(dataCalls));
-      dispatch({ type: actions.setData, payload: result });
+      setData(result);
     } catch (err) {
       setConnected(false);
-      dispatch({ type: actions.resetData });
+      resetData();
       addAlert({
-        dispatch,
         content: "Aria2 RPC disconnected!",
         variant: "error",
       });
@@ -86,13 +90,14 @@ const App = () => {
 
   useEffect(() => {
     document.documentElement.style.setProperty("--app-height", height + "px");
-    if (width < 720) dispatch({ type: actions.closeSidebar });
+    if (width < 720) setSidebar(false);
+
     //eslint-disable-next-line
   }, [width, height]);
 
   useEffect(() => {
-    dispatch({ type: actions.closeSidebar });
-    dispatch({ type: actions.setSelected, payload: [] });
+    setSidebar(false);
+    clearSelected();
     //eslint-disable-next-line
   }, [location]);
 

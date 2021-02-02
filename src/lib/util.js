@@ -1,13 +1,3 @@
-export const addAlert = ({ dispatch, content, variant }) => {
-  const { actions } = require("../redux");
-  const id = Math.random().toString(16).substring(7);
-  const timeout = variant === "error" ? 5000 : 3000;
-  dispatch({
-    type: actions.addAlert,
-    payload: { content, variant, timeout, id },
-  });
-};
-
 export const getIconSize = () => {
   if (window.innerWidth < 720) return 28;
   else return 24;

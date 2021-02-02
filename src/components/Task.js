@@ -1,6 +1,5 @@
 import { formatBytes, getProgress, getFilename } from "../lib/util";
-import { useSelector, useDispatch } from "react-redux";
-import { actions } from "../redux";
+import { useGlobalState, selectTask } from "../globalState";
 
 const Task = ({ data }) => {
   const {
@@ -12,8 +11,7 @@ const Task = ({ data }) => {
     files,
   } = data;
   let progress = getProgress(completedLength, totalLength, 1);
-  const dispatch = useDispatch();
-  const selected = useSelector((state) => state.selected);
+  const [selected] = useGlobalState("selected");
 
   const getStatus = () => {
     if (errorCode !== undefined && errorCode !== "0") return "Error";
@@ -31,12 +29,7 @@ const Task = ({ data }) => {
         taskStyle +
         (selected.includes(gid) ? " bg-blue-100 border-blue-200" : "")
       }
-      onClick={() =>
-        dispatch({
-          type: actions.selectTask,
-          payload: { gid, op: !selected.includes(gid) },
-        })
-      }
+      onClick={() => selectTask(gid, !selected.includes(gid))}
     >
       <p className="overflow-hidden text-sm md:text-xs md:col-span-9 col-span-2 whitespace-nowrap overflow-ellipsis">
         <span className={metaStyle}>Name:</span>

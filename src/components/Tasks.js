@@ -1,11 +1,12 @@
 import { Fragment } from "react";
-import { useSelector } from "react-redux";
 
 import Header from "./Header";
 import Task from "./Task";
 
+import { useGlobalState } from "../globalState";
+
 const Tasks = ({ view }) => {
-  const data = useSelector((state) => state.data);
+  const [data] = useGlobalState("data");
 
   return (
     <Fragment>

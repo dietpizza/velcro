@@ -6,11 +6,15 @@ import {
   IoAddSharp,
 } from "react-icons/io5";
 
-import { getIconSize, addAlert } from "../lib/util";
-
 import { Link, useLocation, useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { actions } from "../redux";
+
+import { getIconSize } from "../lib/util";
+import {
+  useGlobalState,
+  clearSelected,
+  setSidebar,
+  addAlert,
+} from "../globalState";
 
 import { confirm } from "./Confirm";
 
@@ -27,15 +31,14 @@ const Actionbar = ({ aria2, update }) => {
 
   const path = useLocation().pathname.substring(1);
   const history = useHistory();
-  const dispatch = useDispatch();
-  const selected = useSelector((state) => state.selected);
-  const data = useSelector((state) => state.data);
+  const [selected] = useGlobalState("selected");
+  const [data] = useGlobalState("data");
 
   const filterSelected = () => {
     let tmpSel = [];
     const arr = data[path].map((e) => e.gid);
     tmpSel = selected.filter((e) => arr.includes(e));
-    dispatch({ type: actions.setSelected, payload: [] });
+    clearSelected();
     return tmpSel;
   };
 
@@ -49,7 +52,6 @@ const Actionbar = ({ aria2, update }) => {
         flag = true;
       } catch (err) {
         addAlert({
-          dispatch,
           content: "Operation failed",
           variant: "error",
         });
@@ -61,7 +63,7 @@ const Actionbar = ({ aria2, update }) => {
     <div className="z-20 flex items-center flex-shrink-0 w-full px-1 text-gray-500 shadow select-none space-x-3 md:space-x-2 h-14 md:h-12">
       <div
         className="flex items-center md:hidden fade-in"
-        onClick={() => dispatch({ type: actions.openSidebar })}
+        onClick={() => setSidebar(true)}
       >
         <IoMenuSharp
           size={getIconSize()}

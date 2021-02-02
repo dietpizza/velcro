@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 
 import InputField from "./InputField";
 import { confirm } from "./Confirm";
 
-import { defaultRpcConfig, addAlert } from "../lib/util";
+import { defaultRpcConfig } from "../lib/util";
+import { addAlert } from "../globalState";
 
 const Settings = () => {
   const inputStyle =
     "w-full p-2 border border-gray-300 outline-none resize-none md:py-1 focus:border-blue-300";
-  const dispatch = useDispatch();
   const tmpConfig = JSON.parse(localStorage.getItem("rpc-config"));
+
   const [config, setConfig] = useState(tmpConfig || defaultRpcConfig);
 
   return (
@@ -28,7 +28,6 @@ const Settings = () => {
           }).then((res) => {
             if (res) window.location.reload();
             addAlert({
-              dispatch,
               content: "Settings updated... Please refresh page.",
             });
           });

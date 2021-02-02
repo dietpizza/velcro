@@ -6,13 +6,12 @@ import {
 } from "react-icons/io5";
 import { useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { actions } from "../redux";
 import { getIconSize } from "../lib/util";
 
 import useOnClickOutside from "use-onclickoutside";
 
 import logo from "../assets/velcro.svg";
+import { useGlobalState, setSidebar } from "../globalState";
 
 const Section = ({ sectionName }) => {
   return (
@@ -25,10 +24,10 @@ const Section = ({ sectionName }) => {
 const Sidebar = () => {
   const iconStyle = "transition-all";
 
-  const dispatch = useDispatch();
   const path = useLocation().pathname;
-  const sidebarStatus = useSelector((state) => state.sidebarStatus);
-  const count = useSelector((state) => state.data.globalStat);
+  const [sidebarStatus] = useGlobalState("sidebarStatus");
+  const [data] = useGlobalState("data");
+  const { globalStat } = data;
 
   const getMenuStyle = (id) => {
     return (
@@ -39,7 +38,7 @@ const Sidebar = () => {
     );
   };
   const ref = useRef(null);
-  useOnClickOutside(ref, () => dispatch({ type: actions.closeSidebar }));
+  useOnClickOutside(ref, () => setSidebar(false));
 
   return (
     <div
@@ -63,7 +62,7 @@ const Sidebar = () => {
             />
             <p className="pl-2">
               Downloading
-              {count.numActive > 0 ? ` (${count.numActive})` : ""}
+              {globalStat.numActive > 0 ? ` (${globalStat.numActive})` : ""}
             </p>
           </div>
         </Link>
@@ -72,7 +71,7 @@ const Sidebar = () => {
             <IoPauseCircleSharp size={getIconSize()} className={iconStyle} />
             <p className="pl-2">
               Paused
-              {count.numWaiting > 0 ? ` (${count.numWaiting})` : ""}
+              {globalStat.numWaiting > 0 ? ` (${globalStat.numWaiting})` : ""}
             </p>
           </div>
         </Link>
@@ -84,7 +83,7 @@ const Sidebar = () => {
             />
             <p className="pl-2">
               Finished / Stopped
-              {count.numStopped > 0 ? ` (${count.numStopped})` : ""}
+              {globalStat.numStopped > 0 ? ` (${globalStat.numStopped})` : ""}
             </p>
           </div>
         </Link>

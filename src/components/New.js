@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { read } from "clipboardy";
 
 import InputField from "./InputField";
 
-import { isURL, isPath, isSpeed, addAlert } from "../lib/util";
+import { isURL, isPath, isSpeed } from "../lib/util";
+import { useGlobalState, addAlert } from "../globalState";
 
 const New = ({ aria2, update }) => {
   const lastDir = localStorage.getItem("lastDir");
@@ -13,13 +13,11 @@ const New = ({ aria2, update }) => {
   const inputStyle =
     "w-full p-2 border border-gray-300 outline-none resize-none md:py-1 focus:border-blue-300";
 
+  const [aria2config] = useGlobalState("aria2config");
   const [enable, setEnable] = useState(false);
   const loaded = useRef(0);
   const [config, _setConfig] = useState({});
-
   const history = useHistory();
-  const aria2config = useSelector((state) => state.aria2config);
-  const dispatch = useDispatch();
 
   const setConfig = (property) => {
     _setConfig((oldConfig) => {
@@ -37,12 +35,11 @@ const New = ({ aria2, update }) => {
         if (config.out) localStorage.setItem("lastFile", config.out);
         else localStorage.removeItem("lastFile");
         update();
-        addAlert({ dispatch, content: "Download added!" });
+        addAlert({ content: "Download added!" });
         history.push("/active");
       })
       .catch(() => {
         addAlert({
-          dispatch,
           content: "Failed to add download",
           variant: "error",
         });
