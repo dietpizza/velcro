@@ -22,7 +22,7 @@ const Task = ({ data }) => {
     else return formatBytes(downloadSpeed, 2) + "/s";
   };
   const taskStyle =
-    "relative items-center p-2 text-xs text-gray-700 border-b border-gray-200 cursor-pointer md:px-4 grid grid-cols-2 md:grid-cols-16 gap-y-1 md:gap-x-4 fade-in w-full";
+    "relative items-center p-2 text-xs text-gray-700 border-b border-gray-200 cursor-pointer md:px-4 grid grid-cols-2 md:grid-cols-16 gap-y-1 md:gap-x-4 fade-in w-full select-none";
   const metaStyle = "pr-1 text-xs text-gray-500 md:hidden";
 
   return (

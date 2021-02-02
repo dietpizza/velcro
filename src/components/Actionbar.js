@@ -74,7 +74,7 @@ const Actionbar = ({ aria2, update }) => {
           className={"pr-2 cursor-pointer active:text-blue-500 " + iconStyle}
         >
           <button
-            disabled={path === "/new"}
+            disabled={path === "new"}
             className={buttonStyle + " flex items-center"}
           >
             <IoAddSharp size={getIconSize()} />
@@ -85,7 +85,7 @@ const Actionbar = ({ aria2, update }) => {
       <Divider />
       <div className="flex items-center justify-between space-x-3">
         <button
-          disabled={path !== "/active" || selected.length < 1}
+          disabled={path !== "active" || selected.length < 1}
           className={buttonStyle}
           onClick={() => {
             action("pause").then((ret) => {
@@ -96,7 +96,7 @@ const Actionbar = ({ aria2, update }) => {
           <IoPause size={getIconSize()} className={iconStyle} />
         </button>
         <button
-          disabled={path !== "/waiting" || selected.length < 1}
+          disabled={path !== "waiting" || selected.length < 1}
           className={buttonStyle}
           onClick={() => {
             action("unpause").then((ret) => {
@@ -117,7 +117,7 @@ const Actionbar = ({ aria2, update }) => {
               cancelText: "Cancel",
             }).then((res) => {
               if (res) {
-                if (path === "/stopped") {
+                if (path === "stopped") {
                   action("removeDownloadResult");
                 } else {
                   action("remove").then((ret) => {
