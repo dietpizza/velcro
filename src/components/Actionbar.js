@@ -21,12 +21,13 @@ const Divider = () => {
 
 const Actionbar = ({ aria2, update }) => {
   const buttonStyle =
-    "focus:outline-none disabled:text-gray-300 active:text-blue-500";
+    "focus:outline-none disabled:opacity-40 active:text-blue-500";
   const iconStyle = "transition-all duration-200 ease-in-out";
 
   const path = useLocation().pathname.substring(1);
   const history = useHistory();
   const [selected] = useGlobalState("selected");
+  const [mobileSelect] = useGlobalState("mobileSelect");
 
   const action = async (op) => {
     let calls = selected.map((el) => [op, el]);
@@ -46,23 +47,32 @@ const Actionbar = ({ aria2, update }) => {
   };
 
   return (
-    <div className="z-20 flex items-center flex-shrink-0 w-full px-1 text-gray-500 shadow select-none space-x-3 md:space-x-2 h-14 md:h-12">
+    <div
+      className={
+        "z-20 flex items-center flex-shrink-0 w-full px-1 shadow select-none space-x-3 md:space-x-2 h-14 md:h-12 " +
+        (mobileSelect ? " bg-blue-500 text-gray-200" : " text-gray-500 ")
+      }
+    >
       <div
         className="flex items-center md:hidden fade-in"
-        onClick={() => setSidebar(true)}
+        onClick={() => {
+          if (!mobileSelect) setSidebar(true);
+        }}
       >
         <IoMenuSharp
           size={getIconSize() + 1}
-          className={"ml-3 mr-4 cursor-pointer " + iconStyle}
+          className={
+            "ml-3 mr-4 cursor-pointer " +
+            iconStyle +
+            (mobileSelect ? " opacity-40" : "")
+          }
         />
         <Divider />
       </div>
       <Link to="/new">
-        <div
-          className={"pr-2 cursor-pointer active:text-blue-500 " + iconStyle}
-        >
+        <div className={"pr-2 cursor-pointer " + iconStyle}>
           <button
-            disabled={path === "new"}
+            disabled={path === "new" || mobileSelect}
             className={buttonStyle + " flex items-center"}
           >
             <IoAddSharp size={getIconSize() + 2} />

@@ -63,4 +63,8 @@ export const setSidebar = (val) => {
   setGlobalState("sidebarStatus", val);
 };
 
+export const clearMobileSelect = () => {
+  setGlobalState("mobileSelect", false);
+};
+
 export { useGlobalState };

@@ -20,6 +20,7 @@ import {
   setAria2Config,
   setSidebar,
   clearSelected,
+  clearMobileSelect,
   useGlobalState,
 } from "./globalState";
 
@@ -38,7 +39,6 @@ const App = () => {
   const [link, setLink] = useState(null);
 
   const [selected, setSelected] = useGlobalState("selected");
-  const [mobileSelect, setMobileSelect] = useGlobalState("mobileSelect");
 
   const [width, height] = useWindowSize({ wait: 50 });
   const windowFocus = useWindowFocus();
@@ -118,7 +118,7 @@ const App = () => {
   useEffect(() => {
     setSidebar(false);
     clearSelected();
-    setMobileSelect(false);
+    clearMobileSelect();
     //eslint-disable-next-line
   }, [path]);
 
