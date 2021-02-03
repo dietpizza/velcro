@@ -7,10 +7,11 @@ const { setGlobalState, useGlobalState } = createGlobalState({
     stopped: [],
     globalStat: [],
   },
+  aria2config: {},
   alerts: [],
   selected: [],
   sidebarStatus: false,
-  aria2config: {},
+  mobileSelect: false,
 });
 
 export const setData = (data) => {
@@ -31,22 +32,8 @@ export const resetData = () => {
   });
 };
 
-export const selectTask = (gid, op) => {
-  setGlobalState("selected", (selected) =>
-    op ? [...selected, gid] : selected.filter((el) => el !== gid)
-  );
-};
-
-export const setSidebar = (val) => {
-  setGlobalState("sidebarStatus", val);
-};
-
 export const setAria2Config = (config) => {
   setGlobalState("aria2config", config);
-};
-
-export const clearSelected = () => {
-  setGlobalState("selected", []);
 };
 
 export const addAlert = ({ content, variant }) => {
@@ -60,6 +47,20 @@ export const addAlert = ({ content, variant }) => {
 
 export const destroyAlert = (id) => {
   setGlobalState("alerts", (alerts) => alerts.filter((el) => el.id !== id));
+};
+
+export const selectTask = (gid, op) => {
+  setGlobalState("selected", (selected) =>
+    op ? [...selected, gid] : selected.filter((el) => el !== gid)
+  );
+};
+
+export const clearSelected = () => {
+  setGlobalState("selected", []);
+};
+
+export const setSidebar = (val) => {
+  setGlobalState("sidebarStatus", val);
 };
 
 export { useGlobalState };

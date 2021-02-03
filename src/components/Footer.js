@@ -4,11 +4,14 @@ import { IoArrowDown, IoArrowUp } from "react-icons/io5";
 import { useGlobalState } from "../globalState";
 
 const Footer = () => {
-  const [data] = useGlobalState("data");
-  const { downloadSpeed, uploadSpeed } = data.globalStat;
+  const [
+    {
+      globalStat: { downloadSpeed, uploadSpeed },
+    },
+  ] = useGlobalState("data");
 
   return (
-    <div className="flex items-center justify-center h-8 px-5 text-xs text-gray-600 border-t border-gray-200 select-none md:h-10 md:justify-end">
+    <div className="flex items-center justify-center h-8 px-5 text-xs text-gray-600 border-t border-gray-200 select-none md:justify-end">
       <div className="flex items-center mr-1">
         <IoArrowDown size={getIconSize() - 10} className="mx-1 text-blue-600" />
         <p>{formatBytes(downloadSpeed, 2) + "/s"}</p>

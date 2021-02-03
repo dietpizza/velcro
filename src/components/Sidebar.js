@@ -26,8 +26,7 @@ const Sidebar = () => {
 
   const path = useLocation().pathname;
   const [sidebarStatus] = useGlobalState("sidebarStatus");
-  const [data] = useGlobalState("data");
-  const { globalStat } = data;
+  const [{ globalStat }] = useGlobalState("data");
 
   const getMenuStyle = (id) => {
     return (
@@ -57,7 +56,7 @@ const Sidebar = () => {
         <Link to="/active">
           <div className={getMenuStyle("/active")}>
             <IoArrowDownCircleSharp
-              size={getIconSize()}
+              size={getIconSize() - 1}
               className={iconStyle}
             />
             <p className="pl-2">
@@ -68,7 +67,10 @@ const Sidebar = () => {
         </Link>
         <Link to="/waiting">
           <div className={getMenuStyle("/waiting")}>
-            <IoPauseCircleSharp size={getIconSize()} className={iconStyle} />
+            <IoPauseCircleSharp
+              size={getIconSize() - 1}
+              className={iconStyle}
+            />
             <p className="pl-2">
               Paused
               {globalStat.numWaiting > 0 ? ` (${globalStat.numWaiting})` : ""}
@@ -78,7 +80,7 @@ const Sidebar = () => {
         <Link to="/stopped">
           <div className={getMenuStyle("/stopped")}>
             <IoCheckmarkCircleSharp
-              size={getIconSize()}
+              size={getIconSize() - 1}
               className={iconStyle}
             />
             <p className="pl-2">
@@ -92,7 +94,10 @@ const Sidebar = () => {
         <Section sectionName="Settings" />
         <Link to="/settings">
           <div className={getMenuStyle("/settings")}>
-            <IoSettingsSharp size={getIconSize() - 3} className={iconStyle} />
+            <IoSettingsSharp
+              size={getIconSize() - 4}
+              className={iconStyle + " ml-1"}
+            />
             <p className="pl-2">Settings</p>
           </div>
         </Link>

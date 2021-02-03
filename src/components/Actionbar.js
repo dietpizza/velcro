@@ -35,9 +35,8 @@ const Actionbar = ({ aria2, update }) => {
   const [data] = useGlobalState("data");
 
   const filterSelected = () => {
-    let tmpSel = [];
     const arr = data[path].map((e) => e.gid);
-    tmpSel = selected.filter((e) => arr.includes(e));
+    const tmpSel = selected.filter((e) => arr.includes(e));
     clearSelected();
     return tmpSel;
   };
@@ -66,7 +65,7 @@ const Actionbar = ({ aria2, update }) => {
         onClick={() => setSidebar(true)}
       >
         <IoMenuSharp
-          size={getIconSize()}
+          size={getIconSize() + 1}
           className={"ml-3 mr-4 cursor-pointer " + iconStyle}
         />
         <Divider />
@@ -79,8 +78,8 @@ const Actionbar = ({ aria2, update }) => {
             disabled={path === "new"}
             className={buttonStyle + " flex items-center"}
           >
-            <IoAddSharp size={getIconSize()} />
-            <p className="text-base md:text-sm fade-in">New</p>
+            <IoAddSharp size={getIconSize() + 2} />
+            <p className="ml-1 text-base md:text-sm fade-in">New</p>
           </button>
         </div>
       </Link>
@@ -95,7 +94,7 @@ const Actionbar = ({ aria2, update }) => {
             });
           }}
         >
-          <IoPause size={getIconSize()} className={iconStyle} />
+          <IoPause size={getIconSize() + 1} className={iconStyle} />
         </button>
         <button
           disabled={path !== "waiting" || selected.length < 1}
@@ -106,7 +105,7 @@ const Actionbar = ({ aria2, update }) => {
             });
           }}
         >
-          <IoPlay size={getIconSize() - 4} className={iconStyle} />
+          <IoPlay size={getIconSize() - 3} className={iconStyle} />
         </button>
         <button
           className={buttonStyle}
@@ -130,7 +129,7 @@ const Actionbar = ({ aria2, update }) => {
             });
           }}
         >
-          <IoTrash size={getIconSize() - 5} className={iconStyle} />
+          <IoTrash size={getIconSize() - 3} className={iconStyle} />
         </button>
       </div>
     </div>
