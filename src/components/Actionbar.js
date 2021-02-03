@@ -9,12 +9,7 @@ import {
 import { Link, useLocation, useHistory } from "react-router-dom";
 
 import { getIconSize } from "../lib/util";
-import {
-  useGlobalState,
-  clearSelected,
-  setSidebar,
-  addAlert,
-} from "../globalState";
+import { useGlobalState, setSidebar, addAlert } from "../globalState";
 
 import { confirm } from "./Confirm";
 
@@ -32,17 +27,9 @@ const Actionbar = ({ aria2, update }) => {
   const path = useLocation().pathname.substring(1);
   const history = useHistory();
   const [selected] = useGlobalState("selected");
-  const [data] = useGlobalState("data");
-
-  const filterSelected = () => {
-    const arr = data[path].map((e) => e.gid);
-    const tmpSel = selected.filter((e) => arr.includes(e));
-    clearSelected();
-    return tmpSel;
-  };
 
   const action = async (op) => {
-    let calls = filterSelected().map((el) => [op, el]);
+    let calls = selected.map((el) => [op, el]);
     let flag = false;
     if (calls.length > 0)
       try {

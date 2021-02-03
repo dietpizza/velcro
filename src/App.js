@@ -20,6 +20,7 @@ import {
   setAria2Config,
   setSidebar,
   clearSelected,
+  useGlobalState,
 } from "./globalState";
 
 import Interval from "react-interval";
@@ -36,14 +37,32 @@ const App = () => {
   const [isConnected, setConnected] = useState(false);
   const [link, setLink] = useState(null);
 
+  const [selected, setSelected] = useGlobalState("selected");
+  const [mobileSelect, setMobileSelect] = useGlobalState("mobileSelect");
+
   const [width, height] = useWindowSize({ wait: 50 });
   const windowFocus = useWindowFocus();
-  const location = useLocation();
+  const path = useLocation().pathname;
   const history = useHistory();
 
   const config =
     JSON.parse(localStorage.getItem("rpc-config")) || defaultRpcConfig;
   const aria2 = new Aria2(config);
+
+  const filterSelected = (data) => {
+    const index =
+      path === "/active"
+        ? 0
+        : path === "/waiting"
+        ? 1
+        : path === "/stopped"
+        ? 2
+        : -1;
+    if (index > -1) {
+      const arr = data[index].map((e) => e.gid);
+      setSelected(selected.filter((e) => arr.includes(e)));
+    }
+  };
 
   const updateLoop = async () => {
     if (isConnected) {
@@ -62,6 +81,7 @@ const App = () => {
   const update = async () => {
     try {
       const result = await Promise.all(await aria2.batch(dataCalls));
+      filterSelected(result);
       setData(result);
     } catch (err) {
       setConnected(false);
@@ -98,8 +118,9 @@ const App = () => {
   useEffect(() => {
     setSidebar(false);
     clearSelected();
+    setMobileSelect(false);
     //eslint-disable-next-line
-  }, [location]);
+  }, [path]);
 
   useEffect(() => {
     grabLink();

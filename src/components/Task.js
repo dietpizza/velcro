@@ -16,6 +16,7 @@ const Task = ({ data }) => {
   let progress = getProgress(completedLength, totalLength, 1);
 
   const [selected] = useGlobalState("selected");
+  const [mobileSelect, setMobileSelect] = useGlobalState("mobileSelect");
   const history = useHistory();
 
   const getStatus = () => {
@@ -32,9 +33,20 @@ const Task = ({ data }) => {
   return (
     <LongPress
       time={300}
-      onLongPress={() => history.push("/task/" + gid)}
+      onLongPress={() => {
+        if (selected.length === 0) {
+          setMobileSelect(true);
+          selectTask(gid, true);
+        }
+      }}
       onPress={() => {
-        if (isMobile) selectTask(gid, !selected.includes(gid));
+        if (selected.length === 1 && selected[0] === gid) {
+          setMobileSelect(false);
+          selectTask(gid, false);
+        } else {
+          if (mobileSelect) selectTask(gid, !selected.includes(gid));
+          else history.push("/task/" + gid);
+        }
       }}
     >
       <div
