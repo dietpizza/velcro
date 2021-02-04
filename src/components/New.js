@@ -110,7 +110,7 @@ const New = ({ aria2, update }) => {
             }}
           />
         </InputField>
-        <InputField text={"Filename"}>
+        <InputField text={"Filename:"}>
           <input
             type="text"
             className={inputStyle}

@@ -34,7 +34,7 @@ const Settings = () => {
           localStorage.setItem("rpc-config", JSON.stringify(config));
         }}
       >
-        <InputField text="Hostname">
+        <InputField text="Hostname:">
           <input
             defaultValue={config.host}
             className={inputStyle}
@@ -45,7 +45,7 @@ const Settings = () => {
             }}
           />
         </InputField>
-        <InputField text="Port">
+        <InputField text="Port:">
           <input
             defaultValue={config.port}
             className={inputStyle}
@@ -56,7 +56,7 @@ const Settings = () => {
             }}
           />
         </InputField>
-        <InputField text="JsonRPC Path">
+        <InputField text="RPC Path:">
           <input
             defaultValue={config.path}
             className={inputStyle}
