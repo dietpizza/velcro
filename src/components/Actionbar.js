@@ -21,13 +21,13 @@ const Divider = () => {
 
 const Actionbar = ({ aria2, update }) => {
   const buttonStyle =
-    "focus:outline-none disabled:opacity-40 active:text-blue-500";
-  const iconStyle = "transition-all duration-200 ease-in-out";
+    "focus:outline-none disabled:opacity-30 active:text-blue-500 transition-all duration-200 ease-in-out ";
+  const iconStyle = " transition-all duration-200 ease-in-out ";
 
   const path = useLocation().pathname.substring(1);
   const history = useHistory();
   const [selected] = useGlobalState("selected");
-  const [mobileSelect] = useGlobalState("mobileSelect");
+  const [mobileSelect, setMobileSelect] = useGlobalState("mobileSelect");
 
   const action = async (op) => {
     let calls = selected.map((el) => [op, el]);
@@ -36,6 +36,7 @@ const Actionbar = ({ aria2, update }) => {
       try {
         await aria2.multicall(calls);
         update();
+        if (mobileSelect) setMobileSelect(false);
         flag = true;
       } catch (err) {
         addAlert({
@@ -49,8 +50,7 @@ const Actionbar = ({ aria2, update }) => {
   return (
     <div
       className={
-        "z-20 flex items-center flex-shrink-0 w-full px-1 shadow select-none space-x-3 md:space-x-2 h-14 md:h-12 " +
-        (mobileSelect ? " bg-blue-500 text-gray-200" : " text-gray-500 ")
+        "z-20 flex items-center flex-shrink-0 w-full px-1 shadow select-none space-x-3 md:space-x-2 h-14 md:h-12 text-gray-500"
       }
     >
       <div
@@ -64,7 +64,7 @@ const Actionbar = ({ aria2, update }) => {
           className={
             "ml-3 mr-4 cursor-pointer " +
             iconStyle +
-            (mobileSelect ? " opacity-40" : "")
+            (mobileSelect ? " opacity-30" : "")
           }
         />
         <Divider />

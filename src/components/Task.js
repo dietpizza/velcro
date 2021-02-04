@@ -26,7 +26,7 @@ const Task = ({ data }) => {
     else return formatBytes(downloadSpeed, 2) + "/s";
   };
   const taskStyle =
-    "relative items-center p-2 py-3 md:p-0 text-xs text-gray-700 transition-all duration-200 ease-in-out " +
+    "relative items-center p-2 md:p-0 md:pr-3 text-xs text-gray-700 transition-all duration-200 ease-in-out " +
     " border-b border-gray-200 grid grid-cols-2 md:grid-cols-16 gap-y-1 md:gap-x-4 fade-in w-full select-none";
   const metaStyle = "pr-1 text-xs text-gray-500 md:hidden";
 
@@ -59,7 +59,7 @@ const Task = ({ data }) => {
       >
         <div className="flex items-center overflow-hidden text-sm md:text-xs md:col-span-9 col-span-2 whitespace-nowrap overflow-ellipsis">
           <div
-            className="flex items-center justify-center w-0 h-full cursor-pointer md:w-11 transition-all duration-200 ease-in-out"
+            className="flex items-center justify-center w-0 cursor-pointer md:ml-1 md:h-10 md:w-10 transition-all duration-200 ease-in-out"
             onClick={() => {
               if (!isMobile) selectTask(gid, !selected.includes(gid));
             }}
@@ -67,7 +67,9 @@ const Task = ({ data }) => {
             <div
               className={
                 "w-3.5 h-3.5 bg-gray-200 m-0 md:m-3 mx-0 rounded-full" +
-                (selected.includes(gid) ? " bg-blue-500" : " bg-gray-200")
+                (selected.includes(gid)
+                  ? " bg-blue-500"
+                  : " bg-gray-200 hover:bg-gray-300")
               }
             ></div>
           </div>

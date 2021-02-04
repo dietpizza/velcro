@@ -81,8 +81,8 @@ const App = () => {
   const update = async () => {
     try {
       const result = await Promise.all(await aria2.batch(dataCalls));
-      filterSelected(result);
       setData(result);
+      filterSelected(result);
     } catch (err) {
       setConnected(false);
       resetData();

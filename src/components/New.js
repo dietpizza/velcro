@@ -97,7 +97,7 @@ const New = ({ aria2, update }) => {
             }}
           />
         </InputField>
-        <InputField text={"Download Path:"}>
+        <InputField text={"Location:"}>
           <input
             type="url"
             className={inputStyle}
@@ -167,7 +167,7 @@ const New = ({ aria2, update }) => {
         <InputField text={"Force Save: "}>
           <select
             className={inputStyle + " bg-transparent px-1 select-none"}
-            defaultValue={config["force-save"]}
+            defaultValue={false}
             onChange={(e) => {
               setConfig({ "force-save": e.target.value.trim() });
             }}
