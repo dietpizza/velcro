@@ -1,5 +1,4 @@
 import { MdPlayArrow, MdDelete, MdPause, MdAdd, MdMenu } from "react-icons/md";
-
 import { Link, useLocation, useHistory } from "react-router-dom";
 
 import { getIconSize } from "../lib/util";
@@ -15,7 +14,7 @@ const Divider = () => {
 
 const Actionbar = ({ aria2, update }) => {
   const buttonStyle =
-    "focus:outline-none disabled:opacity-30 active:text-blue-500 transition-all duration-200 ease-in-out ";
+    "focus:outline-none disabled:opacity-30 transition-opacity duration-200 ease-in-out ";
   const iconStyle = " transition-all duration-200 ease-in-out ";
 
   const path = useLocation().pathname.substring(1);
@@ -44,11 +43,11 @@ const Actionbar = ({ aria2, update }) => {
   return (
     <div
       className={
-        "z-20 flex items-center flex-shrink-0 w-full px-1 shadow select-none space-x-3 md:space-x-2 h-14 md:h-12 text-gray-500"
+        "z-20 flex items-center flex-shrink-0 w-full shadow select-none space-x-3 md:space-x-2 h-14 md:h-12 text-gray-500"
       }
     >
       <div
-        className="flex items-center md:hidden fade-in"
+        className="flex items-center md:hidden"
         onClick={() => {
           if (!mobileSelect) setSidebar(true);
         }}
@@ -56,7 +55,7 @@ const Actionbar = ({ aria2, update }) => {
         <MdMenu
           size={getIconSize()}
           className={
-            "mx-3 cursor-pointer " +
+            "mx-4 cursor-pointer" +
             iconStyle +
             (mobileSelect ? " opacity-30" : "")
           }
@@ -75,7 +74,7 @@ const Actionbar = ({ aria2, update }) => {
         </div>
       </Link>
       <Divider />
-      <div className="flex items-center justify-between space-x-2">
+      <div className="flex items-center justify-between space-x-3 md:space-x-2">
         <button
           disabled={path !== "active" || selected.length < 1}
           className={buttonStyle}

@@ -7,10 +7,11 @@ import {
 import { useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+import { useGlobalState, setSidebar } from "../globalState";
+
 import useOnClickOutside from "use-onclickoutside";
 
 import logo from "../assets/velcro.svg";
-import { useGlobalState, setSidebar } from "../globalState";
 
 const Section = ({ sectionName }) => {
   return (
@@ -21,7 +22,7 @@ const Section = ({ sectionName }) => {
 };
 
 const Sidebar = () => {
-  const iconStyle = "transition-all";
+  const iconStyle = "transition-all duration-200 ease-in-out w-10 pr-2";
 
   const path = useLocation().pathname;
   const [sidebarStatus] = useGlobalState("sidebarStatus");
@@ -55,7 +56,7 @@ const Sidebar = () => {
         <Link to="/active">
           <div className={getMenuStyle("/active")}>
             <MdArrowDownward size={24} className={iconStyle} />
-            <p className="pl-2">
+            <p>
               Downloading
               {globalStat.numActive > 0 ? ` (${globalStat.numActive})` : ""}
             </p>
@@ -64,7 +65,7 @@ const Sidebar = () => {
         <Link to="/waiting">
           <div className={getMenuStyle("/waiting")}>
             <MdPauseCircleOutline size={24} className={iconStyle} />
-            <p className="pl-2">
+            <p>
               Paused
               {globalStat.numWaiting > 0 ? ` (${globalStat.numWaiting})` : ""}
             </p>
@@ -73,7 +74,7 @@ const Sidebar = () => {
         <Link to="/stopped">
           <div className={getMenuStyle("/stopped")}>
             <MdDone size={24} className={iconStyle} />
-            <p className="pl-2">
+            <p>
               Finished / Stopped
               {globalStat.numStopped > 0 ? ` (${globalStat.numStopped})` : ""}
             </p>
@@ -84,8 +85,8 @@ const Sidebar = () => {
         <Section sectionName="Settings" />
         <Link to="/settings">
           <div className={getMenuStyle("/settings")}>
-            <MdSettings size={24} className={iconStyle} />
-            <p className="pl-2">Settings</p>
+            <MdSettings size={22} className={iconStyle} />
+            <p>Settings</p>
           </div>
         </Link>
       </div>
