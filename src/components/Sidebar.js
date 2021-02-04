@@ -1,12 +1,11 @@
 import {
-  IoArrowDownCircleSharp,
-  IoCheckmarkCircleSharp,
-  IoPauseCircleSharp,
-  IoSettingsSharp,
-} from "react-icons/io5";
+  MdArrowDownward,
+  MdDone,
+  MdPauseCircleOutline,
+  MdSettings,
+} from "react-icons/md";
 import { useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { getIconSize } from "../lib/util";
 
 import useOnClickOutside from "use-onclickoutside";
 
@@ -55,10 +54,7 @@ const Sidebar = () => {
         <Section sectionName="Tasks" />
         <Link to="/active">
           <div className={getMenuStyle("/active")}>
-            <IoArrowDownCircleSharp
-              size={getIconSize() - 1}
-              className={iconStyle}
-            />
+            <MdArrowDownward size={24} className={iconStyle} />
             <p className="pl-2">
               Downloading
               {globalStat.numActive > 0 ? ` (${globalStat.numActive})` : ""}
@@ -67,10 +63,7 @@ const Sidebar = () => {
         </Link>
         <Link to="/waiting">
           <div className={getMenuStyle("/waiting")}>
-            <IoPauseCircleSharp
-              size={getIconSize() - 1}
-              className={iconStyle}
-            />
+            <MdPauseCircleOutline size={24} className={iconStyle} />
             <p className="pl-2">
               Paused
               {globalStat.numWaiting > 0 ? ` (${globalStat.numWaiting})` : ""}
@@ -79,10 +72,7 @@ const Sidebar = () => {
         </Link>
         <Link to="/stopped">
           <div className={getMenuStyle("/stopped")}>
-            <IoCheckmarkCircleSharp
-              size={getIconSize() - 1}
-              className={iconStyle}
-            />
+            <MdDone size={24} className={iconStyle} />
             <p className="pl-2">
               Finished / Stopped
               {globalStat.numStopped > 0 ? ` (${globalStat.numStopped})` : ""}
@@ -94,10 +84,7 @@ const Sidebar = () => {
         <Section sectionName="Settings" />
         <Link to="/settings">
           <div className={getMenuStyle("/settings")}>
-            <IoSettingsSharp
-              size={getIconSize() - 4}
-              className={iconStyle + " ml-1"}
-            />
+            <MdSettings size={24} className={iconStyle} />
             <p className="pl-2">Settings</p>
           </div>
         </Link>

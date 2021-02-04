@@ -1,10 +1,4 @@
-import {
-  IoPlay,
-  IoTrash,
-  IoPause,
-  IoMenuSharp,
-  IoAddSharp,
-} from "react-icons/io5";
+import { MdPlayArrow, MdDelete, MdPause, MdAdd, MdMenu } from "react-icons/md";
 
 import { Link, useLocation, useHistory } from "react-router-dom";
 
@@ -59,10 +53,10 @@ const Actionbar = ({ aria2, update }) => {
           if (!mobileSelect) setSidebar(true);
         }}
       >
-        <IoMenuSharp
-          size={getIconSize() + 1}
+        <MdMenu
+          size={getIconSize()}
           className={
-            "ml-3 mr-4 cursor-pointer " +
+            "mx-3 cursor-pointer " +
             iconStyle +
             (mobileSelect ? " opacity-30" : "")
           }
@@ -70,18 +64,18 @@ const Actionbar = ({ aria2, update }) => {
         <Divider />
       </div>
       <Link to="/new">
-        <div className={"pr-2 cursor-pointer " + iconStyle}>
+        <div className={"pr-1 cursor-pointer " + iconStyle}>
           <button
             disabled={path === "new" || mobileSelect}
             className={buttonStyle + " flex items-center"}
           >
-            <IoAddSharp size={getIconSize() + 2} />
+            <MdAdd size={getIconSize()} />
             <p className="ml-1 text-base md:text-sm fade-in">New</p>
           </button>
         </div>
       </Link>
       <Divider />
-      <div className="flex items-center justify-between space-x-3">
+      <div className="flex items-center justify-between space-x-2">
         <button
           disabled={path !== "active" || selected.length < 1}
           className={buttonStyle}
@@ -91,7 +85,7 @@ const Actionbar = ({ aria2, update }) => {
             });
           }}
         >
-          <IoPause size={getIconSize() + 1} className={iconStyle} />
+          <MdPause size={getIconSize()} className={iconStyle} />
         </button>
         <button
           disabled={path !== "waiting" || selected.length < 1}
@@ -102,7 +96,7 @@ const Actionbar = ({ aria2, update }) => {
             });
           }}
         >
-          <IoPlay size={getIconSize() - 3} className={iconStyle} />
+          <MdPlayArrow size={getIconSize()} className={iconStyle} />
         </button>
         <button
           className={buttonStyle}
@@ -126,7 +120,7 @@ const Actionbar = ({ aria2, update }) => {
             });
           }}
         >
-          <IoTrash size={getIconSize() - 3} className={iconStyle} />
+          <MdDelete size={getIconSize() - 3} className={iconStyle} />
         </button>
       </div>
     </div>
