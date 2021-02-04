@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import InputField from "./InputField";
 import { confirm } from "./Confirm";
@@ -12,6 +12,12 @@ const Settings = () => {
   const tmpConfig = JSON.parse(localStorage.getItem("rpc-config"));
 
   const [config, setConfig] = useState(tmpConfig || defaultRpcConfig);
+  const [change, setChange] = useState(-1);
+
+  useEffect(() => {
+    setChange((c) => c + 1);
+    //eslint-disable-next-line
+  }, [config]);
 
   return (
     <div className="flex flex-col items-center w-full overflow-y-auto text-sm fade-in">
@@ -69,6 +75,7 @@ const Settings = () => {
         </InputField>
         <div className="flex justify-start px-2 py-2 select-none md:px-4 space-x-2">
           <button
+            disabled={change < 1}
             className="px-4 py-1.5 font-medium text-blue-600 bg-blue-200 border border-blue-500 md:font-bold focus:outline-none disabled:opacity-50"
             type="submit"
           >

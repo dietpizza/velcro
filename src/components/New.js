@@ -86,7 +86,7 @@ const New = ({ aria2, update }) => {
   return (
     <div className="flex flex-col flex-grow w-full h-0 overflow-y-auto text-sm fade-in">
       <form onSubmit={addUri} noValidate>
-        <InputField text={"URL:"}>
+        <InputField text={"URL Link:"}>
           <input
             type="url"
             className={inputStyle}
@@ -138,7 +138,7 @@ const New = ({ aria2, update }) => {
             }}
           />
         </InputField>
-        <InputField text="Speed Limit:">
+        <InputField text="Max Speed:">
           <input
             type="text"
             className={inputStyle}
