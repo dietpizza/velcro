@@ -38,7 +38,6 @@ const Confirm = ({
               proceed(false);
             }}
             text={cancelText || "No"}
-            color="red"
           />
           <Button
             onClick={() => {
@@ -46,7 +45,7 @@ const Confirm = ({
               proceed(true);
             }}
             text={actionText || "Yes"}
-            color="blue"
+            color="red"
           />
         </div>
       </div>

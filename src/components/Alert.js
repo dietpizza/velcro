@@ -2,16 +2,16 @@ import { useState } from "react";
 
 const Alert = ({ id, content, timeout, variant, destroy }) => {
   let alertStyle =
-    "p-2 ml-auto bg-opacity-95 font-medium md:font-bold shadow border fade-in ";
+    "p-2 ml-auto bg-opacity-90 text-white rounded font-medium md:font-bold shadow fade-in ";
 
   const [render, setRender] = useState(false);
 
   switch (variant) {
     case "error":
-      alertStyle += "border-red-300 bg-red-200 text-red-500";
+      alertStyle += "bg-red-500";
       break;
     default:
-      alertStyle += "border-blue-300 bg-blue-200 text-blue-500";
+      alertStyle += "bg-blue-500";
   }
 
   setTimeout(() => {

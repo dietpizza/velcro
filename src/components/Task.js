@@ -4,6 +4,7 @@ import { isMobile } from "react-device-detect";
 import { useHistory } from "react-router-dom";
 import { MdRadioButtonChecked, MdRadioButtonUnchecked } from "react-icons/md";
 import LongPress from "react-long";
+import { useEffect, useState } from "react";
 
 const Task = ({ data }) => {
   const {
@@ -17,8 +18,13 @@ const Task = ({ data }) => {
   let progress = getProgress(completedLength, totalLength, 1);
 
   const [selected] = useGlobalState("selected");
+  const [select, setSelect] = useState(selected.includes(gid));
   const [mobileSelect, setMobileSelect] = useGlobalState("mobileSelect");
   const history = useHistory();
+
+  useEffect(() => {
+    setSelect(selected.includes(gid));
+  }, [selected]);
 
   const getStatus = () => {
     if (errorCode !== undefined && errorCode !== "0") return "Error";
@@ -27,8 +33,8 @@ const Task = ({ data }) => {
     else return formatBytes(downloadSpeed, 2) + "/s";
   };
   const taskStyle =
-    "relative items-center p-2 px-4 md:p-0 md:pr-3 text-xs text-gray-700 transition-all duration-200 ease-in-out " +
-    " border-b border-gray-200 grid grid-cols-2 md:grid-cols-16 gap-y-1 md:gap-x-4 fade-in w-full select-none";
+    "relative items-center p-2 px-4 md:px-3 md:py-0 text-xs text-gray-700 border-b border-gray-200 " +
+    "grid grid-cols-2 md:grid-cols-16 gap-y-1 md:gap-x-4 fade-in w-full cursor-pointer select-none ";
   const metaStyle = "pr-1 text-xs text-gray-500 md:hidden";
 
   return (
@@ -45,27 +51,20 @@ const Task = ({ data }) => {
           setMobileSelect(false);
           selectTask(gid, false);
         } else {
-          if (mobileSelect) selectTask(gid, !selected.includes(gid));
+          if (mobileSelect) selectTask(gid, !select);
           else history.push("/task/" + gid);
         }
       }}
     >
       <div
-        className={
-          taskStyle +
-          (selected.includes(gid)
-            ? " bg-blue-100 md:bg-blue-50 border-blue-200"
-            : " ")
-        }
+        className={taskStyle + (select ? " bg-gray-200" : "")}
+        onClick={() => {
+          if (!isMobile) selectTask(gid, !select);
+        }}
       >
-        <div
-          className="flex items-center text-sm md:px-4 md:py-2 cursor-pointer md:text-xs md:col-span-9 col-span-2 whitespace-nowrap overflow-ellipsis"
-          onClick={() => {
-            if (!isMobile) selectTask(gid, !selected.includes(gid));
-          }}
-        >
-          <div className="mr-2 text-blue-500 hidden md:block">
-            {selected.includes(gid) ? (
+        <div className="flex items-center text-sm md:my-2 md:text-xs md:col-span-9 col-span-2">
+          <div className="mr-1 text-blue-500 hidden md:block">
+            {select ? (
               <MdRadioButtonChecked size={20} />
             ) : (
               <MdRadioButtonUnchecked size={20} />
@@ -73,7 +72,12 @@ const Task = ({ data }) => {
           </div>
           <span className={metaStyle}>Name:</span>
           <p
-            className="md:hover:text-blue-600 md:cursor-pointer"
+            className={
+              "px-1 overflow-hidden " +
+              (!select
+                ? "rounded md:hover:text-white md:cursor-pointer md:hover:bg-gray-500 md:transition-all duration-200 ease-in-out"
+                : "")
+            }
             onClick={() => {
               if (!isMobile) history.push("/task/" + gid);
             }}

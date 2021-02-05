@@ -12,7 +12,7 @@ const New = ({ aria2, update }) => {
   const lastDir = localStorage.getItem("lastDir");
   const lastFile = localStorage.getItem("lastFile");
   const inputStyle =
-    "w-full p-2 border border-gray-300 outline-none resize-none md:py-1 focus:border-blue-300";
+    "w-full p-2 border border-gray-300 outline-none resize-none md:py-1 focus:border-blue-500 ";
 
   const [aria2config] = useGlobalState("aria2config");
   const [enable, setEnable] = useState(false);
@@ -177,7 +177,7 @@ const New = ({ aria2, update }) => {
             <option value={"false"}>False</option>
           </select>
         </InputField>
-        <div className="flex justify-start py-2 px-3 select-none md:px-4 space-x-2">
+        <div className="flex justify-start p-3 select-none md:px-4 space-x-2">
           <Button
             disabled={!enable}
             color="blue"

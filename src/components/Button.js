@@ -1,6 +1,6 @@
 const Button = ({ text, color, onClick, disabled, type }) => {
   let style =
-    "py-2 px-4 shadow text-white text-xs font-medium rounded-sm font-websafe md:font-bold focus:outline-none disabled:opacity-60 ";
+    "py-2 px-4 shadow text-white text-xs font-medium rounded font-websafe md:font-bold focus:outline-none disabled:opacity-50 ";
   switch (color) {
     case "red":
       style += "bg-red-500";

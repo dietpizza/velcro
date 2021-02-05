@@ -47,7 +47,7 @@ const Sidebar = () => {
         (sidebarStatus ? "translate-x-0" : "-translate-x-full md:translate-x-0")
       }
     >
-      <div className="flex items-center justify-center bg-blue-600 h-14 md:h-12 transition-all duration-200">
+      <div className="flex items-center justify-center bg-blue-600 h-14 md:h-12 transition-all duration-200 border-b border-gray-600">
         <img src={logo} className="w-8 h-8 mr-1" alt="Logo" />
         <p className="mr-3 text-2xl text-white font-websafe">Velcro</p>
       </div>

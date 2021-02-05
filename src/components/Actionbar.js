@@ -43,7 +43,8 @@ const Actionbar = ({ aria2, update }) => {
   return (
     <div
       className={
-        "z-20 flex items-center flex-shrink-0 w-full shadow select-none space-x-3 md:space-x-2 h-14 md:h-12 text-gray-500"
+        "z-20 flex items-center flex-shrink-0 w-full shadow md:shadow-none md:border-b md:border-gray-200 " +
+        " select-none space-x-3 md:space-x-2 h-14 md:h-12 text-gray-500"
       }
     >
       <div
