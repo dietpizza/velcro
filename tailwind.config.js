@@ -24,6 +24,7 @@ module.exports = {
         "spin-slow": "spin 1s ease-in-out infinite",
       },
       spacing: {
+        60: "15rem",
         108: "27rem",
         120: "30rem",
         132: "33rem",

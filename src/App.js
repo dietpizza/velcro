@@ -133,7 +133,7 @@ const App = () => {
       <Interval callback={updateLoop} timeout={1000} enabled={true} />
       <AlertStack />
       <Sidebar />
-      <div className="flex flex-col flex-grow ml-0 md:ml-56 fade-in">
+      <div className="flex flex-col flex-grow md:ml-60 fade-in">
         <div className="flex flex-col flex-grow fade-in">
           <Actionbar aria2={aria2} update={() => update()} />
           <div className="relative flex flex-col items-center flex-grow h-0 overflow-y-auto">

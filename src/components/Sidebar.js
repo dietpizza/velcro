@@ -1,7 +1,7 @@
 import {
-  MdArrowDownward,
-  MdDone,
-  MdPauseCircleOutline,
+  MdFileDownload,
+  MdInfoOutline,
+  MdSchedule,
   MdSettings,
 } from "react-icons/md";
 import { useRef } from "react";
@@ -43,7 +43,7 @@ const Sidebar = () => {
     <div
       ref={ref}
       className={
-        "fixed z-30 h-full overflow-auto bg-gray-700 transition duration-200 transform-gpu w-56 ease-in-out select-none shadow " +
+        "fixed z-30 h-full overflow-auto bg-gray-700 transition duration-200 transform-gpu w-60 ease-in-out select-none shadow " +
         (sidebarStatus ? "translate-x-0" : "-translate-x-full md:translate-x-0")
       }
     >
@@ -55,7 +55,7 @@ const Sidebar = () => {
         <Section sectionName="Tasks" />
         <Link to="/active">
           <div className={getMenuStyle("/active")}>
-            <MdArrowDownward size={24} className={iconStyle} />
+            <MdFileDownload size={24} className={iconStyle} />
             <p>
               Downloading
               {globalStat.numActive > 0 ? ` (${globalStat.numActive})` : ""}
@@ -64,7 +64,7 @@ const Sidebar = () => {
         </Link>
         <Link to="/waiting">
           <div className={getMenuStyle("/waiting")}>
-            <MdPauseCircleOutline size={24} className={iconStyle} />
+            <MdSchedule size={24} className={iconStyle} />
             <p>
               Paused
               {globalStat.numWaiting > 0 ? ` (${globalStat.numWaiting})` : ""}
@@ -73,7 +73,7 @@ const Sidebar = () => {
         </Link>
         <Link to="/stopped">
           <div className={getMenuStyle("/stopped")}>
-            <MdDone size={24} className={iconStyle} />
+            <MdInfoOutline size={24} className={iconStyle} />
             <p>
               Finished / Stopped
               {globalStat.numStopped > 0 ? ` (${globalStat.numStopped})` : ""}

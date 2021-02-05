@@ -74,7 +74,7 @@ const Actionbar = ({ aria2, update }) => {
         </div>
       </Link>
       <Divider />
-      <div className="flex items-center justify-between space-x-3 md:space-x-2">
+      <div className="flex items-center justify-between space-x-2">
         <button
           disabled={path !== "active" || selected.length < 1}
           className={buttonStyle}
@@ -119,7 +119,7 @@ const Actionbar = ({ aria2, update }) => {
             });
           }}
         >
-          <MdDelete size={getIconSize() - 3} className={iconStyle} />
+          <MdDelete size={getIconSize() - 4} className={iconStyle} />
         </button>
       </div>
     </div>
