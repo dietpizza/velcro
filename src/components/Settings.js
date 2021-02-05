@@ -74,7 +74,7 @@ const Settings = () => {
             }}
           />
         </InputField>
-        <div className="flex justify-start px-2 py-2 select-none md:px-4 space-x-2">
+        <div className="flex justify-start px-3 py-2 select-none">
           <Button
             disabled={change < 1}
             color="blue"

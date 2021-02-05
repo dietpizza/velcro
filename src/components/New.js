@@ -87,7 +87,7 @@ const New = ({ aria2, update }) => {
   return (
     <div className="flex flex-col flex-grow w-full h-0 overflow-y-auto text-sm fade-in">
       <form onSubmit={addUri} noValidate>
-        <InputField text={"URL Link:"}>
+        <InputField text="URL Link:">
           <input
             type="url"
             className={inputStyle}
@@ -98,7 +98,7 @@ const New = ({ aria2, update }) => {
             }}
           />
         </InputField>
-        <InputField text={"Location:"}>
+        <InputField text="Location:">
           <input
             type="url"
             className={inputStyle}
@@ -111,7 +111,7 @@ const New = ({ aria2, update }) => {
             }}
           />
         </InputField>
-        <InputField text={"Filename:"}>
+        <InputField text="Filename:">
           <input
             type="text"
             className={inputStyle}
@@ -127,7 +127,7 @@ const New = ({ aria2, update }) => {
             }}
           />
         </InputField>
-        <InputField text={"Segments:"}>
+        <InputField text="Segments:">
           <input
             type="number"
             className={inputStyle}
@@ -155,7 +155,7 @@ const New = ({ aria2, update }) => {
             }}
           />
         </InputField>
-        <InputField text={"Referer:"}>
+        <InputField text="Referer:">
           <input
             type="url"
             className={inputStyle}
@@ -177,7 +177,7 @@ const New = ({ aria2, update }) => {
             <option value={"false"}>False</option>
           </select>
         </InputField>
-        <div className="flex justify-start px-2 py-2 select-none md:px-4 space-x-2">
+        <div className="flex justify-start py-2 px-3 select-none md:px-4 space-x-2">
           <Button
             disabled={!enable}
             color="blue"

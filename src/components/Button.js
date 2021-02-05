@@ -1,6 +1,6 @@
 const Button = ({ text, color, onClick, disabled, type }) => {
   let style =
-    "px-4 py-1.5 shadow text-white font-medium rounded-sm md:font-bold focus:outline-none disabled:opacity-50 ";
+    "py-2 px-4 shadow text-white text-xs font-medium rounded-sm font-websafe md:font-bold focus:outline-none disabled:opacity-60 ";
   switch (color) {
     case "red":
       style += "bg-red-500";
@@ -8,10 +8,12 @@ const Button = ({ text, color, onClick, disabled, type }) => {
     case "blue":
       style += "bg-blue-500";
       break;
+    default:
+      style += "bg-gray-700";
   }
   return (
     <button className={style} onClick={onClick} disabled={disabled} type={type}>
-      {text}
+      {text.toUpperCase()}
     </button>
   );
 };

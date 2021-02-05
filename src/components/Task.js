@@ -27,7 +27,7 @@ const Task = ({ data }) => {
     else return formatBytes(downloadSpeed, 2) + "/s";
   };
   const taskStyle =
-    "relative items-center p-2 md:p-0 md:pr-3 text-xs text-gray-700 transition-all duration-200 ease-in-out " +
+    "relative items-center p-2 px-4 md:p-0 md:pr-3 text-xs text-gray-700 transition-all duration-200 ease-in-out " +
     " border-b border-gray-200 grid grid-cols-2 md:grid-cols-16 gap-y-1 md:gap-x-4 fade-in w-full select-none";
   const metaStyle = "pr-1 text-xs text-gray-500 md:hidden";
 
