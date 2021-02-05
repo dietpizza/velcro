@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import InputField from "./InputField";
+import Button from "./Button";
 import { confirm } from "./Confirm";
 
 import { defaultRpcConfig } from "../lib/util";
@@ -74,13 +75,12 @@ const Settings = () => {
           />
         </InputField>
         <div className="flex justify-start px-2 py-2 select-none md:px-4 space-x-2">
-          <button
+          <Button
             disabled={change < 1}
-            className="px-4 py-1.5 font-medium text-blue-600 bg-blue-200 border border-blue-500 md:font-bold focus:outline-none disabled:opacity-50"
+            color="blue"
             type="submit"
-          >
-            Save
-          </button>
+            text="Save"
+          />
         </div>
       </form>
     </div>

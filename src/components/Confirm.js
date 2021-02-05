@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Dialog } from "@reach/dialog";
 import { createConfirmation, confirmable } from "../lib/confirm";
 
+import Button from "./Button";
+
 const Confirm = ({
   title,
   show,
@@ -25,31 +27,27 @@ const Confirm = ({
       }}
     >
       <div className="w-full mx-3 bg-gray-100 rounded shadow md:mx-0 md:w-120 fade-in transform-gpu -translate-y-1/2 md:-translate-y-1/3">
-        <div className="p-4 pb-2 text-2xl text-blue-600 border-b border-blue-200">
+        <div className="p-4 pb-0 text-2xl text-blue-600 ">
           {title || "Confirmation"}
         </div>
-        <div className="p-3 px-4 text-sm text-gray-700 border-b border-blue-200">
-          {message}
-        </div>
-        <div className="flex justify-end p-3 px-4 text-sm text-gray-700 space-x-2">
-          <button
+        <div className="py-2 px-4 text-sm text-gray-700 ">{message}</div>
+        <div className="flex justify-end pt-2 p-4 text-sm text-gray-700 space-x-2">
+          <Button
             onClick={() => {
               setRender(true);
               proceed(false);
             }}
-            className="px-4 py-1.5 font-medium text-red-500 bg-red-200 border border-red-400 md:font-bold focus:outline-none"
-          >
-            {cancelText || "No"}
-          </button>
-          <button
+            text={cancelText || "No"}
+            color="red"
+          />
+          <Button
             onClick={() => {
               setRender(true);
               proceed(true);
             }}
-            className="px-4 py-1.5 font-medium text-blue-600 bg-blue-200 border border-blue-500 md:font-bold focus:outline-none disabled:opacity-50"
-          >
-            {actionText || "Yes"}
-          </button>
+            text={actionText || "Yes"}
+            color="blue"
+          />
         </div>
       </div>
     </Dialog>

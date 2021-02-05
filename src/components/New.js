@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { read } from "clipboardy";
 
 import InputField from "./InputField";
+import Button from "./Button";
 
 import { isURL, isPath, isSpeed } from "../lib/util";
 import { useGlobalState, addAlert } from "../globalState";
@@ -177,13 +178,12 @@ const New = ({ aria2, update }) => {
           </select>
         </InputField>
         <div className="flex justify-start px-2 py-2 select-none md:px-4 space-x-2">
-          <button
+          <Button
             disabled={!enable}
-            className="px-4 py-1.5 font-medium text-blue-600 bg-blue-200 border border-blue-500 md:font-bold focus:outline-none disabled:opacity-50"
+            color="blue"
+            text="Download"
             type="submit"
-          >
-            Download
-          </button>
+          />
         </div>
       </form>
     </div>
