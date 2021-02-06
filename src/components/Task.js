@@ -65,7 +65,7 @@ const Task = ({ data }) => {
         <div className="flex items-center text-sm md:my-2 md:text-xs md:col-span-9 col-span-2">
           <div
             className={
-              "mx-1 h-3 w-3 rounded-full " +
+              "md:mx-1 md:h-3 md:w-3 rounded-full " +
               (select ? "bg-blue-500" : "bg-gray-200")
             }
           ></div>
