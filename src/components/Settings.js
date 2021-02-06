@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 
 import InputField from "./InputField";
 import Button from "./Button";
-import { confirm } from "./Confirm";
 
-import { defaultRpcConfig } from "../lib/util";
 import { addAlert } from "../globalState";
 
 const Settings = () => {
@@ -26,19 +24,10 @@ const Settings = () => {
         className="w-full"
         onSubmit={(e) => {
           e.preventDefault();
-          confirm({
-            title: "Reload?",
-            message:
-              "Aria2 RPC settings updated. Reload the page for this to take effect.",
-            actionText: "Reload",
-            cancelText: "Cancel",
-          }).then((res) => {
-            if (res) window.location.reload();
-            addAlert({
-              content: "Settings updated... Please refresh page.",
-            });
-          });
           localStorage.setItem("rpc-config", JSON.stringify(config));
+          addAlert({
+            content: "Settings updated... Please refresh page.",
+          });
         }}
       >
         <InputField text="Hostname:">
