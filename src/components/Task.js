@@ -2,7 +2,6 @@ import { formatBytes, getProgress, getFilename } from "../lib/util";
 import { useGlobalState, selectTask } from "../globalState";
 import { isMobile } from "react-device-detect";
 import { useHistory } from "react-router-dom";
-import { MdRadioButtonChecked, MdRadioButtonUnchecked } from "react-icons/md";
 import LongPress from "react-long";
 import { useEffect, useState } from "react";
 
@@ -24,6 +23,7 @@ const Task = ({ data }) => {
 
   useEffect(() => {
     setSelect(selected.includes(gid));
+    //eslint-disable-next-line
   }, [selected]);
 
   const getStatus = () => {
@@ -63,13 +63,12 @@ const Task = ({ data }) => {
         }}
       >
         <div className="flex items-center text-sm md:my-2 md:text-xs md:col-span-9 col-span-2">
-          <div className="mr-1 text-blue-500 hidden md:block">
-            {select ? (
-              <MdRadioButtonChecked size={20} />
-            ) : (
-              <MdRadioButtonUnchecked size={20} />
-            )}
-          </div>
+          <div
+            className={
+              "mx-1 h-3 w-3 rounded-full " +
+              (select ? "bg-blue-500" : "bg-gray-200")
+            }
+          ></div>
           <span className={metaStyle}>Name:</span>
           <p
             className={
@@ -79,7 +78,7 @@ const Task = ({ data }) => {
                 : "")
             }
             onClick={() => {
-              if (!isMobile) history.push("/task/" + gid);
+              if (!isMobile && !select) history.push("/task/" + gid);
             }}
           >
             {getFilename(files[0])}
