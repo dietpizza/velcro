@@ -4,6 +4,7 @@ import InputField from "./InputField";
 import Button from "./Button";
 
 import { addAlert } from "../globalState";
+import { defaultRpcConfig } from "../lib/util";
 
 const Settings = () => {
   const inputStyle =
