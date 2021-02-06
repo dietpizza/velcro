@@ -1,4 +1,4 @@
-import { useGlobalState, destroyAlert } from "../globalState";
+import { useGlobalState } from "../globalState";
 
 import Alert from "./Alert";
 
@@ -14,7 +14,6 @@ const AlertStack = () => {
           id={id}
           timeout={timeout}
           variant={variant}
-          destroy={destroyAlert}
         />
       ))}
     </div>

@@ -36,6 +36,7 @@ import Settings from "./components/Settings";
 
 const App = () => {
   const [isConnected, setConnected] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const [link, setLink] = useState(null);
 
   const [selected, setSelected] = useGlobalState("selected");
@@ -46,9 +47,14 @@ const App = () => {
   const path = useLocation().pathname;
   const history = useHistory();
 
-  const config =
-    JSON.parse(localStorage.getItem("rpc-config")) || defaultRpcConfig;
+  const [config, setConfig] = useState(
+    JSON.parse(localStorage.getItem("rpc-config")) || defaultRpcConfig
+  );
   const aria2 = new Aria2(config);
+
+  const forceUpdate = () => {
+    setConfig(JSON.parse(localStorage.getItem("rpc-config")));
+  };
 
   const getIndex = () => {
     return path === "/active"
@@ -124,6 +130,9 @@ const App = () => {
     if (mobileSelect) {
       clearMobileSelect();
     }
+    if (getIndex() < 0) {
+      setLoading(false);
+    } else setLoading(true);
     //eslint-disable-next-line
   }, [path]);
 
@@ -142,7 +151,7 @@ const App = () => {
         <div className="flex flex-col flex-grow fade-in">
           <Actionbar aria2={aria2} update={() => update()} />
           <div className="relative flex flex-col items-center flex-grow h-0 overflow-y-auto">
-            <Loading show={!isConnected} />
+            <Loading show={!isConnected && isLoading} />
             <Switch>
               <Route path="/" exact>
                 <Redirect to="/active" />
@@ -157,7 +166,7 @@ const App = () => {
                 <Tasks view="stopped" />
               </Route>
               <Route path="/settings">
-                <Settings />
+                <Settings forceUpdate={forceUpdate} />
               </Route>
               <Route path="/new">
                 <New aria2={aria2} update={() => update()} />

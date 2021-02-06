@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const Alert = ({ id, content, timeout, variant, destroy }) => {
+import { destroyAlert } from "../globalState";
+
+const Alert = ({ id, content, timeout, variant }) => {
   let alertStyle =
-    "p-2 ml-auto bg-opacity-90 text-white rounded font-medium md:font-bold shadow fade-in ";
+    "p-2 ml-auto bg-opacity-80 text-white rounded font-medium md:font-bold shadow ";
 
   const [render, setRender] = useState(false);
 
@@ -13,17 +15,21 @@ const Alert = ({ id, content, timeout, variant, destroy }) => {
     default:
       alertStyle += "bg-blue-500";
   }
-
-  setTimeout(() => {
-    setRender(true);
-  }, timeout);
+  useEffect(() => {
+    const time = setTimeout(() => {
+      setRender(true);
+    }, timeout);
+    return () => {
+      clearTimeout(time);
+    };
+  }, [timeout]);
 
   return (
     <div className="right-0 flex text-xs font-medium justify-items-end">
       <div
-        className={alertStyle + (render ? " fade-out" : "")}
+        className={alertStyle + (render ? " fade-out" : " fade-in")}
         onAnimationEnd={() => {
-          if (render) destroy(id);
+          if (render) destroyAlert(id);
         }}
       >
         {content}

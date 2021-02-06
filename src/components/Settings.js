@@ -6,7 +6,7 @@ import Button from "./Button";
 import { addAlert } from "../globalState";
 import { defaultRpcConfig } from "../lib/util";
 
-const Settings = () => {
+const Settings = ({ forceUpdate }) => {
   const inputStyle =
     "w-full p-2 border border-gray-300 outline-none resize-none md:py-1 focus:border-blue-300";
   const tmpConfig = JSON.parse(localStorage.getItem("rpc-config"));
@@ -27,8 +27,10 @@ const Settings = () => {
           e.preventDefault();
           localStorage.setItem("rpc-config", JSON.stringify(config));
           addAlert({
-            content: "Settings updated... Please refresh page.",
+            content: "Settings updated...",
           });
+          setChange(0);
+          forceUpdate();
         }}
       >
         <InputField text="Hostname:">
