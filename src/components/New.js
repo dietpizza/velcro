@@ -48,10 +48,12 @@ const New = ({ aria2, update }) => {
   };
 
   useEffect(() => {
+    const split = parseInt(config.split);
+    const isNum = !isNaN(split) && split > 0 && split < 16;
+    console.log(isNum);
     if (
       isURL(config.url) &&
-      parseInt(config.split) > 0 &&
-      parseInt(config.split) < 16 &&
+      isNum &&
       isPath(config.dir) &&
       isSpeed(config["max-download-limit"])
     )
@@ -91,10 +93,10 @@ const New = ({ aria2, update }) => {
           <input
             type="url"
             className={inputStyle}
-            defaultValue={config.url !== undefined ? config.url : ""}
+            defaultValue={config.url || ""}
             placeholder="Eg.- https://speed.hetzner.de/100MB.bin"
             onChange={(e) => {
-              setConfig({ url: e.target.value.trim() });
+              setConfig({ url: e.target.value.trim() || "" });
             }}
           />
         </InputField>
@@ -105,9 +107,7 @@ const New = ({ aria2, update }) => {
             defaultValue={lastDir}
             placeholder={config.dir}
             onChange={(e) => {
-              const value = e.target.value.trim();
-              if (value.length === 0) setConfig({ dir: aria2config.dir });
-              else setConfig({ dir: value });
+              setConfig({ dir: e.target.value.trim() || aria2config.dir });
             }}
           />
         </InputField>
@@ -115,16 +115,10 @@ const New = ({ aria2, update }) => {
           <input
             type="text"
             className={inputStyle}
-            defaultValue={lastFile !== null ? lastFile : ""}
+            defaultValue={lastFile || ""}
             placeholder="Original"
             onChange={(e) => {
-              const value = e.target.value.trim();
-              if (value.length === 0) {
-                _setConfig((oldConfig) => {
-                  delete oldConfig["out"];
-                  return oldConfig;
-                });
-              } else setConfig({ out: value });
+              setConfig({ out: e.target.value.trim() || "" });
             }}
           />
         </InputField>
@@ -134,9 +128,7 @@ const New = ({ aria2, update }) => {
             className={inputStyle}
             placeholder={config.split}
             onChange={(e) => {
-              let value = parseInt(e.target.value.trim());
-              if (isNaN(value)) value = aria2config.split;
-              setConfig({ split: value.toString() });
+              setConfig({ split: e.target.value.trim() || aria2config.split });
             }}
           />
         </InputField>
@@ -144,15 +136,9 @@ const New = ({ aria2, update }) => {
           <input
             type="text"
             className={inputStyle}
-            placeholder={
-              config["max-download-limit"] === "0"
-                ? "None"
-                : config["max-download-limit"]
-            }
+            placeholder={config["max-download-limit"]}
             onChange={(e) => {
-              let value = e.target.value.trim();
-              if (value.trim().length === 0) value = "0";
-              setConfig({ "max-download-limit": value });
+              setConfig({ "max-download-limit": e.target.value.trim() || "0" });
             }}
           />
         </InputField>
@@ -162,7 +148,7 @@ const New = ({ aria2, update }) => {
             className={inputStyle}
             placeholder="Eg.- https://soundcloud.com"
             onChange={(e) => {
-              setConfig({ referer: e.target.value.trim() });
+              setConfig({ referer: e.target.value.trim() || "" });
             }}
           />
         </InputField>
