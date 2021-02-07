@@ -22,7 +22,8 @@ const Alert = ({ id, content, timeout, variant }) => {
     return () => {
       clearTimeout(time);
     };
-  }, [timeout]);
+    //eslint-disable-next-line
+  }, []);
 
   return (
     <div className="right-0 flex text-xs font-medium justify-items-end">

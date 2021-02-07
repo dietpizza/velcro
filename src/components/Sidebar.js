@@ -32,8 +32,8 @@ const Sidebar = () => {
     return (
       "flex items-center w-full h-12 px-2 font-websafe text-sm text-gray-300 " +
       "cursor-pointer justify-items-start hover:bg-gray-600 " +
-      "border-b border-gray-700" +
-      (id === path ? " bg-gray-600" : "")
+      "border-b border-gray-700 transition-all duration-200 ease-in-out " +
+      (id === path ? "bg-gray-600" : "")
     );
   };
   const ref = useRef(null);
@@ -64,7 +64,7 @@ const Sidebar = () => {
         </Link>
         <Link to="/waiting">
           <div className={getMenuStyle("/waiting")}>
-            <MdSchedule size={24} className={iconStyle} />
+            <MdSchedule size={22} className={iconStyle} />
             <p>
               Paused
               {globalStat.numWaiting > 0 ? ` (${globalStat.numWaiting})` : ""}
@@ -73,7 +73,7 @@ const Sidebar = () => {
         </Link>
         <Link to="/stopped">
           <div className={getMenuStyle("/stopped")}>
-            <MdInfoOutline size={24} className={iconStyle} />
+            <MdInfoOutline size={22} className={iconStyle} />
             <p>
               Finished / Stopped
               {globalStat.numStopped > 0 ? ` (${globalStat.numStopped})` : ""}

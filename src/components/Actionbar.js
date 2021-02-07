@@ -8,13 +8,13 @@ import { confirm } from "./Confirm";
 
 const Divider = () => {
   return (
-    <div className="w-0 h-6 border-r border-gray-300 border-solid md:h-5" />
+    <div className="w-0 h-6 border-r border-gray-200 border-solid md:h-5" />
   );
 };
 
 const Actionbar = ({ aria2, update }) => {
   const buttonStyle =
-    "focus:outline-none disabled:opacity-30 transition-opacity duration-200 ease-in-out ";
+    "focus:outline-none disabled:opacity-40 transition-opacity duration-200 ease-in-out ";
   const iconStyle = " transition-all duration-200 ease-in-out ";
 
   const path = useLocation().pathname.substring(1);
@@ -70,7 +70,7 @@ const Actionbar = ({ aria2, update }) => {
             className={buttonStyle + " flex items-center"}
           >
             <MdAdd size={getIconSize()} />
-            <p className="ml-1 text-base md:text-sm fade-in">New</p>
+            <p className="text-base md:text-sm">New</p>
           </button>
         </div>
       </Link>
