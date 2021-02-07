@@ -120,9 +120,10 @@ const New = ({ aria2, update }) => {
             onChange={(e) => {
               const value = e.target.value.trim();
               if (value.length === 0) {
-                let tmp = config;
-                delete tmp["out"];
-                _setConfig(tmp);
+                _setConfig((oldConfig) => {
+                  delete oldConfig["out"];
+                  return oldConfig;
+                });
               } else setConfig({ out: value });
             }}
           />
