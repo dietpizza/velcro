@@ -23,8 +23,7 @@ const Task = ({ data }) => {
 
   useEffect(() => {
     setSelect(selected.includes(gid));
-    //eslint-disable-next-line
-  }, [selected]);
+  }, [selected, gid]);
 
   const getStatus = () => {
     if (errorCode !== undefined && errorCode !== "0") return "Error";
@@ -65,7 +64,7 @@ const Task = ({ data }) => {
         <div className="flex items-center text-sm md:my-2 md:text-xs md:col-span-9 col-span-2">
           <div
             className={
-              "md:mx-1 md:h-3 md:w-3 rounded-full " +
+              "md:mr-2 md:h-3 md:w-3 rounded-full " +
               (select ? "bg-blue-500" : "bg-gray-200")
             }
           ></div>
@@ -73,9 +72,9 @@ const Task = ({ data }) => {
           <p
             className={
               "px-1 overflow-hidden " +
-              (!select
-                ? "rounded md:hover:text-white md:cursor-pointer md:hover:bg-gray-500 md:transition-all duration-200 ease-in-out"
-                : "")
+              (select
+                ? ""
+                : "rounded md:hover:text-white md:cursor-pointer md:hover:bg-gray-500 md:transition-all duration-200 ease-in-out")
             }
             onClick={() => {
               if (!isMobile && !select) history.push("/task/" + gid);

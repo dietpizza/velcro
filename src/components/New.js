@@ -5,7 +5,7 @@ import { read } from "clipboardy";
 import InputField from "./InputField";
 import Button from "./Button";
 
-import { isURL, isPath, isSpeed } from "../lib/util";
+import { isURL, isPath, isSpeed, isNum } from "../lib/util";
 import { useGlobalState, addAlert } from "../globalState";
 
 const New = ({ aria2, update }) => {
@@ -46,14 +46,10 @@ const New = ({ aria2, update }) => {
         });
       });
   };
-
   useEffect(() => {
-    const split = parseInt(config.split);
-    const isNum = !isNaN(split) && split > 0 && split < 16;
-    console.log(isNum);
     if (
       isURL(config.url) &&
-      isNum &&
+      isNum(config.split) &&
       isPath(config.dir) &&
       isSpeed(config["max-download-limit"])
     )

@@ -37,6 +37,11 @@ export const isSpeed = (str) => {
   else return /^[0-9]+[kKmM]?$/.test(str);
 };
 
+export const isNum = (num) => {
+  const split = parseInt(num);
+  return !isNaN(split) && split > 0 && split < 16;
+};
+
 export const defaultRpcConfig = {
   host: window.location.hostname,
   port: 6800,

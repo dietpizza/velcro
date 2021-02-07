@@ -73,7 +73,7 @@ const App = () => {
     }
   };
 
-  const updateLoop = async () => {
+  const mainLoop = async () => {
     if (isConnected) {
       update();
     } else {
@@ -120,7 +120,6 @@ const App = () => {
   useEffect(() => {
     document.documentElement.style.setProperty("--app-height", height + "px");
     if (width < 720) setSidebar(false);
-
     //eslint-disable-next-line
   }, [width, height]);
 
@@ -137,14 +136,13 @@ const App = () => {
   }, [path]);
 
   useEffect(() => {
-    grabLink();
-    updateLoop();
+    // mainLoop();
     //eslint-disable-next-line
   }, []);
 
   return (
     <div className="relative flex h-full font-websafe fade-in">
-      <Interval callback={updateLoop} timeout={1000} enabled={true} />
+      <Interval callback={mainLoop} timeout={1000} enabled={true} />
       <AlertStack />
       <Sidebar />
       <div className="flex flex-col flex-grow md:ml-60">
