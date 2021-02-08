@@ -113,7 +113,7 @@ const New = ({ aria2, update }) => {
           <input
             type="text"
             className={inputStyle}
-            defaultValue={lastFile || ""}
+            defaultValue={config.out || ""}
             placeholder="Original"
             onChange={(e) => {
               setConfig({ out: e.target.value.trim() || "" });

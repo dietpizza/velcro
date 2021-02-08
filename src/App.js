@@ -136,7 +136,7 @@ const App = () => {
   }, [path]);
 
   useEffect(() => {
-    // mainLoop();
+    mainLoop();
     //eslint-disable-next-line
   }, []);
 
