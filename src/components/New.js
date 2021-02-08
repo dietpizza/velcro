@@ -14,17 +14,18 @@ const New = ({ aria2, update }) => {
   const inputStyle =
     "w-full p-2 border border-gray-300 outline-none resize-none md:py-1 focus:border-blue-500 ";
 
-  const [aria2config] = useGlobalState("aria2config");
-  const [enable, setEnable] = useState(false);
-  const loaded = useRef(0);
-  const [config, _setConfig] = useState({});
   const history = useHistory();
+  const [aria2config] = useGlobalState("aria2config");
+  const loaded = useRef(0);
 
+  const [enable, setEnable] = useState(false);
+  const [config, _setConfig] = useState({});
   const setConfig = (property) => {
     _setConfig((oldConfig) => {
       return { ...oldConfig, ...property };
     });
   };
+
   const addUri = (e) => {
     e.preventDefault();
     aria2
@@ -61,7 +62,8 @@ const New = ({ aria2, update }) => {
     if (loaded.current < 2) {
       setConfig({
         split: aria2config.split,
-        dir: lastDir !== null ? lastDir : aria2config.dir,
+        dir: lastDir || aria2config.dir,
+        out: lastFile || "",
         "force-save": aria2config["force-save"],
         "max-download-limit": aria2config["max-download-limit"],
       });
