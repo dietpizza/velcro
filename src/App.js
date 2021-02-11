@@ -15,13 +15,13 @@ import useWindowFocus from "use-window-focus";
 import { isURL, defaultRpcConfig, dataCalls } from "./lib/util";
 import {
   setData,
-  resetData,
   addAlert,
-  setAria2Config,
+  resetData,
   setSidebar,
   clearSelected,
-  clearMobileSelect,
   useGlobalState,
+  setAria2Config,
+  clearMobileSelect,
 } from "./globalState";
 
 import Interval from "react-interval";
@@ -75,12 +75,12 @@ const App = () => {
 
   const mainLoop = async () => {
     if (isConnected) {
-      update();
+      await update();
     } else {
       try {
         const config = await aria2.call("getGlobalOption", []);
         setConnected(true);
-        update();
+        await update();
         addAlert({ content: "Aria2 RPC connected!" });
         setAria2Config(config);
       } catch (err) {}
@@ -89,7 +89,7 @@ const App = () => {
 
   const update = async () => {
     try {
-      const result = await Promise.all(await aria2.batch(dataCalls));
+      const result = await aria2.multicall(dataCalls);
       setData(result);
       filterSelected(result);
     } catch (err) {
@@ -106,8 +106,10 @@ const App = () => {
     if (windowFocus) {
       try {
         const text = await read();
-        if (text !== link && isURL(text)) {
+        const lastLink = localStorage.getItem("lastLink");
+        if ((text !== link || text !== lastLink) && isURL(text)) {
           setLink(text);
+          localStorage.setItem("lastLink", text);
           history.push("/new");
         }
       } catch (err) {}

@@ -17,10 +17,10 @@ const { setGlobalState, useGlobalState } = createGlobalState({
 export const setData = (data) => {
   data[2].reverse();
   setGlobalState("data", {
-    active: data[0],
-    waiting: data[1],
-    stopped: data[2],
-    globalStat: data[3],
+    active: data[0][0],
+    waiting: data[1][0],
+    stopped: data[2][0],
+    globalStat: data[3][0],
   });
 };
 export const resetData = () => {
