@@ -68,7 +68,8 @@ const App = () => {
   const filterSelected = (data) => {
     const index = getIndex();
     if (index > -1) {
-      const arr = data[index].map((e) => e.gid);
+      const arr = data[index][0].map((e) => e.gid);
+      console.log(arr);
       setSelected(selected.filter((e) => arr.includes(e)));
     }
   };
