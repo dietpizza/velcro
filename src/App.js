@@ -68,8 +68,7 @@ const App = () => {
   const filterSelected = (data) => {
     const index = getIndex();
     if (index > -1) {
-      const arr = data[index][0].map((e) => e.gid);
-      console.log(arr);
+      const arr = data[index].map((e) => e.gid);
       setSelected(selected.filter((e) => arr.includes(e)));
     }
   };
@@ -90,7 +89,7 @@ const App = () => {
 
   const update = async () => {
     try {
-      const result = await aria2.multicall(dataCalls);
+      const result = await Promise.all(await aria2.batch(dataCalls));
       setData(result);
       filterSelected(result);
     } catch (err) {
