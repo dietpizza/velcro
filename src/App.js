@@ -107,7 +107,7 @@ const App = () => {
       try {
         const text = await read();
         const lastLink = localStorage.getItem("lastLink");
-        if ((text !== link || text !== lastLink) && isURL(text)) {
+        if (!(text === link || text === lastLink) && isURL(text)) {
           setLink(text);
           localStorage.setItem("lastLink", text);
           history.push("/new");
