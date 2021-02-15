@@ -80,7 +80,7 @@ const Actionbar = ({ aria2, update }) => {
           disabled={path !== "active" || selected.length < 1}
           className={buttonStyle}
           onClick={() => {
-            action("pause").then((ret) => {
+            action("forcePause").then((ret) => {
               if (ret) history.push("/waiting");
             });
           }}

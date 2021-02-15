@@ -8,7 +8,7 @@ import { defaultRpcConfig } from "../lib/util";
 
 const Settings = ({ forceUpdate }) => {
   const inputStyle =
-    "w-full p-2 border border-gray-300 outline-none resize-none md:py-1 focus:border-blue-300";
+    "w-full p-2 px-3 border border-gray-300 outline-none resize-none focus:border-blue-300";
   const tmpConfig = JSON.parse(localStorage.getItem("rpc-config"));
 
   const [config, setConfig] = useState(tmpConfig || defaultRpcConfig);
@@ -66,7 +66,7 @@ const Settings = ({ forceUpdate }) => {
             }}
           />
         </InputField>
-        <div className="flex justify-start p-3 md:px-4 select-none">
+        <div className="flex justify-start p-2 select-none md:px-4">
           <Button
             disabled={change < 1}
             color="blue"

@@ -31,8 +31,10 @@ import Actionbar from "./components/Actionbar";
 import Footer from "./components/Footer";
 import AlertStack from "./components/AlertStack";
 import New from "./components/New";
+import TaskDetail from "./components/TaskDetail";
 import Loading from "./components/Loading";
 import Settings from "./components/Settings";
+import NotFound from "./components/NotFound";
 
 const App = () => {
   const [isConnected, setConnected] = useState(false);
@@ -57,13 +59,7 @@ const App = () => {
   };
 
   const getIndex = () => {
-    return path === "/active"
-      ? 0
-      : path === "/waiting"
-      ? 1
-      : path === "/stopped"
-      ? 2
-      : -1;
+    return ["/active", "/waiting", "/stopped"].indexOf(path);
   };
   const filterSelected = (data) => {
     const index = getIndex();
@@ -170,6 +166,12 @@ const App = () => {
               </Route>
               <Route path="/new">
                 <New aria2={aria2} update={() => update()} />
+              </Route>
+              <Route path="/task/:gid">
+                <TaskDetail />
+              </Route>
+              <Route>
+                <NotFound />
               </Route>
             </Switch>
           </div>

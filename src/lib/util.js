@@ -12,10 +12,23 @@ export const formatBytes = (bytes, decimals) => {
   );
 };
 
-export const getFilename = (file) => {
-  if (file.path === "") return file.uris[0].uri.replace(/^.*(\\|\/|:)/, "");
-  else if (file.path.length > 0) return file.path.replace(/^.*(\\|\/|:)/, "");
-  else return "Error";
+export const getFilename = (data) => {
+  const file = data.files[0];
+  if (data.bittorrent) {
+    if (data.bittorrent.info) {
+      return data.bittorrent.info.name;
+    } else {
+      return file.path;
+    }
+  } else {
+    if (file.path === "") {
+      return file.uris[0].uri.replace(/^.*(\\|\/|:)/, "");
+    } else if (file.path.length > 0) {
+      return file.path.replace(/^.*(\\|\/|:)/, "");
+    } else {
+      return "Error";
+    }
+  }
 };
 
 export const getProgress = (completed, total, digits) => {

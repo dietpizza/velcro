@@ -12,7 +12,7 @@ const Task = ({ data }) => {
     totalLength,
     completedLength,
     downloadSpeed,
-    files,
+    status,
   } = data;
   let progress = getProgress(completedLength, totalLength, 1);
 
@@ -26,13 +26,14 @@ const Task = ({ data }) => {
   }, [selected, gid]);
 
   const getStatus = () => {
-    if (errorCode !== undefined && errorCode !== "0") return "Error";
-    else if (completedLength === totalLength && totalLength !== "0")
-      return "Completed";
-    else return formatBytes(downloadSpeed, 2) + "/s";
+    if (errorCode && errorCode !== "0") return "Error";
+    else if (completedLength === totalLength && totalLength !== "0") {
+      if (status === "active") return "Seeding";
+      else return "Completed";
+    } else return formatBytes(downloadSpeed, 2) + "/s";
   };
   const taskStyle =
-    "relative items-center p-2 px-4 md:px-3 md:py-0 text-xs text-gray-700 border-b border-gray-200 " +
+    "relative items-center p-2 px-4 md:px-3 md:py-1 text-xs text-gray-700 border-b border-gray-200 " +
     "grid grid-cols-2 md:grid-cols-16 gap-y-1 md:gap-x-4 fade-in w-full cursor-pointer select-none ";
   const metaStyle = "pr-1 text-xs text-gray-500 md:hidden";
 
@@ -80,7 +81,7 @@ const Task = ({ data }) => {
               if (!isMobile && !select) history.push("/task/" + gid);
             }}
           >
-            {getFilename(files[0])}
+            {getFilename(data)}
           </p>
         </div>
         <div className="relative flex items-center col-span-2 md:col-span-3">

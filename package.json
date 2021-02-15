@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@hookstate/core": "^3.0.5",
     "@reach/dialog": "^0.13.0",
     "@react-hook/window-size": "^3.0.7",
     "@testing-library/jest-dom": "^5.11.8",
