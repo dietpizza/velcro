@@ -1,5 +1,5 @@
 import { MdPlayArrow, MdDelete, MdPause, MdAdd, MdMenu } from "react-icons/md";
-import { Link, useLocation, useHistory } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { getIconSize } from "../lib/util";
 import { useGlobalState, setSidebar, addAlert } from "../globalState";
