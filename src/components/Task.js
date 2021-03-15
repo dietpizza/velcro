@@ -26,8 +26,10 @@ const Task = ({ data }) => {
   }, [selected, gid]);
 
   const getStatus = () => {
-    if (errorCode && errorCode !== "0") return "Error";
-    else if (completedLength === totalLength && totalLength !== "0") {
+    if (errorCode && errorCode !== "0") {
+      if (errorCode === "31") return "Stopped";
+      else return "Error";
+    } else if (completedLength === totalLength && totalLength !== "0") {
       if (status === "active") return "Seeding";
       else return "Completed";
     } else return formatBytes(downloadSpeed, 2) + "/s";

@@ -18,35 +18,27 @@ const Actionbar = ({ aria2, update }) => {
   const iconStyle = " transition-all duration-200 ease-in-out ";
 
   const path = useLocation().pathname.substring(1);
-  const history = useHistory();
   const [selected] = useGlobalState("selected");
   const [mobileSelect, setMobileSelect] = useGlobalState("mobileSelect");
 
   const action = async (op) => {
     let calls = selected.map((el) => [op, el]);
-    let flag = false;
-    if (calls.length > 0)
+    if (calls.length > 0) {
       try {
         await aria2.multicall(calls);
-        update();
         if (mobileSelect) setMobileSelect(false);
-        flag = true;
       } catch (err) {
         addAlert({
           content: "Operation failed",
           variant: "error",
         });
       }
-    return flag;
+      update();
+    }
   };
 
   return (
-    <div
-      className={
-        "z-20 flex items-center flex-shrink-0 w-full shadow md:shadow-none md:border-b md:border-gray-200 " +
-        " select-none space-x-3 md:space-x-2 h-14 md:h-12 text-gray-500"
-      }
-    >
+    <div className="z-20 flex items-center flex-shrink-0 w-full shadow md:shadow-none md:border-b md:border-gray-200 select-none space-x-3 md:space-x-2 h-14 md:h-12 text-gray-500">
       <div
         className="flex items-center md:hidden"
         onClick={() => {
@@ -75,14 +67,12 @@ const Actionbar = ({ aria2, update }) => {
         </div>
       </Link>
       <Divider />
-      <div className="flex items-center justify-between space-x-2">
+      <div className="flex items-center space-x-2 justify-between space-x-2">
         <button
           disabled={path !== "active" || selected.length < 1}
           className={buttonStyle}
           onClick={() => {
-            action("forcePause").then((ret) => {
-              if (ret) history.push("/waiting");
-            });
+            action("forcePause");
           }}
         >
           <MdPause size={getIconSize()} className={iconStyle} />
@@ -91,9 +81,7 @@ const Actionbar = ({ aria2, update }) => {
           disabled={path !== "waiting" || selected.length < 1}
           className={buttonStyle}
           onClick={() => {
-            action("unpause").then((ret) => {
-              if (ret) history.push("/active");
-            });
+            action("unpause");
           }}
         >
           <MdPlayArrow size={getIconSize()} className={iconStyle} />
@@ -112,9 +100,7 @@ const Actionbar = ({ aria2, update }) => {
                 if (path === "stopped") {
                   action("removeDownloadResult");
                 } else {
-                  action("remove").then((ret) => {
-                    if (ret) history.push("/stopped");
-                  });
+                  action("remove");
                 }
               }
             });

@@ -94,7 +94,9 @@ const New = ({ aria2, update }) => {
             defaultValue={config.url || ""}
             placeholder="Eg.- https://speed.hetzner.de/100MB.bin"
             onChange={(e) => {
-              setConfig({ url: e.target.value.trim() || "" });
+              setConfig({
+                url: decodeURIComponent(e.target.value) || "",
+              });
             }}
           />
         </InputField>

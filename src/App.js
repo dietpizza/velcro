@@ -25,13 +25,13 @@ import {
 } from "./globalState";
 
 import Interval from "react-interval";
-import Tasks from "./components/Tasks";
+import TaskPane from "./components/TaskPane";
 import Sidebar from "./components/Sidebar";
 import Actionbar from "./components/Actionbar";
 import Footer from "./components/Footer";
 import AlertStack from "./components/AlertStack";
 import New from "./components/New";
-import TaskDetail from "./components/TaskDetail";
+import TaskView from "./components/TaskView";
 import Loading from "./components/Loading";
 import Settings from "./components/Settings";
 import NotFound from "./components/NotFound";
@@ -153,13 +153,13 @@ const App = () => {
                 <Redirect to="/active" />
               </Route>
               <Route path="/active">
-                <Tasks view="active" />
+                <TaskPane view="active" />
               </Route>
               <Route path="/waiting">
-                <Tasks view="waiting" />
+                <TaskPane view="waiting" />
               </Route>
               <Route path="/stopped">
-                <Tasks view="stopped" />
+                <TaskPane view="stopped" />
               </Route>
               <Route path="/settings">
                 <Settings forceUpdate={forceUpdate} />
@@ -168,7 +168,7 @@ const App = () => {
                 <New aria2={aria2} update={() => update()} />
               </Route>
               <Route path="/task/:gid">
-                <TaskDetail />
+                <TaskView />
               </Route>
               <Route>
                 <NotFound />

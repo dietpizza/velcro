@@ -5,7 +5,7 @@ import Task from "./Task";
 
 import { useGlobalState } from "../globalState";
 
-const Tasks = ({ view }) => {
+const TaskPane = ({ view }) => {
   const [data] = useGlobalState("data");
 
   return (
@@ -18,4 +18,4 @@ const Tasks = ({ view }) => {
   );
 };
 
-export default Tasks;
+export default TaskPane;

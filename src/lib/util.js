@@ -38,7 +38,10 @@ export const getProgress = (completed, total, digits) => {
 };
 
 export const isURL = (str) => {
-  return /^(?:\w+:)?\/\/([^\s.]+\.\S{2})\S*$/.test(str);
+  return (
+    /^(?:\w+:)?\/\/([^\s.]+\.\S{2})\S*$/.test(str) ||
+    /^magnet:\?xt=urn:/.test(str)
+  );
 };
 
 export const isPath = (str) => {
@@ -46,8 +49,9 @@ export const isPath = (str) => {
 };
 
 export const isSpeed = (str) => {
-  if (str === "0") return true;
-  else return /^[0-9]+[kKmM]?$/.test(str);
+  if (str === "0") {
+    return true;
+  } else return /^[0-9]+[kKmM]?$/.test(str);
 };
 
 export const isNum = (num) => {
