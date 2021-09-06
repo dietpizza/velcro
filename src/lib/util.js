@@ -62,6 +62,7 @@ export const isNum = (num) => {
 export const defaultRpcConfig = {
   host: window.location.hostname,
   port: 6800,
+  secure:true,
   path: "/jsonrpc",
 };
 
